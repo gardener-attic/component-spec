@@ -1,0 +1,3 @@
+#!/usr/bin/env bash
+
+echo "this should render and update the documentation"

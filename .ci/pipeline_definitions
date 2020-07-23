@@ -1,0 +1,14 @@
+component-spec:
+  inherit:
+    github_pages_repo: &github_pages_repo
+      repos:
+        - name: 'github_pages'
+          path: 'gardener/component-spec'
+          branch: 'github_pages'
+
+  jobs:
+    head-update:
+      <<: *github_pages_repo
+      steps:
+        render_and_update_documentation:
+          publish_to: ['github_pages']
