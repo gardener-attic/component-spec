@@ -1,0 +1,33 @@
+Component Descriptor format specification - v1
+==============================================
+
+*Example*
+
+.. code-block:: yaml
+
+   # meta attribute is optional; if absent, v1 must be assumed
+   meta:
+    schema_version: 'v1'
+
+  component_overwrites:
+  - declaring_component:
+      name: 'github.com/gardener/gardener'
+      version: 'v1.7.2'
+    dependency_overwrites:
+    - container_images:
+      - name: 'apiserver'
+        version: 'v1.7.2'
+        image_reference: 'eu.gcr.io/some-other/path/apiserver:v1.7.2'
+
+  components:
+    - name: 'github.com/gardener/gardener'
+      version: 'v1.7.2'
+      dependencies:
+        web: []
+        generic:
+          - name: 'hyperkube'
+            version: ''
+        container_images:
+          - name: 'apiserver'
+            version: 'v1.7.2'
+            image_reference: 'eu.gcr.io/gardener-project/gardener/apiserver:v1.7.2'
