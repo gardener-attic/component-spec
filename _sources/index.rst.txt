@@ -10,6 +10,8 @@ Gardener Component-Descriptor Contract and Specification
    :maxdepth: 2
    :caption: Contents:
 
+  specification/index.rst
+
 
 
 Indices and tables
