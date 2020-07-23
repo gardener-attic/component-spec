@@ -4,7 +4,7 @@ component-spec:
       repos:
         - name: 'github_pages'
           path: 'gardener/component-spec'
-          branch: 'github_pages'
+          branch: 'gh-pages' # github requires the branch to be named exactly so
 
   jobs:
     head-update:
