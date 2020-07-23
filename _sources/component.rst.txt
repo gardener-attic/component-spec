@@ -35,8 +35,24 @@ Gardener Component Type
 repository. Each GitHub release is a component version and *MUST* contain a `Component Descriptor`
 as GitHub release asset named `component_descriptor.yaml`.
 
++----------------------+-------------------------------------------+
+| component name       | GitHub repository URL (without schema)    |
++----------------------+-------------------------------------------+
+| component version    | GitHub release tag                        |
++----------------------+-------------------------------------------+
+| component descriptor | release asset `component_descriptor.yaml` |
++----------------------+-------------------------------------------+
+
 
 OCI Component Type
 ~~~~~~~~~~~~~~~~~~
 
 TBD
+
++----------------------+----------------------------------------+
+| component name       | OCI reference without tag              |
++----------------------+----------------------------------------+
+| component version    | OCI reference tag                      |
++----------------------+----------------------------------------+
+| component descriptor | GitHub release tag                     |
++----------------------+----------------------------------------+

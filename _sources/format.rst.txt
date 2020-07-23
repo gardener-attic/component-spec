@@ -24,4 +24,11 @@ The order of attributes is insignificant, and must not be relied upon.
 Publishing and Discovery
 ------------------------
 
-Any `Gardener Component` is a set of 
+For any `Resolvable Component Version`, it *MUST* be possible to unambiguously discover and
+retrieve a `Component Descriptor` using the three-tuple of:
+
+- component name
+- component version
+- component type
+
+See :doc:`component` for component-type specifics.
