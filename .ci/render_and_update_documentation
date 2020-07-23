@@ -1,3 +1,25 @@
 #!/usr/bin/env bash
 
-echo "this should render and update the documentation"
+set -ux
+
+# assume this script resides one dir below repo-root
+own_dir="$(readlink -f "$(dirname $0)")"
+repo_root="$(readlink -f "${own_dir}/..")"
+
+# set by pipeline to this dir, checked out for branch `github_pages`
+out_dir="${GITHUB_PAGES_PATH}"
+
+doc_dir="${repo_root}/doc"
+
+sphinx-build -E -a "${doc_dir}" "${out_dir}"
+
+export GIT_DIR="${out_dir}/.git"
+export GIT_WORK_TREE="${out_dir}"
+
+if [ -z "$(git status --porcelain=v1)" ]; then
+  echo "no changes - nothing to commit"
+  exit 0
+fi
+
+git add .
+git commit -m "update documentation"
