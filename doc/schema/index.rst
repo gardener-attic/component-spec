@@ -1,5 +1,5 @@
-Component Descriptor specification
-==================================
+Component Descriptor Schema specification
+=========================================
 
 .. toctree::
   :hidden:
