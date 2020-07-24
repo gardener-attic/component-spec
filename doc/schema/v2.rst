@@ -1,6 +1,23 @@
 Component Descriptor format specification - v2
 ==============================================
 
+Known Component Types
+---------------------
+
+*resolvable Component Types*
+
+TODO: document + reference
+- `gardenerComponent`
+- `ociComponent`
+
+*dependency types*
+
+TODO: document + reference
+- `ociImage`
+- `web`
+- `generic`
+
+
 *Example*
 
 

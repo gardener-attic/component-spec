@@ -25,11 +25,14 @@ Component Types
 ---------------
 
 Each `Resolvable Component` has a `Component Type`, which defines the contract through which
-their `Component Versions` are published, discovered, and retrieved.
+their `Component Versions` are published, discovered, and retrieved. Each resolvable component
+version may be declared as a dependency by other resolvable components.
 
 
 Gardener Component Type
 ~~~~~~~~~~~~~~~~~~~~~~~
+
+*since: `v1`*
 
 `Gardener Components` are resolvable components that reside in a `GitHub <https://github.com>`_
 repository. Each GitHub release is a component version and *MUST* contain a `Component Descriptor`
@@ -47,6 +50,8 @@ as GitHub release asset named `component_descriptor.yaml`.
 OCI Component Type
 ~~~~~~~~~~~~~~~~~~
 
+*since: `v2`*
+
 TBD
 
 +----------------------+----------------------------------------+
@@ -56,3 +61,58 @@ TBD
 +----------------------+----------------------------------------+
 | component descriptor | GitHub release tag                     |
 +----------------------+----------------------------------------+
+
+
+Dependency Types
+----------------
+
+Any known type that is not a `Resolvable Component` is a `Dependency Type`. Dependencies
+are used to describe technical artifacts the declaring resolvable component depends
+upon.
+
+
+OCI Image Dependency Type
+~~~~~~~~~~~~~~~~~~~~~~~~~
+
+*since: `v1`*
+
+An OCI Container Image published to an OCI Image registry.
+
+
++-----------------+----------------------------------------+
+| name            | arbitrary name (ASCII recommened)      |
++-----------------+----------------------------------------+
+| version         | relaxed semver                         |
++-----------------+----------------------------------------+
+| image_reference | OCI image reference                    |
++-----------------+----------------------------------------+
+
+
+Web Dependency Type
+~~~~~~~~~~~~~~~~~~~
+
+*since: `v1`*
+
+A dependency retrievable via HTTP-GET
+
++-----------------+----------------------------------------+
+| name            | arbitrary name (ASCII recommened)      |
++-----------------+----------------------------------------+
+| version         | relaxed semver                         |
++-----------------+----------------------------------------+
+| url             | a Unified Resource Locator             |
++-----------------+----------------------------------------+
+
+
+Generic Dependency Type
+~~~~~~~~~~~~~~~~~~~~~~~
+
+*since: `v1`*
+
+An informal dependency intended for human interpretation.
+
++-----------------+----------------------------------------+
+| name            | arbitrary name (ASCII recommened)      |
++-----------------+----------------------------------------+
+| version         | relaxed semver                         |
++-----------------+----------------------------------------+

@@ -1,6 +1,22 @@
 Component Descriptor format specification - v1
 ==============================================
 
+
+Known Component Types
+---------------------
+
+*resolvable Component Types*
+
+TODO: document + reference
+- `gardenerComponent`
+
+*dependency types*
+
+TODO: document + reference
+- `ociImage`
+- `web`
+- `generic`
+
 *Example*
 
 .. code-block:: yaml
