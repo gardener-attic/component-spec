@@ -82,13 +82,15 @@
             
               <p class="caption"><span class="caption-text">Contents:</span></p>
 <ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="../component.html">Resolvable Components</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../components/index.html">Resolvable Components</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../format.html">Gardener Component Descriptor Format Specification</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Component Descriptor Schema specification</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="v1.html">Component Descriptor format specification - v1</a></li>
 <li class="toctree-l2"><a class="reference internal" href="v2.html">Component Descriptor format specification - v2</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#version-independent-specifications">Version-Independent specifications</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#metadata">Metadata</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#component-type">Component-Type</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#custom-component-type-prefix">Custom Component-Type prefix</a></li>
 </ul>
 </li>
 </ul>
@@ -177,6 +179,20 @@ attribute <cite>schema_version</cite>, whith the actual schema version as string
  <span class="nt">schema_version</span><span class="p">:</span> <span class="s">&#39;v2&#39;</span>
 </pre></div>
 </div>
+</div>
+<div class="section" id="component-type">
+<h3>Component-Type<a class="headerlink" href="#component-type" title="Permalink to this headline">¶</a></h3>
+<p>Each resolvable component, and each dependency has a type. In <cite>v1</cite>, this type was implied by the structure.
+Since <cite>v2</cite>, the type is explcitly declared through an attribute <cite>type</cite>.</p>
+<p>For each <cite>Component Descriptor</cite> schema version, there is a set of known types, with a well-defined schema.</p>
+<p><cite>Component Descriptors</cite> <em>MUST</em> not contain any component or dependency entries with an unknown type.
+Validation <em>MUST</em> fail in this case.</p>
+</div>
+<div class="section" id="custom-component-type-prefix">
+<h3>Custom Component-Type prefix<a class="headerlink" href="#custom-component-type-prefix" title="Permalink to this headline">¶</a></h3>
+<p>To allow for custom extensions, the aforementioned validation rule does not apply to component types with the
+reserved <cite>x-</cite> prefix. Component type names starting with the <cite>x-</cite> prefix <em>MUST</em> be retained during
+deserialiation and serialisation operations, but <em>MAY</em> otherwise be ignored.</p>
 </div>
 </div>
 </div>

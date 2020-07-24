@@ -30,3 +30,22 @@ attribute `schema_version`, whith the actual schema version as string value.
 
    meta:
     schema_version: 'v2'
+
+
+Component-Type
+~~~~~~~~~~~~~~
+
+Each resolvable component, and each dependency has a type. In `v1`, this type was implied by the structure.
+Since `v2`, the type is explcitly declared through an attribute `type`.
+
+For each `Component Descriptor` schema version, there is a set of known types, with a well-defined schema.
+
+`Component Descriptors` *MUST* not contain any component or dependency entries with an unknown type.
+Validation *MUST* fail in this case.
+
+Custom Component-Type prefix
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+To allow for custom extensions, the aforementioned validation rule does not apply to component types with the
+reserved `x-` prefix. Component type names starting with the `x-` prefix *MUST* be retained during
+deserialiation and serialisation operations, but *MAY* otherwise be ignored.
