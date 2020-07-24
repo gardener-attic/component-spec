@@ -13,22 +13,22 @@ Component Descriptor format specification - v2
   - declaring_component:
       name: 'github.com/gardener/gardener'
       version: 'v1.7.2'
-      type: 'gardener_component'
+      type: 'gardenerComponent'
 
     dependency_overwrites:
       - name: 'apiserver'
         version: 'v1.7.2'
-        type: 'oci_image'
+        type: 'ociImage'
         image_reference: 'eu.gcr.io/some-other/path/apiserver:v1.7.2'
 
   components:
     - name: 'github.com/gardener/gardener'
       version: 'v1.7.2'
-      type: 'gardener_component'
+      type: 'gardenerComponent'
 
       dependencies:
         - name: 'hyperkube'
           version: 'v1.7.2'
-          type: 'oci_image'
-          # image_reference attribute is implied by `oci_image` typew
+          type: 'ociImage'
+          # image_reference attribute is implied by `ociImage` type
           image_reference: 'eu.gcr.io/gardener-project/gardener/apiserver:v1.7.2'

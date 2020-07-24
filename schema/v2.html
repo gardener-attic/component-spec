@@ -165,24 +165,24 @@
 <span class="p p-Indicator">-</span> <span class="nt">declaring_component</span><span class="p">:</span>
     <span class="nt">name</span><span class="p">:</span> <span class="s">&#39;github.com/gardener/gardener&#39;</span>
     <span class="nt">version</span><span class="p">:</span> <span class="s">&#39;v1.7.2&#39;</span>
-    <span class="nt">type</span><span class="p">:</span> <span class="s">&#39;gardener_component&#39;</span>
+    <span class="nt">type</span><span class="p">:</span> <span class="s">&#39;gardenerComponent&#39;</span>
 
   <span class="nt">dependency_overwrites</span><span class="p">:</span>
     <span class="p p-Indicator">-</span> <span class="nt">name</span><span class="p">:</span> <span class="s">&#39;apiserver&#39;</span>
       <span class="nt">version</span><span class="p">:</span> <span class="s">&#39;v1.7.2&#39;</span>
-      <span class="nt">type</span><span class="p">:</span> <span class="s">&#39;oci_image&#39;</span>
+      <span class="nt">type</span><span class="p">:</span> <span class="s">&#39;ociImage&#39;</span>
       <span class="nt">image_reference</span><span class="p">:</span> <span class="s">&#39;eu.gcr.io/some-other/path/apiserver:v1.7.2&#39;</span>
 
 <span class="nt">components</span><span class="p">:</span>
   <span class="p p-Indicator">-</span> <span class="nt">name</span><span class="p">:</span> <span class="s">&#39;github.com/gardener/gardener&#39;</span>
     <span class="nt">version</span><span class="p">:</span> <span class="s">&#39;v1.7.2&#39;</span>
-    <span class="nt">type</span><span class="p">:</span> <span class="s">&#39;gardener_component&#39;</span>
+    <span class="nt">type</span><span class="p">:</span> <span class="s">&#39;gardenerComponent&#39;</span>
 
     <span class="nt">dependencies</span><span class="p">:</span>
       <span class="p p-Indicator">-</span> <span class="nt">name</span><span class="p">:</span> <span class="s">&#39;hyperkube&#39;</span>
         <span class="nt">version</span><span class="p">:</span> <span class="s">&#39;v1.7.2&#39;</span>
-        <span class="nt">type</span><span class="p">:</span> <span class="s">&#39;oci_image&#39;</span>
-        <span class="c1"># image_reference attribute is implied by `oci_image` typew</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="s">&#39;ociImage&#39;</span>
+        <span class="c1"># image_reference attribute is implied by `ociImage` type</span>
         <span class="nt">image_reference</span><span class="p">:</span> <span class="s">&#39;eu.gcr.io/gardener-project/gardener/apiserver:v1.7.2&#39;</span>
 </pre></div>
 </div>
