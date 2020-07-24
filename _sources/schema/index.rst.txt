@@ -49,3 +49,17 @@ Custom Component-Type prefix
 To allow for custom extensions, the aforementioned validation rule does not apply to component types with the
 reserved `x-` prefix. Component type names starting with the `x-` prefix *MUST* be retained during
 deserialiation and serialisation operations, but *MAY* otherwise be ignored.
+
+
+Uniqueness Constraints
+~~~~~~~~~~~~~~~~~~~~~~
+
+Each sequence of `Components` (either `Resolvable Components` or dependencies) *MUST NOT* contain
+duplicate elements.
+
+`Components` are duplicates, iff they reside in the same sequence, and share the same `name`,
+`version`, and `type`.
+
+Implementations for creation of `Component Descriptors` are _recommended_ to silently discard
+duplicate entries if they are identical to an existing element, and *MUST* raise a
+validation error if the duplicate entry definition differs.

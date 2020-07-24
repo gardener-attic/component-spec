@@ -91,6 +91,7 @@
 <li class="toctree-l3"><a class="reference internal" href="#metadata">Metadata</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#component-type">Component-Type</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#custom-component-type-prefix">Custom Component-Type prefix</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#uniqueness-constraints">Uniqueness Constraints</a></li>
 </ul>
 </li>
 </ul>
@@ -193,6 +194,16 @@ Validation <em>MUST</em> fail in this case.</p>
 <p>To allow for custom extensions, the aforementioned validation rule does not apply to component types with the
 reserved <cite>x-</cite> prefix. Component type names starting with the <cite>x-</cite> prefix <em>MUST</em> be retained during
 deserialiation and serialisation operations, but <em>MAY</em> otherwise be ignored.</p>
+</div>
+<div class="section" id="uniqueness-constraints">
+<h3>Uniqueness Constraints<a class="headerlink" href="#uniqueness-constraints" title="Permalink to this headline">¶</a></h3>
+<p>Each sequence of <cite>Components</cite> (either <cite>Resolvable Components</cite> or dependencies) <em>MUST NOT</em> contain
+duplicate elements.</p>
+<p><cite>Components</cite> are duplicates, iff they reside in the same sequence, and share the same <cite>name</cite>,
+<cite>version</cite>, and <cite>type</cite>.</p>
+<p>Implementations for creation of <cite>Component Descriptors</cite> are _recommended_ to silently discard
+duplicate entries if they are identical to an existing element, and <em>MUST</em> raise a
+validation error if the duplicate entry definition differs.</p>
 </div>
 </div>
 </div>
