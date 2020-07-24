@@ -59,3 +59,7 @@ duplicate elements.
 
 `Components` are duplicates, iff they reside in the same sequence, and share the same `name`,
 `version`, and `type`.
+
+Implementations for creation of `Component Descriptors` are _recommended_ to silently discard
+duplicate entries if they are identical to an existing element, and *MUST* raise a
+validation error if the duplicate entry definition differs.
