@@ -31,7 +31,7 @@ TODO: document + reference
       name: 'github.com/gardener/consumer-of-gardener'
       version: '1.2.3'
       type: 'gardenerComponent'
-  - references:
+    references:
       name: 'github.com/gardener/gardener'
       version: 'v1.7.2'
       type: 'gardenerComponent'
