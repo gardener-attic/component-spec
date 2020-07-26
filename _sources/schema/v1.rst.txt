@@ -27,6 +27,9 @@ TODO: document + reference
 
   component_overwrites:
   - declaring_component:
+      name: 'github.com/gardener/consumer-of-gardener'
+      version: '1.2.3'
+    references:
       name: 'github.com/gardener/gardener'
       version: 'v1.7.2'
     dependency_overwrites:
@@ -36,6 +39,12 @@ TODO: document + reference
         image_reference: 'eu.gcr.io/some-other/path/apiserver:v1.7.2'
 
   components:
+    - name: 'github.com/gardener/consumer-of-gardener'
+      version: '1.2.3'
+      dependencies:
+        components:
+          - name: 'github.com/gardener/gardener'
+            version: 'v1.7.2'
     - name: 'github.com/gardener/gardener'
       version: 'v1.7.2'
       dependencies:
