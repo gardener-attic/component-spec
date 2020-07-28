@@ -19,7 +19,7 @@ Metadata
 ~~~~~~~~
 
 Each `Component Descriptor` of `v2` or later *MUST* contain a root-level attribute `meta`, which *MUST* contain a nested
-attribute `schema_version`, whith the actual schema version as string value.
+attribute `schemaVersion`, whith the actual schema version as string value.
 
 `Component Descriptors` of `v1` *MAY* contain such an attribute at root-level. If `meta` attribute is absent, `v1` schema
 *MUST* be assumed.
@@ -29,7 +29,7 @@ attribute `schema_version`, whith the actual schema version as string value.
 .. code-block:: yaml
 
    meta:
-    schema_version: 'v2'
+    schemaVersion: 'v2'
 
 
 Component-Type
