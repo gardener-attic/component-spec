@@ -24,22 +24,23 @@ TODO: document + reference
 .. code-block:: yaml
 
    meta:
-    schema_version: 'v2'
+    schemaVersion: 'v2'
 
-  component_overwrites:
-  - declaring_component:
+  overwriteDeclarations:
+  - declaringComponent:
       name: 'github.com/gardener/consumer-of-gardener'
       version: '1.2.3'
       type: 'gardenerComponent'
-    references:
-      name: 'github.com/gardener/gardener'
-      version: 'v1.7.2'
-      type: 'gardenerComponent'
-    dependency_overwrites:
-      - name: 'apiserver'
-        version: 'v1.7.2'
-        type: 'ociImage'
-        image_reference: 'eu.gcr.io/some-other/path/apiserver:v1.7.2'
+    overwrites:
+      - references:
+          name: 'github.com/gardener/gardener'
+          version: 'v1.7.2'
+          type: 'gardenerComponent'
+        dependencies:
+        - name: 'apiserver'
+          version: 'v1.7.2'
+          type: 'ociImage'
+          imageReference: 'eu.gcr.io/some-other/path/apiserver:v1.7.2'
 
   components:
     - name: 'github.com/gardener/consumer-of-gardener'
@@ -54,5 +55,5 @@ TODO: document + reference
         - name: 'hyperkube'
           version: 'v1.7.2'
           type: 'ociImage'
-          # image_reference attribute is implied by `ociImage` type
-          image_reference: 'eu.gcr.io/gardener-project/gardener/apiserver:v1.7.2'
+          # imageReference attribute is implied by `ociImage` type
+          imageReference: 'eu.gcr.io/gardener-project/gardener/apiserver:v1.7.2'
