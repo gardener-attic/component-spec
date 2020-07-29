@@ -17,7 +17,6 @@ as well as a definition of how to publish, persist, discover, and retrieve `Comp
   :maxdepth: 2
   :caption: Contents:
 
-  components/index
   format
   schema/index
 

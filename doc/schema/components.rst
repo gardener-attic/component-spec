@@ -1,5 +1,5 @@
-Resolvable Components
-=====================
+Resolvable Components and Resolvable Component References
+=========================================================
 
 `Resolvable Components` in the context of the Gardener Project are parts from which Gardner
 Landscapes can be materialised. They adhere to a common contract that allows for them to be
@@ -29,6 +29,83 @@ their `Component Versions` are published, discovered, and retrieved. Each resolv
 version may be declared as a dependency by other resolvable components.
 
 
+Resolvable Component Schema (v1)
+--------------------------------
+
+Each `Resolvable Component` *MUST* define the following attributes; `Resolvable Components` *MAY*
+define additional components, according to their schema.
+
+- name: str, defined by Component Type
+- version: str, relaxed semver (see above)
+- dependencies: dict with dependencies (components, container_images, web, generic)
+
+*Example*
+
+.. code-block:: yaml
+
+   name: 'component-name'
+   version: '1.0.0'
+   dependencies:
+    components: []
+    container_images: []
+    web: []
+    generic: []
+
+
+Resolvable Component Schema (v2)
+--------------------------------
+
+Each `Resolvable Component` *MUST* define the following attributes; `Resolvable Components` *MAY*
+define additional components, according to their schema.
+
+- name: str, defined by Component Type
+- version: str, relaxed semver (see above)
+- type: str, one of `gardenerComponent`, `ociComponent`
+- dependencies: list of dependencies (references to resolvable components or dependency components)
+
+*Example*
+
+.. code-block:: yaml
+
+   name: 'component-name'
+   version: '1.0.0'
+   type: 'a-valid-component-type' # `gardenerComponent`|`ociComponent`
+   dependencies: []
+
+
+Resolvable Component References (v1)
+------------------------------------
+
+Resolvable Component References consist exactly of the attributes `name`, `version`, where:
+
+- `name` is the name of a Gardener Component
+- `version` is version of a Gardener Component version
+
+*Example*
+
+.. code-block:: yaml
+
+   name: 'component-name'
+   version: '1.0.0'
+
+Resolvable Component References (v2)
+------------------------------------
+
+Resolvable Component References consist exactly of the attributes `name`, `version`, `type`, where:
+
+- `name` is the name of a Gardener Component
+- `version` is version of a Gardener Component version
+- `type` is the referenced component's type (gardenerComponent or ociComponent)
+
+*Example*
+
+.. code-block:: yaml
+
+   name: 'component-name'
+   version: '1.0.0'
+   type: 'gardenerComponent'
+
+
 Gardener Component Type
 ~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -46,6 +123,48 @@ as GitHub release asset named `component_descriptor.yaml`.
 | component descriptor | release asset `component_descriptor.yaml` |
 +----------------------+-------------------------------------------+
 
+Schema (v1)
+...........
+
+Gardener Components do not define additional attributes.
+
+*Example*
+
+.. code-block:: yaml
+
+   name: 'github.com/gardener/gardener'
+   version: 'v1.7.2'
+   dependencies:
+    components:
+      - name: 'github.com/gardener/etcd-druid'
+        version: 'v0.3.0'
+    container_images:
+      - name: 'apiserver'
+        version: 'v1.7.2'
+        image_reference: 'eu.gcr.io/gardener-project/gardener/apiserver:v1.7.2'
+    web: []
+    generic: []
+
+Schema (v2)
+...........
+
+Gardener Components do not define additional attributes.
+
+*Example*
+
+.. code-block:: yaml
+
+   name: 'github.com/gardener/gardener'
+   version: 'v1.7.2'
+   type: 'gardenerComponent'
+   dependencies:
+    - name: 'github.com/gardener/etcd-druid'
+      version: 'v0.3.0'
+      type: 'gardenerComponent'
+    - name: 'apiserver'
+      version: 'v1.7.2'
+      type: 'ociImage'
+      image_reference: 'eu.gcr.io/gardener-project/gardener/apiserver:v1.7.2'
 
 OCI Component Type
 ~~~~~~~~~~~~~~~~~~
