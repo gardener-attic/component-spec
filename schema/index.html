@@ -82,7 +82,6 @@
             
               <p class="caption"><span class="caption-text">Contents:</span></p>
 <ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="../components/index.html">Resolvable Components</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../format.html">Gardener Component Descriptor Format Specification</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Component Descriptor Schema specification</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="v1.html">Component Descriptor format specification - v1</a></li>
@@ -166,15 +165,15 @@
 </div>
 <div class="section" id="version-independent-specifications">
 <h2>Version-Independent specifications<a class="headerlink" href="#version-independent-specifications" title="Permalink to this headline">¶</a></h2>
-<p><cite>Component Descriptors</cite> are associative arrays of data, adhering to a versioned schema. While the original implementation
-(now named <cite>v1</cite>) did not contain a version schema metadata, such an attribute is introduced for <cite>v2</cite>, and will remain in
-place for future versions.</p>
+<p><cite>Component Descriptors</cite> are associative arrays of data, adhering to a versioned schema. While the
+original implementation (now named <cite>v1</cite>) did not contain a version schema metadata, such an
+attribute is introduced for <cite>v2</cite>, and will remain in place for future versions.</p>
 <div class="section" id="metadata">
 <h3>Metadata<a class="headerlink" href="#metadata" title="Permalink to this headline">¶</a></h3>
-<p>Each <cite>Component Descriptor</cite> of <cite>v2</cite> or later <em>MUST</em> contain a root-level attribute <cite>meta</cite>, which <em>MUST</em> contain a nested
-attribute <cite>schemaVersion</cite>, whith the actual schema version as string value.</p>
-<p><cite>Component Descriptors</cite> of <cite>v1</cite> <em>MAY</em> contain such an attribute at root-level. If <cite>meta</cite> attribute is absent, <cite>v1</cite> schema
-<em>MUST</em> be assumed.</p>
+<p>Each <cite>Component Descriptor</cite> of <cite>v2</cite> or later <em>MUST</em> contain a root-level attribute <cite>meta</cite>, which
+<em>MUST</em> contain a nested attribute <cite>schemaVersion</cite>, whith the actual schema version as string value.</p>
+<p><cite>Component Descriptors</cite> of <cite>v1</cite> <em>MAY</em> contain such an attribute at root-level. If <cite>meta</cite> attribute
+is absent, <cite>v1</cite> schema <em>MUST</em> be assumed.</p>
 <p><em>Example</em></p>
 <div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">meta</span><span class="p">:</span>
  <span class="nt">schemaVersion</span><span class="p">:</span> <span class="s">&#39;v2&#39;</span>
@@ -183,17 +182,18 @@ attribute <cite>schemaVersion</cite>, whith the actual schema version as string 
 </div>
 <div class="section" id="component-type">
 <h3>Component-Type<a class="headerlink" href="#component-type" title="Permalink to this headline">¶</a></h3>
-<p>Each resolvable component, and each dependency has a type. In <cite>v1</cite>, this type was implied by the structure.
-Since <cite>v2</cite>, the type is explcitly declared through an attribute <cite>type</cite>.</p>
-<p>For each <cite>Component Descriptor</cite> schema version, there is a set of known types, with a well-defined schema.</p>
+<p>Each resolvable component, and each dependency has a type. In <cite>v1</cite>, this type was implied by the
+structure.  Since <cite>v2</cite>, the type is explcitly declared through an attribute <cite>type</cite>.</p>
+<p>For each <cite>Component Descriptor</cite> schema version, there is a set of known types, with a well-defined
+schema.</p>
 <p><cite>Component Descriptors</cite> <em>MUST</em> not contain any component or dependency entries with an unknown type.
 Validation <em>MUST</em> fail in this case.</p>
 </div>
 <div class="section" id="custom-component-type-prefix">
 <h3>Custom Component-Type prefix<a class="headerlink" href="#custom-component-type-prefix" title="Permalink to this headline">¶</a></h3>
-<p>To allow for custom extensions, the aforementioned validation rule does not apply to component types with the
-reserved <cite>x-</cite> prefix. Component type names starting with the <cite>x-</cite> prefix <em>MUST</em> be retained during
-deserialiation and serialisation operations, but <em>MAY</em> otherwise be ignored.</p>
+<p>To allow for custom extensions, the aforementioned validation rule does not apply to component types
+with the reserved <cite>x-</cite> prefix. Component type names starting with the <cite>x-</cite> prefix <em>MUST</em> be retained
+during deserialiation and serialisation operations, but <em>MAY</em> otherwise be ignored.</p>
 </div>
 <div class="section" id="uniqueness-constraints">
 <h3>Uniqueness Constraints<a class="headerlink" href="#uniqueness-constraints" title="Permalink to this headline">¶</a></h3>
