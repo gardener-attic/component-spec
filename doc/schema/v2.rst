@@ -38,16 +38,16 @@ TODO: document + reference
           version: 'v1.7.2'
           type: 'gardenerComponent'
 
-          componentOverwrites: {}
-          # attributes declared here will overwrite overwritable attributes from the
-          # component itself (there are no such attributes for gardenerComponents)
+        componentOverwrites: {}
+        # attributes declared here will overwrite overwritable attributes from the
+        # component itself (there are no such attributes for gardenerComponents)
 
-          dependencyOverwrites:
-            - name: 'apiserver'
-              version: 'v1.7.2'
-              type: 'ociImage'
+        dependencyOverwrites:
+          - name: 'apiserver'
+            version: 'v1.7.2'
+            type: 'ociImage'
 
-              imageReference: 'eu.gcr.io/some-other/path/apiserver:v1.7.2'
+            imageReference: 'eu.gcr.io/some-other/path/apiserver:v1.7.2'
 
   components:
     - name: 'github.com/gardener/consumer-of-gardener'
