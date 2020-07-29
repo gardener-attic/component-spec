@@ -32,26 +32,37 @@ TODO: document + reference
       version: '1.2.3'
       type: 'gardenerComponent'
     overwrites:
-      - references:
+      - componentReference:
           name: 'github.com/gardener/gardener'
           version: 'v1.7.2'
           type: 'gardenerComponent'
-        dependencies:
-        - name: 'apiserver'
-          version: 'v1.7.2'
-          type: 'ociImage'
-          imageReference: 'eu.gcr.io/some-other/path/apiserver:v1.7.2'
+
+          componentOverwrites: {}
+          # attributes declared here will overwrite overwritable attributes from the
+          # component itself (there are no such attributes for gardenerComponents)
+
+          dependencyOverwrites:
+            - name: 'apiserver'
+              version: 'v1.7.2'
+              type: 'ociImage'
+
+              imageReference: 'eu.gcr.io/some-other/path/apiserver:v1.7.2'
 
   components:
     - name: 'github.com/gardener/consumer-of-gardener'
       version: '1.2.3'
       type: 'gardenerComponent'
+      uri: foo
 
     - name: 'github.com/gardener/gardener'
       version: 'v1.7.2'
       type: 'gardenerComponent'
 
       dependencies:
+        - name: github.com/gardener/gardener
+          version: 1.2.3
+          type: gartdenerComponent
+
         - name: 'hyperkube'
           version: 'v1.7.2'
           type: 'ociImage'
