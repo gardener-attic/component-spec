@@ -95,7 +95,17 @@ definitions:
       dependencies:
         type: 'array'
 
+  overwriteDeclaration:
+    type: 'object'
+    required: ['declaringComponent', 'overwrites']
+    properties:
+      declaringComponent:
+        $ref: '#/definitions/resolvableComponentReference'
+      overwrites:
+        type: 'array'
+
 type: 'object'
+required: ['meta', 'components', 'overwriteDeclarations']
 properties:
   meta:
     $ref: '#/definitions/schema'
@@ -105,3 +115,7 @@ properties:
       anyOf:
         - $ref: '#/definitions/gardenerComponent'
         - $ref: '#/definitions/ociComponent'
+  overwriteDeclarations:
+    type: 'array'
+    items:
+      $ref: '#/definitions/overwriteDeclaration'
