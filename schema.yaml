@@ -95,6 +95,35 @@ definitions:
       dependencies:
         type: 'array'
 
+  overwriteEntry:
+    type: 'object'
+    required: ['componentReference']
+    properties:
+      componentReference:
+        $ref: '#/definitions/resolvableComponentReference'
+      componentOverwrites:
+        type: 'object'
+      dependencyOverwrites:
+        type: 'array'
+        items:
+          anyOf:
+            - $ref: '#/definitions/resolvableComponentReference'
+            - $ref: '#/definitions/ociImage'
+            - $ref: '#/definitions/web'
+            - $ref: '#/definitions/generic'
+
+
+  overwriteEntrySet:
+    type: 'object'
+    required: ['declaringComponent', 'overwrites']
+    properties:
+      declaringComponent:
+        $ref: '#/definitions/resolvableComponentReference'
+      overwrites:
+        type: 'array'
+        items:
+          $ref: '#/definitions/overwriteEntry'
+
   overwriteDeclaration:
     type: 'object'
     required: ['declaringComponent', 'overwrites']
