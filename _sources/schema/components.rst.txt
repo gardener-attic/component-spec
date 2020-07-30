@@ -187,7 +187,45 @@ Dependency Types
 
 Any known type that is not a `Resolvable Component` is a `Dependency Type`. Dependencies
 are used to describe technical artifacts the declaring resolvable component depends
-upon.
+upon. Dependencies are always defined by a `Resolvable Component`
+
+Dependency Type Schema (v1)
+---------------------------
+
+Each `Dependency Types` *MUST* define the following attributes; `Dependencies` *MAY*
+define additional components, according to their schema. Dependencies *MUST* only be
+defined below the type-specific attribute below the `dependencies` attribute of a
+`Resolvable Component`.
+
+- name: str
+- version: str, relaxed semver (see above)
+
+*Example*
+
+.. code-block:: yaml
+
+   name: 'dependency-name'
+   version: '1.0.0'
+
+
+Dependency Type Schema (v2)
+---------------------------
+
+Each `Dependency Types` *MUST* define the following attributes; `Dependencies` *MAY*
+define additional components, according to their schema. Dependencies *MUST* only be
+defined below `dependencies` attribute of a `Resolvable Component`.
+
+- name: str, defined by Component Type
+- version: str, relaxed semver (see above)
+- type: str, one of `ociImage`, `web`, `generic`
+
+*Example*
+
+.. code-block:: yaml
+
+   name: 'dependency-name'
+   version: '1.0.0'
+   type: 'a-valid-component-type' # `ociImage`|`web` | `generic`
 
 
 OCI Image Dependency Type
@@ -206,6 +244,25 @@ An OCI Container Image published to an OCI Image registry.
 | image_reference | OCI image reference                    |
 +-----------------+----------------------------------------+
 
+*Example (v1)*
+
+.. code-block:: yaml
+
+  dependencies:
+    container_images:
+      - name: 'example-image'
+        version: '1.2.3'
+        image_reference: 'eu.gcr.io/some-project/some-image:1.2.3'
+
+*Example (v2)*
+
+.. code-block:: yaml
+
+  dependencies:
+    - name: 'example-image'
+      version: '1.2.3'
+      type: 'ociImage'
+      image_reference: 'eu.gcr.io/some-project/some-image:1.2.3'
 
 Web Dependency Type
 ~~~~~~~~~~~~~~~~~~~
@@ -222,6 +279,25 @@ A dependency retrievable via HTTP-GET
 | url             | a Unified Resource Locator             |
 +-----------------+----------------------------------------+
 
+*Example (v1)*
+
+.. code-block:: yaml
+
+  dependencies:
+    web:
+      - name: 'example-web-dependency'
+        version: '1.2.3'
+        url: 'https://example.org/some-file'
+
+*Example (v2)*
+
+.. code-block:: yaml
+
+  dependencies:
+    - name: 'example-web-dependency'
+      version: '1.2.3'
+      type: 'web'
+      url: 'https://example.org/some-file'
 
 Generic Dependency Type
 ~~~~~~~~~~~~~~~~~~~~~~~
@@ -235,3 +311,21 @@ An informal dependency intended for human interpretation.
 +-----------------+----------------------------------------+
 | version         | relaxed semver                         |
 +-----------------+----------------------------------------+
+
+*Example (v1)*
+
+.. code-block:: yaml
+
+  dependencies:
+    generic:
+      - name: 'example-generic-dependency'
+        version: '1.2.3'
+
+*Example (v2)*
+
+.. code-block:: yaml
+
+  dependencies:
+    - name: 'example-generic-dependency'
+      version: '1.2.3'
+      type: 'generic'

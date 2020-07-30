@@ -323,7 +323,40 @@ as GitHub release asset named <cite>component_descriptor.yaml</cite>.</p>
 <h2>Dependency Types<a class="headerlink" href="#dependency-types" title="Permalink to this headline">¶</a></h2>
 <p>Any known type that is not a <cite>Resolvable Component</cite> is a <cite>Dependency Type</cite>. Dependencies
 are used to describe technical artifacts the declaring resolvable component depends
-upon.</p>
+upon. Dependencies are always defined by a <cite>Resolvable Component</cite></p>
+</div>
+<div class="section" id="dependency-type-schema-v1">
+<h2>Dependency Type Schema (v1)<a class="headerlink" href="#dependency-type-schema-v1" title="Permalink to this headline">¶</a></h2>
+<p>Each <cite>Dependency Types</cite> <em>MUST</em> define the following attributes; <cite>Dependencies</cite> <em>MAY</em>
+define additional components, according to their schema. Dependencies <em>MUST</em> only be
+defined below the type-specific attribute below the <cite>dependencies</cite> attribute of a
+<cite>Resolvable Component</cite>.</p>
+<ul class="simple">
+<li><p>name: str</p></li>
+<li><p>version: str, relaxed semver (see above)</p></li>
+</ul>
+<p><em>Example</em></p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">name</span><span class="p">:</span> <span class="s">&#39;dependency-name&#39;</span>
+<span class="nt">version</span><span class="p">:</span> <span class="s">&#39;1.0.0&#39;</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="dependency-type-schema-v2">
+<h2>Dependency Type Schema (v2)<a class="headerlink" href="#dependency-type-schema-v2" title="Permalink to this headline">¶</a></h2>
+<p>Each <cite>Dependency Types</cite> <em>MUST</em> define the following attributes; <cite>Dependencies</cite> <em>MAY</em>
+define additional components, according to their schema. Dependencies <em>MUST</em> only be
+defined below <cite>dependencies</cite> attribute of a <cite>Resolvable Component</cite>.</p>
+<ul class="simple">
+<li><p>name: str, defined by Component Type</p></li>
+<li><p>version: str, relaxed semver (see above)</p></li>
+<li><p>type: str, one of <cite>ociImage</cite>, <cite>web</cite>, <cite>generic</cite></p></li>
+</ul>
+<p><em>Example</em></p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">name</span><span class="p">:</span> <span class="s">&#39;dependency-name&#39;</span>
+<span class="nt">version</span><span class="p">:</span> <span class="s">&#39;1.0.0&#39;</span>
+<span class="nt">type</span><span class="p">:</span> <span class="s">&#39;a-valid-component-type&#39;</span> <span class="c1"># `ociImage`|`web` | `generic`</span>
+</pre></div>
+</div>
 <div class="section" id="oci-image-dependency-type">
 <h3>OCI Image Dependency Type<a class="headerlink" href="#oci-image-dependency-type" title="Permalink to this headline">¶</a></h3>
 <p><em>since: `v1`</em></p>
@@ -345,6 +378,22 @@ upon.</p>
 </tr>
 </tbody>
 </table>
+<p><em>Example (v1)</em></p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">dependencies</span><span class="p">:</span>
+  <span class="nt">container_images</span><span class="p">:</span>
+    <span class="p p-Indicator">-</span> <span class="nt">name</span><span class="p">:</span> <span class="s">&#39;example-image&#39;</span>
+      <span class="nt">version</span><span class="p">:</span> <span class="s">&#39;1.2.3&#39;</span>
+      <span class="nt">image_reference</span><span class="p">:</span> <span class="s">&#39;eu.gcr.io/some-project/some-image:1.2.3&#39;</span>
+</pre></div>
+</div>
+<p><em>Example (v2)</em></p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">dependencies</span><span class="p">:</span>
+  <span class="p p-Indicator">-</span> <span class="nt">name</span><span class="p">:</span> <span class="s">&#39;example-image&#39;</span>
+    <span class="nt">version</span><span class="p">:</span> <span class="s">&#39;1.2.3&#39;</span>
+    <span class="nt">type</span><span class="p">:</span> <span class="s">&#39;ociImage&#39;</span>
+    <span class="nt">image_reference</span><span class="p">:</span> <span class="s">&#39;eu.gcr.io/some-project/some-image:1.2.3&#39;</span>
+</pre></div>
+</div>
 </div>
 <div class="section" id="web-dependency-type">
 <h3>Web Dependency Type<a class="headerlink" href="#web-dependency-type" title="Permalink to this headline">¶</a></h3>
@@ -367,6 +416,22 @@ upon.</p>
 </tr>
 </tbody>
 </table>
+<p><em>Example (v1)</em></p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">dependencies</span><span class="p">:</span>
+  <span class="nt">web</span><span class="p">:</span>
+    <span class="p p-Indicator">-</span> <span class="nt">name</span><span class="p">:</span> <span class="s">&#39;example-web-dependency&#39;</span>
+      <span class="nt">version</span><span class="p">:</span> <span class="s">&#39;1.2.3&#39;</span>
+      <span class="nt">url</span><span class="p">:</span> <span class="s">&#39;https://example.org/some-file&#39;</span>
+</pre></div>
+</div>
+<p><em>Example (v2)</em></p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">dependencies</span><span class="p">:</span>
+  <span class="p p-Indicator">-</span> <span class="nt">name</span><span class="p">:</span> <span class="s">&#39;example-web-dependency&#39;</span>
+    <span class="nt">version</span><span class="p">:</span> <span class="s">&#39;1.2.3&#39;</span>
+    <span class="nt">type</span><span class="p">:</span> <span class="s">&#39;web&#39;</span>
+    <span class="nt">url</span><span class="p">:</span> <span class="s">&#39;https://example.org/some-file&#39;</span>
+</pre></div>
+</div>
 </div>
 <div class="section" id="generic-dependency-type">
 <h3>Generic Dependency Type<a class="headerlink" href="#generic-dependency-type" title="Permalink to this headline">¶</a></h3>
@@ -386,6 +451,20 @@ upon.</p>
 </tr>
 </tbody>
 </table>
+<p><em>Example (v1)</em></p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">dependencies</span><span class="p">:</span>
+  <span class="nt">generic</span><span class="p">:</span>
+    <span class="p p-Indicator">-</span> <span class="nt">name</span><span class="p">:</span> <span class="s">&#39;example-generic-dependency&#39;</span>
+      <span class="nt">version</span><span class="p">:</span> <span class="s">&#39;1.2.3&#39;</span>
+</pre></div>
+</div>
+<p><em>Example (v2)</em></p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">dependencies</span><span class="p">:</span>
+  <span class="p p-Indicator">-</span> <span class="nt">name</span><span class="p">:</span> <span class="s">&#39;example-generic-dependency&#39;</span>
+    <span class="nt">version</span><span class="p">:</span> <span class="s">&#39;1.2.3&#39;</span>
+    <span class="nt">type</span><span class="p">:</span> <span class="s">&#39;generic&#39;</span>
+</pre></div>
+</div>
 </div>
 </div>
 </div>
