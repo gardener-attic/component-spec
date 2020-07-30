@@ -1,0 +1,107 @@
+description: 'Gardener Component Descriptor v2 schema'
+definitions:
+  schema:
+    type: 'object'
+    description: 'component descriptor metadata'
+    required: ['schemaVersion']
+    properties:
+      schemaVersion:
+        type: 'string'
+
+  resolvableComponentReference:
+    type: 'object'
+    required: ['name', 'version', 'type']
+    properties:
+      name:
+        type: 'string'
+      version:
+        type: 'string'
+      type:
+        type: 'string'
+        enum: ['gardenerComponent', 'ociComponent']
+
+
+  ociImage:
+    type: 'object'
+    required: ['name', 'version', 'type', 'imageReference']
+    properties:
+      name:
+        type: 'string'
+      version:
+        type: 'string'
+      type:
+        type: 'string'
+        enum: ['ociImage']
+      imageReference:
+        type: 'string'
+
+  web:
+    type: 'object'
+    required: ['name', 'version', 'type', 'url']
+    properties:
+      name:
+        type: 'string'
+      version:
+        type: 'string'
+      type:
+        type: 'string'
+        enum: ['url']
+      url:
+        type: 'string'
+
+  generic:
+    type: 'object'
+    required: ['name', 'version', 'type']
+    properties:
+      name:
+        type: 'string'
+      version:
+        type: 'string'
+      type:
+        type: 'string'
+        enum: ['generic']
+
+  gardenerComponent:
+    type: 'object'
+    required: ['name', 'version', 'type', 'dependencies']
+    properties:
+      name:
+        type: 'string'
+      version:
+        type: 'string'
+      type:
+        type: 'string'
+        enum: ['gardenerComponent']
+      dependencies:
+        type: 'array'
+        items:
+          anyOf:
+            - $ref: '#/definitions/resolvableComponentReference'
+            - $ref: '#/definitions/ociImage'
+            - $ref: '#/definitions/web'
+            - $ref: '#/definitions/generic'
+
+  ociComponent:
+    type: 'object'
+    required: ['name', 'version', 'type', 'dependencies']
+    properties:
+      name:
+        type: 'string'
+      version:
+        type: 'string'
+      type:
+        type: 'string'
+        enum: ['ociComponent']
+      dependencies:
+        type: 'array'
+
+type: 'object'
+properties:
+  meta:
+    $ref: '#/definitions/schema'
+  components:
+    type: 'array'
+    items:
+      anyOf:
+        - $ref: '#/definitions/gardenerComponent'
+        - $ref: '#/definitions/ociComponent'
