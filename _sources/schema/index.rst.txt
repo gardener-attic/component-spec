@@ -65,4 +65,33 @@ Implementations for creation of `Component Descriptors` are _recommended_ to sil
 duplicate entries if they are identical to an existing element, and *MUST* raise a
 validation error if the duplicate entry definition differs.
 
+
+Overwrite Semantics / Effective Component Descriptor
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+In addition to declaring components and their dependencies, `Component Descriptors` *MAY* be
+enriched with overwrite declarations (see version-specific schema definitions for details).
+
+`Overwrites` are used, for example, to persist the result of a copying operation of a referenced
+artifact to a new location, and thus provide a means to abstract the concrete location of a
+dependency from the logical dependency.
+
+Regardless of schema version, `overwrites` are always grouped in sets of individual overwrites,
+representing one common overwrite operation.
+
+Additional overwrite declarations *MAY* be appended to existing overwrite declarations. New
+declarations *MUST* however always be appended as last sequence element. Existing overwrite
+declarations *MUST NOT* be altered or omitted or re-ordered.
+
+It is only permitted to overwrite commponent or dependency attributes that do not constitute to the
+identification of the component or dependency. I.e. it is not permissible to overwrite `type`,
+`name` or `version`.
+
+To determine the `Effective Component Descriptor`, all overwrites *MUST* be applied in the order
+they are specified to the defined components. All overwrites *MUST* only reference components
+that were previously defined in the same `Component Descriptor`.
+
+Consumers of dependencies declared in a `Component Descriptor` *SHOULD* always use the effective
+dependencies.
+
 .. vim: tw=100:

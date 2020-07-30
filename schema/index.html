@@ -91,6 +91,7 @@
 <li class="toctree-l3"><a class="reference internal" href="#component-type">Component-Type</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#custom-component-type-prefix">Custom Component-Type prefix</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#uniqueness-constraints">Uniqueness Constraints</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#overwrite-semantics-effective-component-descriptor">Overwrite Semantics / Effective Component Descriptor</a></li>
 </ul>
 </li>
 </ul>
@@ -204,6 +205,27 @@ duplicate elements.</p>
 <p>Implementations for creation of <cite>Component Descriptors</cite> are _recommended_ to silently discard
 duplicate entries if they are identical to an existing element, and <em>MUST</em> raise a
 validation error if the duplicate entry definition differs.</p>
+</div>
+<div class="section" id="overwrite-semantics-effective-component-descriptor">
+<h3>Overwrite Semantics / Effective Component Descriptor<a class="headerlink" href="#overwrite-semantics-effective-component-descriptor" title="Permalink to this headline">¶</a></h3>
+<p>In addition to declaring components and their dependencies, <cite>Component Descriptors</cite> <em>MAY</em> be
+enriched with overwrite declarations (see version-specific schema definitions for details).</p>
+<p><cite>Overwrites</cite> are used, for example, to persist the result of a copying operation of a referenced
+artifact to a new location, and thus provide a means to abstract the concrete location of a
+dependency from the logical dependency.</p>
+<p>Regardless of schema version, <cite>overwrites</cite> are always grouped in sets of individual overwrites,
+representing one common overwrite operation.</p>
+<p>Additional overwrite declarations <em>MAY</em> be appended to existing overwrite declarations. New
+declarations <em>MUST</em> however always be appended as last sequence element. Existing overwrite
+declarations <em>MUST NOT</em> be altered or omitted or re-ordered.</p>
+<p>It is only permitted to overwrite commponent or dependency attributes that do not constitute to the
+identification of the component or dependency. I.e. it is not permissible to overwrite <cite>type</cite>,
+<cite>name</cite> or <cite>version</cite>.</p>
+<p>To determine the <cite>Effective Component Descriptor</cite>, all overwrites <em>MUST</em> be applied in the order
+they are specified to the defined components. All overwrites <em>MUST</em> only reference components
+that were previously defined in the same <cite>Component Descriptor</cite>.</p>
+<p>Consumers of dependencies declared in a <cite>Component Descriptor</cite> <em>SHOULD</em> always use the effective
+dependencies.</p>
 </div>
 </div>
 </div>
