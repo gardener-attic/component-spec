@@ -6,18 +6,17 @@ Known Component Types
 
 *resolvable Component Types*
 
-TODO: document + reference
 
 - `gardenerComponent`
 - `ociComponent`
 
 *dependency types*
 
-TODO: document + reference
 - `ociImage`
 - `web`
 - `generic`
 
+See :doc:`components` for details on known component and dependency types.
 
 *Example*
 
