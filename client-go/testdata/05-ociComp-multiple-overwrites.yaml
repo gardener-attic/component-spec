@@ -1,0 +1,49 @@
+meta:
+  schemaVersion: 'v2'
+
+overwriteDeclarations:
+- declaringComponent:
+    name: 'github.com/gardener/consumer-of-gardener'
+    version: 'v1.7.2'
+    type: 'gardenerComponent'
+  overwrites:
+  - componentReference:
+      name: 'github.com/gardener/gardener'
+      version: 'v1.7.2'
+      type: 'ociComponent'
+
+    componentOverwrites:
+      repository: eu.gcr.io/gardener-project/gardener
+
+    dependencyOverwrites:
+    - name: 'apiserver'
+      version: 'v1.7.2'
+      type: 'ociImage'
+      imageReference: 'eu.gcr.io/some-other/path/apiserver:v1.7.2'
+
+- declaringComponent:
+    name: 'github.com/gardener/another-consumer-of-gardener'
+    version: 'v1.2.3'
+    type: 'gardenerComponent'
+  overwrites:
+  - componentReference:
+      name: 'github.com/gardener/gardener'
+      version: 'v1.7.2'
+      type: 'ociComponent'
+
+    componentOverwrites:
+      repository: eu.gcr.io/gardener-project/latest/gardener
+
+components:
+- name: 'github.com/gardener/gardener'
+  version: 'v1.7.2'
+  type: 'ociComponent'
+
+  repository: gardener-project/gardener
+
+  dependencies:
+  - name: 'apiserver'
+    version: 'v1.7.2'
+    type: 'ociImage'
+    # image_reference attribute is implied by `ociImage` type
+    imageReference: 'eu.gcr.io/gardener-project/gardener/apiserver:v1.7.2'

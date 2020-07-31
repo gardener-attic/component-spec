@@ -1,0 +1,30 @@
+meta:
+  schemaVersion: 'v2'
+
+overwriteDeclarations:
+- declaringComponent:
+    name: 'github.com/gardener/consumer-of-gardener'
+    version: 'v1.7.2'
+    type: 'gardenerComponent'
+  overwrites:
+  - componentReference:
+      name: 'github.com/gardener/gardener'
+      version: 'v1.7.2'
+      type: 'gardenerComponent'
+
+    dependencyOverwrites:
+    - name: 'my-custom'
+      version: 'v1.7.2'
+      type: 'x-custom'
+      url: 'other.com'
+
+components:
+- name: 'github.com/gardener/gardener'
+  version: 'v1.7.2'
+  type: 'gardenerComponent'
+
+  dependencies:
+  - name: 'my-custom'
+    version: 'v1.7.2'
+    type: 'x-custom'
+    url: 'example.com'

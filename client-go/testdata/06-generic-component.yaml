@@ -1,0 +1,13 @@
+meta:
+  schemaVersion: 'v2'
+
+components:
+- name: 'github.com/gardener/gardener'
+  version: 'v1.7.2'
+  type: 'gardenerComponent'
+
+  dependencies:
+  - name: 'my-custom'
+    version: 'v1.7.2'
+    type: 'x-custom'
+    url: 'example.com'

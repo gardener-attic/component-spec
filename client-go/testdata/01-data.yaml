@@ -1,0 +1,14 @@
+meta:
+  schemaVersion: 'v2'
+
+components:
+- name: 'github.com/gardener/gardener'
+  version: 'v1.7.2'
+  type: 'gardenerComponent'
+
+  dependencies:
+  - name: 'hyperkube'
+    version: 'v1.7.2'
+    type: 'ociImage'
+    # image_reference attribute is implied by `ociImage` type
+    imageReference: 'eu.gcr.io/gardener-project/gardener/apiserver:v1.7.2'

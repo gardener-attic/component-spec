@@ -1,3 +1,5 @@
 _build/
 __pycache__/
 .pytest_cache/
+
+.idea
