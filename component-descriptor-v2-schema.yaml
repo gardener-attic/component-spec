@@ -227,7 +227,7 @@ definitions:
             - $ref: '#/definitions/webResource'
             - $ref: '#/definitions/genericResource'
 
-    componentReferences:
+    componentReferences: {}
 
 
 type: 'object'
