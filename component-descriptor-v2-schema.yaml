@@ -217,7 +217,7 @@ definitions:
             - $ref: '#/definitions/ociImageResource'
             - $ref: '#/definitions/genericResource'
 
-    componentReferences:
+    componentReferences: {}
 
 
 type: 'object'
