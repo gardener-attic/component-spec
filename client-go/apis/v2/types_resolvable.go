@@ -86,7 +86,7 @@ func (g GardenerComponent) DeepCopy() ResolvableComponentAccessor {
 	return comp
 }
 
-// GardenerComponentType is the type of a gardener component
+// OCIComponentType is the type of a oci component
 const OCIComponentType = "ociComponent"
 
 var ociComponentScheme = &resolvableScheme{
@@ -106,7 +106,7 @@ var ociComponentScheme = &resolvableScheme{
 	}),
 }
 
-// OCIComponent describes oci resolvable component
+// OCIComponent describes an oci resolvable component
 type OCIComponent struct {
 	ComponentMetadata `json:",inline"`
 

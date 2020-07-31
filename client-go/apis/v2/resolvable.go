@@ -27,7 +27,7 @@ type ResolvableComponent struct {
 }
 
 // ApplyOverwriteToDependencies applies the given overwrite of the dependencies of a resolvable component
-// and return the new resolvable component.
+// and returns the new resolvable component.
 func ApplyOverwriteToDependencies(rc ResolvableComponentAccessor, overwrite ComponentOverwrite) (ResolvableComponentAccessor, error) {
 	deps := rc.GetDependencies()
 	newDeps := make(ComponentList, len(rc.GetDependencies()))

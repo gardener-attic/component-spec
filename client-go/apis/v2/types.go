@@ -21,7 +21,7 @@ import (
 	"github.com/ghodss/yaml"
 )
 
-// OCIImageType is the type of a oci image component
+// OCIImageType is the type of an oci image component
 const OCIImageType = "ociImage"
 
 var ociScheme = &scheme{
@@ -41,6 +41,7 @@ var ociScheme = &scheme{
 	}),
 }
 
+// OCIImage is a component describing a OCI container image.
 type OCIImage struct {
 	ComponentMetadata `json:",inline"`
 
@@ -90,7 +91,7 @@ func (O OCIImage) DeepCopy() ComponentAccessor {
 	return img
 }
 
-// OCIImageType is the type of a oci image component
+// WebType is the type of a web component
 const WebType = "web"
 
 var webScheme = &scheme{
@@ -110,6 +111,7 @@ var webScheme = &scheme{
 	}),
 }
 
+// Web describes a web resource that can be fetched via http GET request.
 type Web struct {
 	ComponentMetadata `json:",inline"`
 
@@ -190,25 +192,6 @@ func (c *GenericComponent) SetAdditionalData(data []byte) error {
 func (c *GenericComponent) ApplyOverwrite(overwrite ComponentAccessor) (ComponentAccessor, error) {
 	newAccessor := &GenericComponent{}
 	newAccessor.SetMetadata(overwrite.GetMetadata())
-
-	// todo: parse data and only replace parts
-
-	//var addData map[string]interface{}
-	//if err := yaml.Unmarshal(overwrite.GetAdditionalData(), &addData); err != nil {
-	//	return nil, err
-	//}
-	//
-	//var data map[string]interface{}
-	//if err := yaml.Unmarshal(c.GetAdditionalData(), &data); err != nil {
-	//	return nil, err
-	//}
-	//
-	//// replace addData in data
-	//
-	//newAddData, err := yaml.Marshal(data)
-	//if err != nil {
-	//	return nil, err
-	//}
 	newData, err := overwrite.GetAdditionalData()
 	if err != nil {
 		return nil, err

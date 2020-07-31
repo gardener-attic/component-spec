@@ -52,7 +52,7 @@ var _ = Describe("Validation", func() {
 				Name:    "image2",
 				Version: "1.2.3",
 			},
-			ImageReference: "docker/image1:1.2.3",
+			ImageReference: "docker/image2:1.2.3",
 		}
 	})
 

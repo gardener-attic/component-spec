@@ -26,7 +26,7 @@ type OverwriteDeclaration struct {
 	Overwrites []ComponentOverwrite `json:"overwrites"`
 }
 
-// ComponentOverwrite defines a overwrite for a resolvable component.
+// ComponentOverwrite defines an overwrite for a resolvable component.
 type ComponentOverwrite struct {
 	// ComponentReference references the component to overwrite
 	ComponentReference ComponentMetadata `json:"componentReference"`
@@ -40,7 +40,7 @@ type ComponentOverwrite struct {
 }
 
 // ApplyOverwrites applies the overwrites defined by component descriptor
-// and returns a new component descriptor with the applies overwrites
+// and returns a new component descriptor with the applied overwrites
 func (dc *ComponentDescriptor) ApplyOverwrites() (ComponentDescriptor, error) {
 	newDC := ComponentDescriptor{}
 	newDC.Metadata = dc.Metadata

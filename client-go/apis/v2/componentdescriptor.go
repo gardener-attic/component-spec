@@ -66,7 +66,7 @@ type ComponentAccessor interface {
 	GetAdditionalData() ([]byte, error)
 	// SetAdditionalData sets the custom data of a component.
 	SetAdditionalData([]byte) error
-	// ApplyOverwrite should apply a component overwrite and return the new overwritten component.
+	// ApplyOverwrite applies a component overwrite and returns the new overwritten component.
 	ApplyOverwrite(overwrite ComponentAccessor) (ComponentAccessor, error)
 	// DeepCopy creates a deep copy of the current component
 	DeepCopy() ComponentAccessor
@@ -82,7 +82,7 @@ type ResolvableComponentAccessor interface {
 	GetAdditionalData() ([]byte, error)
 	// SetAdditionalData sets the custom data of a component.
 	SetAdditionalData([]byte) error
-	// ApplyOverwrite should apply a component overwrite and return the new overwritten component.
+	// ApplyOverwrite applies a component overwrite and returns the new overwritten component.
 	ApplyOverwrite(overwrite ComponentOverwrite) (ResolvableComponentAccessor, error)
 	// GetDependencies returns the dependencies of a resolvable component.
 	GetDependencies() ComponentList
