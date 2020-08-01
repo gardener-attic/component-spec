@@ -134,6 +134,8 @@ definitions:
         $ref: '#/definitions/resolvableComponentReference'
       overwrites:
         type: 'array'
+        items:
+          $ref: '#/definitions/overwriteEntrySet'
 
 type: 'object'
 required: ['meta', 'components', 'overwriteDeclarations']
