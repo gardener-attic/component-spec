@@ -9,9 +9,23 @@ repo_root="$(readlink -f "${own_dir}/..")"
 # set by pipeline to this dir, checked out for branch `github_pages`
 out_dir="${GITHUB_PAGES_PATH}"
 
-doc_dir="${repo_root}/doc"
 
-sphinx-build -E -a "${doc_dir}" "${out_dir}"
+function sphinx_build {
+  doc_dir="${repo_root}/doc"
+
+  sphinx-build -E -a "${doc_dir}" "${out_dir}"
+}
+
+function schema_build {
+  pip3 install -y json-schema-for-humans
+
+  generate-schema-doc \
+    "${repo_root}/component-descriptor-v2-schema.yaml" \
+    "${out_dir}/component-descriptor-v2.html"
+}
+
+sphinx_build
+schema_build
 
 export GIT_DIR="${out_dir}/.git"
 export GIT_WORK_TREE="${out_dir}"
