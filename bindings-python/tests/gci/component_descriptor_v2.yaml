@@ -16,63 +16,38 @@ components:
   dependencies: []
   uri: foo.org/bar
 
-#- name: example.org/foo/bar-overwrites
-#  version: 0.1.0
-
 overwriteDeclarations:
 - declaringComponent:
     name: example.org/foo/bar-overwrites
     version: 0.0.1
     type: 'gardenerComponent'
   overwrites:
-    - component:
+    - componentReference:
         name: oci-component
         version: 2.3.4
         type: ociComponent
 
-        uri: bla
+      dependencyOverwrites:
+      - name: 'a-dependency'
+        version: '1.2.3'
+        type: 'ociImage'
+        imageReference: 'alpine:latest'
 
-        dependencies:
-        - name: ...
-          version: ...
-          type: ...
-          image-ref: ...
-
-    - componentRef:
+    - componentReference:
         name: oci-component
         version: 2.3.4
         type: ociComponent
 
-      self_overwrites:
+      componentOverwrites:
         uri: bla
-
-      dependency_overwrites:
-        - name: ...
-          version: ...
-          type: ...
-          image-ref: ...
 
     - componentReference:
         name: example.org/foo/bar
         version: 1.2.3
         type: gardenerComponent
 
-      dependencies:
+      dependencyOverwrites:
       - name: foo
         version: 1.2.3-sap1
         type: ociImage
-        image_reference: foo:3.7-sap-1
-
-    - componentReference:
-        name: example.org/foo/bar
-        version: 1.2.3
-        type: gardenerComponent
-
-      self:
-        uri: 'foo'
-
-      dependencies:
-      - name: foo
-        version: 1.2.3-sap1
-        type: ociImage
-        image_reference: foo:3.7-sap-1
+        imageReference: foo:3.7-sap-1

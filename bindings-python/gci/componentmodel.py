@@ -75,6 +75,29 @@ class GardenerComponent(ResolvableComponent):
 class OciComponent(ResolvableComponent):
     pass
 
+
+@dc
+class Overwrite:
+    componentReference: ResolvableComponentReference
+    componentOverwrites: dict = dataclasses.field(
+        default_factory=dict,
+    ) # XXX define explicit overwrite-type(s)
+    dependencyOverwrites: typing.List[
+        typing.Union[
+            ResolvableComponentReference,
+            OciImage,
+            WebDependency,
+            GenericDependency,
+        ]
+    ] = dataclasses.field(default_factory=list)
+
+
+@dc
+class OverwriteDeclaration:
+    declaringComponent: ResolvableComponentReference
+    overwrites: typing.List[Overwrite]
+
+
 @dc
 class ComponentDescriptor:
     meta: Metadata
@@ -84,3 +107,4 @@ class ComponentDescriptor:
             OciComponent,
         ]
     ]
+    overwriteDeclarations: typing.List[OverwriteDeclaration]
