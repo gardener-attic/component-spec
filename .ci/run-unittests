@@ -1,0 +1,18 @@
+#!/usr/bin/env bash
+
+set -e
+
+own_dir="$(readlink -f "$(dirname "${0}")")"
+repo_root="$(readlink -f "${own_dir}/..")"
+
+function python_unittests {
+  echo "running python unittests"
+
+  python_dir="${repo_root}/bindings-python"
+  PYTHONPATH="${python_dir}" \
+    python3 -m pytest "${python_dir}"
+
+  echo "unittests succeeded"
+}
+
+python_unittests

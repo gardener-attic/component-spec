@@ -12,3 +12,4 @@ component-spec:
       steps:
         render_and_update_documentation:
           publish_to: ['github_pages']
+        run-unittests: ~
