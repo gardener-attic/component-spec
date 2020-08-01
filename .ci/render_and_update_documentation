@@ -17,7 +17,7 @@ function sphinx_build {
 }
 
 function schema_build {
-  pip3 install -y json-schema-for-humans
+  pip3 install json-schema-for-humans
 
   generate-schema-doc \
     "${repo_root}/component-descriptor-v2-schema.yaml" \
