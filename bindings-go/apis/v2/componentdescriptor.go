@@ -122,7 +122,7 @@ func (cl *ComponentList) UnmarshalJSON(data []byte) error {
 			return err
 		}
 
-		ttype, ok := knownTypes[metadata.Type]
+		ttype, ok := KnownTypes[metadata.Type]
 		if !ok {
 			// use the generic type for decoding
 			comp := &GenericComponent{}
@@ -154,7 +154,7 @@ func (cl ComponentList) MarshalJSON() ([]byte, error) {
 			return nil, err
 		}
 
-		ttype, ok := knownTypes[component.GetMetadata().Type]
+		ttype, ok := KnownTypes[component.GetMetadata().Type]
 		if !ok {
 			// encode generic component
 			// todo: refactor to own scheme
@@ -222,7 +222,7 @@ func (cl *ResolvableComponentList) UnmarshalJSON(data []byte) error {
 			return err
 		}
 
-		ttype, ok := knownResolvableTypes[metadata.Type]
+		ttype, ok := KnownResolvableTypes[metadata.Type]
 		if !ok {
 			// generic component are not allowed for resolvable components
 			return fmt.Errorf("%s is not a known resolvable component", metadata.Type)

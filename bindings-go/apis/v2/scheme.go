@@ -19,14 +19,14 @@ import (
 	"strings"
 )
 
-// knownTypes contains all known types
-var knownTypes = map[string]Scheme{
+// KnownTypes contains all known types
+var KnownTypes = map[string]Scheme{
 	OCIImageType: ociScheme,
 	WebType:      webScheme,
 }
 
-// knownResolvableTypes contains all known resolvable component types
-var knownResolvableTypes = map[string]ResolvableScheme{
+// KnownResolvableTypes contains all known resolvable component types
+var KnownResolvableTypes = map[string]ResolvableScheme{
 	GardenerComponentType: gardenerComponentScheme,
 	OCIComponentType:      ociComponentScheme,
 }
@@ -110,7 +110,7 @@ func (e ResolvableEncoderFunc) Encode(accessor ResolvableComponentAccessor) ([]b
 // ValidateType validates that a type is known or of a generic type.
 // todo: revisit currently "x-" specifies a generic type
 func ValidateType(ttype string) error {
-	if _, ok := knownTypes[ttype]; ok {
+	if _, ok := KnownTypes[ttype]; ok {
 		return nil
 	}
 
