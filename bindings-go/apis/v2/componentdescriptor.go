@@ -28,7 +28,7 @@ const SchemaVersion = "v2"
 // components and their versions.
 // Optionally overwrites can be defined.
 type ComponentDescriptor struct {
-	Metadata Metadata `yaml:"meta"`
+	Metadata Metadata `json:"meta"`
 
 	// OverwriteDeclarations contains all overwrites of components
 	OverwriteDeclarations []OverwriteDeclaration `json:"overwriteDeclarations"`
