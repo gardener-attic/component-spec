@@ -1,4 +1,4 @@
-module github.com/gardener/component-spec/client-go
+module github.com/gardener/component-spec/bindings-go
 
 go 1.14
 

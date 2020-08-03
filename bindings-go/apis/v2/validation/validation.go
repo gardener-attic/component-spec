@@ -20,7 +20,7 @@ import (
 	"k8s.io/apimachinery/pkg/util/sets"
 	"k8s.io/apimachinery/pkg/util/validation/field"
 
-	v2 "github.com/gardener/component-spec/client-go/apis/v2"
+	v2 "github.com/gardener/component-spec/bindings-go/apis/v2"
 )
 
 // Validate validates a parsed v2 component descriptor

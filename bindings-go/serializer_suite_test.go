@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package client_go_test
+package bindings_go_test
 
 import (
 	"io/ioutil"
@@ -21,8 +21,8 @@ import (
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
 
-	client_go "github.com/gardener/component-spec/client-go"
-	v2 "github.com/gardener/component-spec/client-go/apis/v2"
+	client_go "github.com/gardener/component-spec/bindings-go"
+	v2 "github.com/gardener/component-spec/bindings-go/apis/v2"
 )
 
 func TestConfig(t *testing.T) {

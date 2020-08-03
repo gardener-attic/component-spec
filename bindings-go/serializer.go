@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package client_go
+package bindings_go
 
 import (
 	"encoding/json"
@@ -22,9 +22,9 @@ import (
 
 	"github.com/ghodss/yaml"
 
-	"github.com/gardener/component-spec/client-go/apis"
-	v2 "github.com/gardener/component-spec/client-go/apis/v2"
-	"github.com/gardener/component-spec/client-go/apis/v2/validation"
+	"github.com/gardener/component-spec/bindings-go/apis"
+	v2 "github.com/gardener/component-spec/bindings-go/apis/v2"
+	"github.com/gardener/component-spec/bindings-go/apis/v2/validation"
 )
 
 // Decode decodes a component descriptor into the given object.

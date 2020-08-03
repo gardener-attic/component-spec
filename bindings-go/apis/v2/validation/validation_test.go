@@ -21,8 +21,8 @@ import (
 	. "github.com/onsi/gomega"
 	"k8s.io/apimachinery/pkg/util/validation/field"
 
-	v2 "github.com/gardener/component-spec/client-go/apis/v2"
-	"github.com/gardener/component-spec/client-go/apis/v2/validation"
+	v2 "github.com/gardener/component-spec/bindings-go/apis/v2"
+	"github.com/gardener/component-spec/bindings-go/apis/v2/validation"
 )
 
 func TestConfig(t *testing.T) {

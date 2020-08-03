@@ -16,8 +16,8 @@ package main
 import (
     "fmt"
 
-    "github.com/gardener/component-spec/client-go" 
-    "github.com/gardener/component-spec/client-go/apis/v2"
+    "github.com/gardener/component-spec/bindings-go" 
+    "github.com/gardener/component-spec/bindings-go/apis/v2"
 )
 
 func main() {
