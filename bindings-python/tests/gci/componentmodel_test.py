@@ -4,10 +4,12 @@ import dacite
 import yaml
 
 import gci.componentmodel as cm
+import paths
 
-own_dir = os.path.abspath(os.path.dirname(__file__))
+test_res_dir = paths.test_res_dir
 
-with open(os.path.join(own_dir, 'component_descriptor_v2.yaml')) as f:
+
+with open(os.path.join(test_res_dir, 'component_descriptor_v2.yaml')) as f:
     component_descriptor_dict = yaml.safe_load(f)
 
 
