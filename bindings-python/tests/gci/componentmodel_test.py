@@ -14,13 +14,6 @@ with open(os.path.join(test_res_dir, 'component_descriptor_v2.yaml')) as f:
 
 
 def test_deserialisation():
-    component_descriptor = dacite.from_dict(
-        data_class=cm.ComponentDescriptor,
-        data=component_descriptor_dict,
-        config=dacite.Config(
-            cast=[
-                cm.SchemaVersion,
-                cm.ComponentType,
-            ]
-        )
+    component_descriptor = cm.ComponentDescriptor.from_dict(
+        component_descriptor_dict=component_descriptor_dict,
     )

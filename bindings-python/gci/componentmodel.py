@@ -2,6 +2,8 @@ import dataclasses
 import enum
 import typing
 
+import dacite
+
 dc = dataclasses.dataclass
 
 
@@ -108,3 +110,18 @@ class ComponentDescriptor:
         ]
     ]
     overwriteDeclarations: typing.List[OverwriteDeclaration]
+
+    @staticmethod
+    def from_dict(component_descriptor_dict: dict):
+        component_descriptor = dacite.from_dict(
+            data_class=ComponentDescriptor,
+            data=component_descriptor_dict,
+            config=dacite.Config(
+                cast=[
+                    SchemaVersion,
+                    ComponentType,
+                ]
+            )
+        )
+
+        return component_descriptor
