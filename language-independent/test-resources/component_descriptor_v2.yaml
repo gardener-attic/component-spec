@@ -23,12 +23,16 @@ component:
     - name: 'apiserver'
       # version is implied by component, i.e. v1.7.2 in this case
       type: 'ociImage'
-      imageReference: 'eu.gcr.io/gardener-project/gardener/apiserver:v1.7.4'
+      access:
+        type: 'ociRegistry'
+        imageReference: 'eu.gcr.io/gardener-project/gardener/apiserver:v1.7.4'
 
   externalResources:
     - name: 'grafana'
       version: '7.0.3'
-      imageReference: 'registry-1.docker.io/grafana/grafana/7.0.3
+      access:
+        type: 'ociRegistry'
+        imageReference: 'registry-1.docker.io/grafana/grafana/7.0.3
 
 
 overwriteDeclarations:
