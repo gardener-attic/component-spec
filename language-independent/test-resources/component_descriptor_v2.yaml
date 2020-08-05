@@ -2,10 +2,11 @@ meta:
   schemaVersion: 'v2'
 
 component:
-  name: github.com/gardener/gardener
+  name: 'github.com/gardener/gardener'
   version: 'v1.7.2'
   repositoryContexts:
-    - eu.gcr.io/gardener-project/components/dev
+    - baseUrl: 'eu.gcr.io/gardener-project/components/dev'
+  provider: 'internal'
 
   sources:
     - name: 'github.com/gardener/gardener'
@@ -21,7 +22,7 @@ component:
 
   localResources:
     - name: 'apiserver'
-      # version is implied by component, i.e. v1.7.2 in this case
+      version: 'v1.7.2' # version is implied by component, i.e. v1.7.2 in this case
       type: 'ociImage'
       access:
         type: 'ociRegistry'
@@ -30,6 +31,7 @@ component:
   externalResources:
     - name: 'grafana'
       version: '7.0.3'
+      type: 'ociImage'
       access:
         type: 'ociRegistry'
-        imageReference: 'registry-1.docker.io/grafana/grafana/7.0.3
+        imageReference: 'registry-1.docker.io/grafana/grafana/7.0.3'
