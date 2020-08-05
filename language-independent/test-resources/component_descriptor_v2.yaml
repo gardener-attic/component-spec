@@ -1,7 +1,8 @@
 meta:
   schemaVersion: 'v2'
-components:
-- name: github.com/gardener/gardener
+
+component:
+  name: github.com/gardener/gardener
   version: 'v1.7.2'
   repositoryContexts:
     - eu.gcr.io/gardener-project/components/dev
