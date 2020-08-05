@@ -1,20 +1,34 @@
 meta:
   schemaVersion: 'v2'
 components:
-- name: example.org/foo/bar
-  version: 1.2.3
-  type: 'gardenerComponent'
-  dependencies:
-    - name: foo
-      version: 1.2.3
-      type: ociImage
-      imageReference: alpine:3.7
+- name: github.com/gardener/gardener
+  version: 'v1.7.2'
+  repositoryContexts:
+    - eu.gcr.io/gardener-project/components/dev
 
-- name: 'oci-component'
-  version: '2.3.4'
-  type: 'ociComponent'
-  dependencies: []
-  uri: foo.org/bar
+  sources:
+    - name: 'github.com/gardener/gardener'
+      type: 'git'
+      access:
+        type: 'github'
+        repoUrl: 'github.com/gardener/gardener'
+        ref: 'refs/tags/v1.7.2'
+
+  componentReferences:
+    - name: 'etc-druid'
+      version: 'v0.3.0'
+
+  localResources:
+    - name: 'apiserver'
+      # version is implied by component, i.e. v1.7.2 in this case
+      type: 'ociImage'
+      imageReference: 'eu.gcr.io/gardener-project/gardener/apiserver:v1.7.4'
+
+  externalResources:
+    - name: 'grafana'
+      version: '7.0.3'
+      imageReference: 'registry-1.docker.io/grafana/grafana/7.0.3
+
 
 overwriteDeclarations:
 - declaringComponent:
