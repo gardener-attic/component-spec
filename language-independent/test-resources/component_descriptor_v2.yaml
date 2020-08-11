@@ -4,8 +4,11 @@ meta:
 component:
   name: 'github.com/gardener/gardener'
   version: 'v1.7.2'
+
   repositoryContexts:
-    - baseUrl: 'eu.gcr.io/gardener-project/components/dev'
+    - type: 'ociRegistry'
+      baseUrl: 'eu.gcr.io/gardener-project/components/dev'
+
   provider: 'internal'
 
   sources:

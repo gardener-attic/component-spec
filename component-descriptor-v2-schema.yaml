@@ -15,9 +15,13 @@ definitions:
     type: 'object'
     required:
       - 'baseUrl'
+      - 'type'
     properties:
       baseUrl:
         type: 'string'
+      type:
+        type: 'string'
+        enum: ['ociRegistry']
 
   access:
     type: 'object'
