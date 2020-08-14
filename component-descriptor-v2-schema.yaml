@@ -44,6 +44,15 @@ definitions:
       ref:
         type: 'string'
 
+  noneAccess:
+    type: 'object'
+    required:
+      - 'type'
+    properties:
+      type:
+        type: 'string'
+        enum: ['None']
+
   sourceDefinition:
     type: 'object'
     required:

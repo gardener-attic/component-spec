@@ -16,6 +16,7 @@ class AccessType(enum.Enum):
     OCI_REGISTRY = 'ociRegistry'
     GITHUB = 'github'
     HTTP = 'http'
+    NONE = 'None' # the resource is only declared informally (e.g. generic)
 
 
 class SourceType(enum.Enum):
@@ -59,7 +60,7 @@ class Provider(enum.Enum):
 
 @dc(frozen=True)
 class Metadata:
-    schemaVersion: SchemaVersion
+    schemaVersion: SchemaVersion = SchemaVersion.V2
 
 
 
