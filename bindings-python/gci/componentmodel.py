@@ -42,7 +42,7 @@ class OciAccess(ResourceAccess):
 class GithubAccess(ResourceAccess):
     repoUrl: str
     ref: str
-    type: AccessType = AccessType.GITHUB
+    type: AccessType
 
 
 @dc(frozen=True)
