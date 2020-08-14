@@ -7,6 +7,9 @@ import yaml
 import gci.componentmodel
 
 
+component_descriptor_fname = 'component-descriptor.yaml'
+
+
 def component_descriptor_to_tarfileobj(
     component_descriptor: typing.Union[dict, gci.componentmodel.ComponentDescriptor],
 ):
@@ -21,7 +24,7 @@ def component_descriptor_to_tarfileobj(
 
     tf = tarfile.open(mode='w', fileobj=tar_buf)
 
-    tar_info = tarfile.TarInfo(name='component-descriptor.yaml')
+    tar_info = tarfile.TarInfo(name=component_descriptor_fname)
     tar_info.size = component_descriptor_buf.tell()
     component_descriptor_buf.seek(0)
 
@@ -29,3 +32,13 @@ def component_descriptor_to_tarfileobj(
     tf.fileobj.seek(0)
 
     return tf.fileobj
+
+
+def component_descriptor_from_tarfileobj(
+    fileobj: io.BytesIO,
+):
+    with tarfile.open(fileobj=fileobj, mode='r') as tf:
+        component_descriptor_info = tf.getmember(component_descriptor_fname)
+        raw_dict = yaml.safe_load(tf.extractfile(component_descriptor_info).read())
+
+        gci.componentmodel.ComponentDescriptor.from_dict(raw_dict)
