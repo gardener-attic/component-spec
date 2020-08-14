@@ -60,6 +60,7 @@ definitions:
         anyOf:
           - $ref: '#/definitions/access'
           - $ref: '#/definitions/githubAccess'
+          - $ref: '#/definitions/httpAccess'
 
   componentReference:
     type: 'object'
@@ -121,7 +122,7 @@ definitions:
       access:
         $ref: '#/definitions/ociImageAccess'
 
-  webAccess:
+  httpAccess:
     type: 'object'
     required:
       - 'type'
@@ -129,27 +130,9 @@ definitions:
     properties:
       type:
         type: 'string'
-        enum: ['web']
+        enum: ['http']
       url:
         type: 'string'
-
-  webResource:
-    type: 'object'
-    required:
-      - 'name'
-      - 'version'
-      - 'type'
-      - 'access'
-    properties:
-      name:
-        type: 'string'
-      version:
-        type: 'string'
-      type:
-        type: 'string'
-        enum: ['web']
-      access:
-        $ref: '#/definitions/webAccess'
 
   genericAccess:
     type: 'object'
@@ -216,7 +199,6 @@ definitions:
           anyOf:
             - $ref: '#/definitions/resourceType'
             - $ref: '#/definitions/ociImageResource'
-            - $ref: '#/definitions/webResource'
             - $ref: '#/definitions/genericResource'
       externalResources:
         type: 'array'
@@ -224,7 +206,6 @@ definitions:
           anyOf:
             - $ref: '#/definitions/resourceType'
             - $ref: '#/definitions/ociImageResource'
-            - $ref: '#/definitions/webResource'
             - $ref: '#/definitions/genericResource'
 
     componentReferences:

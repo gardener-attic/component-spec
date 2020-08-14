@@ -15,6 +15,7 @@ class SchemaVersion(enum.Enum):
 class AccessType(enum.Enum):
     OCI_REGISTRY = 'ociRegistry'
     GITHUB = 'github'
+    HTTP = 'http'
 
 
 class SourceType(enum.Enum):
@@ -23,7 +24,6 @@ class SourceType(enum.Enum):
 
 class ResourceType(enum.Enum):
     OCI_IMAGE = 'ociImage'
-    WEB_DEPENDENCY = 'web'
     GENERIC = 'generic'
 
 
@@ -44,7 +44,7 @@ class GithubAccess(ResourceAccess):
 
 
 @dc(frozen=True)
-class WebAccess(ResourceAccess):
+class HttpAccess(ResourceAccess):
     url: str
 
 
@@ -78,7 +78,7 @@ class Resource:
         ResourceAccess,
         OciAccess,
         GithubAccess,
-        WebAccess,
+        HttpAccess,
     ]
 
 
