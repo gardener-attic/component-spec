@@ -80,6 +80,7 @@ class Resource:
         OciAccess,
         GithubAccess,
         HttpAccess,
+        None
     ]
 
 
