@@ -148,28 +148,6 @@
             
   <div class="section" id="resolvable-components-and-resolvable-component-references">
 <h1>Resolvable Components and Resolvable Component References<a class="headerlink" href="#resolvable-components-and-resolvable-component-references" title="Permalink to this headline">¶</a></h1>
-<p><cite>Resolvable Components</cite> in the context of the Gardener Project are parts from which Gardner
-Landscapes can be materialised. They adhere to a common contract that allows for them to be
-managed in a common and automated way.</p>
-<div class="section" id="component-versions">
-<h2>Component Versions<a class="headerlink" href="#component-versions" title="Permalink to this headline">¶</a></h2>
-<p>Each <cite>Resolvable Component</cite> can be considered as an umbrella for a set of <cite>Component Versions</cite>.
-Each <cite>Resolvable Component Version</cite> is a snapshot of said version, accompanied with a
-<cite>Component Descriptor</cite>.</p>
-<p><cite>Component Versions</cite> are represented as (utf-encoded) strings adhering to a relaxed variant of
-<a class="reference external" href="https://semver.org">semver</a>.</p>
-<p>Different to strict semver:</p>
-<ul class="simple">
-<li><p>an optional <cite>v</cite> prefix <em>MAY</em> be prepended</p></li>
-<li><p>the patch-component <em>MAY</em> be ommitted (defaults to <cite>.0</cite> in this case)</p></li>
-</ul>
-</div>
-<div class="section" id="component-types">
-<h2>Component Types<a class="headerlink" href="#component-types" title="Permalink to this headline">¶</a></h2>
-<p>Each <cite>Resolvable Component</cite> has a <cite>Component Type</cite>, which defines the contract through which
-their <cite>Component Versions</cite> are published, discovered, and retrieved. Each resolvable component
-version may be declared as a dependency by other resolvable components.</p>
-</div>
 <div class="section" id="resolvable-component-schema-v1">
 <h2>Resolvable Component Schema (v1)<a class="headerlink" href="#resolvable-component-schema-v1" title="Permalink to this headline">¶</a></h2>
 <p>Each <cite>Resolvable Component</cite> <em>MUST</em> define the following attributes; <cite>Resolvable Components</cite> <em>MAY</em>
@@ -190,24 +168,6 @@ define additional components, according to their schema.</p>
 </pre></div>
 </div>
 </div>
-<div class="section" id="resolvable-component-schema-v2">
-<h2>Resolvable Component Schema (v2)<a class="headerlink" href="#resolvable-component-schema-v2" title="Permalink to this headline">¶</a></h2>
-<p>Each <cite>Resolvable Component</cite> <em>MUST</em> define the following attributes; <cite>Resolvable Components</cite> <em>MAY</em>
-define additional components, according to their schema.</p>
-<ul class="simple">
-<li><p>name: str, defined by Component Type</p></li>
-<li><p>version: str, relaxed semver (see above)</p></li>
-<li><p>type: str, one of <cite>gardenerComponent</cite>, <cite>ociComponent</cite></p></li>
-<li><p>dependencies: list of dependencies (references to resolvable components or dependency components)</p></li>
-</ul>
-<p><em>Example</em></p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">name</span><span class="p">:</span> <span class="s">&#39;component-name&#39;</span>
-<span class="nt">version</span><span class="p">:</span> <span class="s">&#39;1.0.0&#39;</span>
-<span class="nt">type</span><span class="p">:</span> <span class="s">&#39;a-valid-component-type&#39;</span> <span class="c1"># `gardenerComponent`|`ociComponent`</span>
-<span class="nt">dependencies</span><span class="p">:</span> <span class="p p-Indicator">[]</span>
-</pre></div>
-</div>
-</div>
 <div class="section" id="resolvable-component-references-v1">
 <h2>Resolvable Component References (v1)<a class="headerlink" href="#resolvable-component-references-v1" title="Permalink to this headline">¶</a></h2>
 <p>Resolvable Component References consist exactly of the attributes <cite>name</cite>, <cite>version</cite>, where:</p>
@@ -218,21 +178,6 @@ define additional components, according to their schema.</p>
 <p><em>Example</em></p>
 <div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">name</span><span class="p">:</span> <span class="s">&#39;component-name&#39;</span>
 <span class="nt">version</span><span class="p">:</span> <span class="s">&#39;1.0.0&#39;</span>
-</pre></div>
-</div>
-</div>
-<div class="section" id="resolvable-component-references-v2">
-<h2>Resolvable Component References (v2)<a class="headerlink" href="#resolvable-component-references-v2" title="Permalink to this headline">¶</a></h2>
-<p>Resolvable Component References consist exactly of the attributes <cite>name</cite>, <cite>version</cite>, <cite>type</cite>, where:</p>
-<ul class="simple">
-<li><p><cite>name</cite> is the name of a Gardener Component</p></li>
-<li><p><cite>version</cite> is version of a Gardener Component version</p></li>
-<li><p><cite>type</cite> is the referenced component’s type (gardenerComponent or ociComponent)</p></li>
-</ul>
-<p><em>Example</em></p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">name</span><span class="p">:</span> <span class="s">&#39;component-name&#39;</span>
-<span class="nt">version</span><span class="p">:</span> <span class="s">&#39;1.0.0&#39;</span>
-<span class="nt">type</span><span class="p">:</span> <span class="s">&#39;gardenerComponent&#39;</span>
 </pre></div>
 </div>
 <div class="section" id="gardener-component-type">
@@ -277,46 +222,6 @@ as GitHub release asset named <cite>component_descriptor.yaml</cite>.</p>
 </pre></div>
 </div>
 </div>
-<div class="section" id="schema-v2">
-<h4>Schema (v2)<a class="headerlink" href="#schema-v2" title="Permalink to this headline">¶</a></h4>
-<p>Gardener Components do not define additional attributes.</p>
-<p><em>Example</em></p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">name</span><span class="p">:</span> <span class="s">&#39;github.com/gardener/gardener&#39;</span>
-<span class="nt">version</span><span class="p">:</span> <span class="s">&#39;v1.7.2&#39;</span>
-<span class="nt">type</span><span class="p">:</span> <span class="s">&#39;gardenerComponent&#39;</span>
-<span class="nt">dependencies</span><span class="p">:</span>
- <span class="p p-Indicator">-</span> <span class="nt">name</span><span class="p">:</span> <span class="s">&#39;github.com/gardener/etcd-druid&#39;</span>
-   <span class="nt">version</span><span class="p">:</span> <span class="s">&#39;v0.3.0&#39;</span>
-   <span class="nt">type</span><span class="p">:</span> <span class="s">&#39;gardenerComponent&#39;</span>
- <span class="p p-Indicator">-</span> <span class="nt">name</span><span class="p">:</span> <span class="s">&#39;apiserver&#39;</span>
-   <span class="nt">version</span><span class="p">:</span> <span class="s">&#39;v1.7.2&#39;</span>
-   <span class="nt">type</span><span class="p">:</span> <span class="s">&#39;ociImage&#39;</span>
-   <span class="nt">image_reference</span><span class="p">:</span> <span class="s">&#39;eu.gcr.io/gardener-project/gardener/apiserver:v1.7.2&#39;</span>
-</pre></div>
-</div>
-</div>
-</div>
-<div class="section" id="oci-component-type">
-<h3>OCI Component Type<a class="headerlink" href="#oci-component-type" title="Permalink to this headline">¶</a></h3>
-<p><em>since: `v2`</em></p>
-<p>TBD</p>
-<table class="docutils align-default">
-<colgroup>
-<col style="width: 35%" />
-<col style="width: 65%" />
-</colgroup>
-<tbody>
-<tr class="row-odd"><td><p>component name</p></td>
-<td><p>OCI reference without tag</p></td>
-</tr>
-<tr class="row-even"><td><p>component version</p></td>
-<td><p>OCI reference tag</p></td>
-</tr>
-<tr class="row-odd"><td><p>component descriptor</p></td>
-<td><p>GitHub release tag</p></td>
-</tr>
-</tbody>
-</table>
 </div>
 </div>
 <div class="section" id="dependency-types">
@@ -338,23 +243,6 @@ defined below the type-specific attribute below the <cite>dependencies</cite> at
 <p><em>Example</em></p>
 <div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">name</span><span class="p">:</span> <span class="s">&#39;dependency-name&#39;</span>
 <span class="nt">version</span><span class="p">:</span> <span class="s">&#39;1.0.0&#39;</span>
-</pre></div>
-</div>
-</div>
-<div class="section" id="dependency-type-schema-v2">
-<h2>Dependency Type Schema (v2)<a class="headerlink" href="#dependency-type-schema-v2" title="Permalink to this headline">¶</a></h2>
-<p>Each <cite>Dependency Types</cite> <em>MUST</em> define the following attributes; <cite>Dependencies</cite> <em>MAY</em>
-define additional components, according to their schema. Dependencies <em>MUST</em> only be
-defined below <cite>dependencies</cite> attribute of a <cite>Resolvable Component</cite>.</p>
-<ul class="simple">
-<li><p>name: str, defined by Component Type</p></li>
-<li><p>version: str, relaxed semver (see above)</p></li>
-<li><p>type: str, one of <cite>ociImage</cite>, <cite>web</cite>, <cite>generic</cite></p></li>
-</ul>
-<p><em>Example</em></p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">name</span><span class="p">:</span> <span class="s">&#39;dependency-name&#39;</span>
-<span class="nt">version</span><span class="p">:</span> <span class="s">&#39;1.0.0&#39;</span>
-<span class="nt">type</span><span class="p">:</span> <span class="s">&#39;a-valid-component-type&#39;</span> <span class="c1"># `ociImage`|`web` | `generic`</span>
 </pre></div>
 </div>
 <div class="section" id="oci-image-dependency-type">
@@ -424,14 +312,6 @@ defined below <cite>dependencies</cite> attribute of a <cite>Resolvable Componen
       <span class="nt">url</span><span class="p">:</span> <span class="s">&#39;https://example.org/some-file&#39;</span>
 </pre></div>
 </div>
-<p><em>Example (v2)</em></p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">dependencies</span><span class="p">:</span>
-  <span class="p p-Indicator">-</span> <span class="nt">name</span><span class="p">:</span> <span class="s">&#39;example-web-dependency&#39;</span>
-    <span class="nt">version</span><span class="p">:</span> <span class="s">&#39;1.2.3&#39;</span>
-    <span class="nt">type</span><span class="p">:</span> <span class="s">&#39;web&#39;</span>
-    <span class="nt">url</span><span class="p">:</span> <span class="s">&#39;https://example.org/some-file&#39;</span>
-</pre></div>
-</div>
 </div>
 <div class="section" id="generic-dependency-type">
 <h3>Generic Dependency Type<a class="headerlink" href="#generic-dependency-type" title="Permalink to this headline">¶</a></h3>
@@ -456,13 +336,6 @@ defined below <cite>dependencies</cite> attribute of a <cite>Resolvable Componen
   <span class="nt">generic</span><span class="p">:</span>
     <span class="p p-Indicator">-</span> <span class="nt">name</span><span class="p">:</span> <span class="s">&#39;example-generic-dependency&#39;</span>
       <span class="nt">version</span><span class="p">:</span> <span class="s">&#39;1.2.3&#39;</span>
-</pre></div>
-</div>
-<p><em>Example (v2)</em></p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">dependencies</span><span class="p">:</span>
-  <span class="p p-Indicator">-</span> <span class="nt">name</span><span class="p">:</span> <span class="s">&#39;example-generic-dependency&#39;</span>
-    <span class="nt">version</span><span class="p">:</span> <span class="s">&#39;1.2.3&#39;</span>
-    <span class="nt">type</span><span class="p">:</span> <span class="s">&#39;generic&#39;</span>
 </pre></div>
 </div>
 </div>
