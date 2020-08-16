@@ -82,7 +82,15 @@
               <p class="caption"><span class="caption-text">Contents:</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="format.html">Gardener Component Descriptor Format Specification</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Gardener Component Descriptor Semantics</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Gardener Component Descriptor Semantics</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#repository-contexts-history">Repository Contexts History</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#provider">Provider</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#component-sources">Component Sources</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#component-references">Component References</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#local-resources">Local Resources</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#external-resources">External Resources</a></li>
+</ul>
+</li>
 </ul>
 
             
@@ -149,7 +157,49 @@
             
   <div class="section" id="gardener-component-descriptor-semantics">
 <h1>Gardener Component Descriptor Semantics<a class="headerlink" href="#gardener-component-descriptor-semantics" title="Permalink to this headline">¶</a></h1>
+<p><cite>Component Descriptors</cite> adhere to a schema defined in the JSON-schema contained in the
+<a class="reference external" href="https://github.com/gardener/component-spec">component-spec</a> repository.</p>
+<p>In this section, the semantics of those elements are defined.</p>
+<div class="section" id="repository-contexts-history">
+<h2>Repository Contexts History<a class="headerlink" href="#repository-contexts-history" title="Permalink to this headline">¶</a></h2>
+<p>Sets of Components are typically being developed in a common context. Such a context consists of
+organisational aspects (for example code ownership), and related infrastructure. Examples for
+related infrastructure contain source code repositories, build infrastructure, and resource
+repositories. An example for a source code repository being github.com, and an example for a
+resource repository being an OCI Registry, such as eu.gcr.io for OCI images.</p>
+<p>Such contexts are accompanied by <cite>Component Descriptor Context Repositories</cite>, which are used to
+manage the component metadata (in the form of <cite>Component Descriptors</cite>).</p>
+<p>Each component <em>MUST</em> have at least one such repository context, which is its initial context.</p>
+<p>For delivery scenarios, additional repository contexts <em>MAY</em> be defined. Such a repository context
+consists of the same set of technical repository types. In particular, it <em>MUST</em> contain a
+separate <cite>Component Descriptor</cite> repository.</p>
+<p>Component versions can be “transported” into such a context, by copying all referenced resources
+into the corresponding resource repositories of the target context. In addition to copying
+referenced resources, a new <cite>Component Descriptor</cite> <em>MUST</em> be created, containing references to
+the new resource locations.</p>
+<p>In order to retain the transport history, the original repository context history <em>MUST</em> be
+retained, and be appended to with the new (target) repository context.</p>
+</div>
+<div class="section" id="provider">
+<h2>Provider<a class="headerlink" href="#provider" title="Permalink to this headline">¶</a></h2>
 <p>tbd</p>
+</div>
+<div class="section" id="component-sources">
+<h2>Component Sources<a class="headerlink" href="#component-sources" title="Permalink to this headline">¶</a></h2>
+<p>tbd</p>
+</div>
+<div class="section" id="component-references">
+<h2>Component References<a class="headerlink" href="#component-references" title="Permalink to this headline">¶</a></h2>
+<p>tbd</p>
+</div>
+<div class="section" id="local-resources">
+<h2>Local Resources<a class="headerlink" href="#local-resources" title="Permalink to this headline">¶</a></h2>
+<p>tbd</p>
+</div>
+<div class="section" id="external-resources">
+<h2>External Resources<a class="headerlink" href="#external-resources" title="Permalink to this headline">¶</a></h2>
+<p>tbd</p>
+</div>
 </div>
 
 
