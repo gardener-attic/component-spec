@@ -18,7 +18,7 @@ as well as a definition of how to publish, persist, discover, and retrieve `Comp
   :caption: Contents:
 
   format
-  schema/index
+  schema_v1/index
 
 
 Indices and tables

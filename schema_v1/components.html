@@ -1,0 +1,384 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Resolvable Components and Resolvable Component References &mdash; Gardener Component-Descriptor Contract and Specification  documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> Gardener Component-Descriptor Contract and Specification
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../format.html">Gardener Component Descriptor Format Specification</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">Gardener Component-Descriptor Contract and Specification</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+      <li>Resolvable Components and Resolvable Component References</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/schema_v1/components.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="resolvable-components-and-resolvable-component-references">
+<h1>Resolvable Components and Resolvable Component References<a class="headerlink" href="#resolvable-components-and-resolvable-component-references" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="resolvable-component-schema-v1">
+<h2>Resolvable Component Schema (v1)<a class="headerlink" href="#resolvable-component-schema-v1" title="Permalink to this headline">¶</a></h2>
+<p>Each <cite>Resolvable Component</cite> <em>MUST</em> define the following attributes; <cite>Resolvable Components</cite> <em>MAY</em>
+define additional components, according to their schema.</p>
+<ul class="simple">
+<li><p>name: str, defined by Component Type</p></li>
+<li><p>version: str, relaxed semver (see above)</p></li>
+<li><p>dependencies: dict with dependencies (components, container_images, web, generic)</p></li>
+</ul>
+<p><em>Example</em></p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">name</span><span class="p">:</span> <span class="s">&#39;component-name&#39;</span>
+<span class="nt">version</span><span class="p">:</span> <span class="s">&#39;1.0.0&#39;</span>
+<span class="nt">dependencies</span><span class="p">:</span>
+ <span class="nt">components</span><span class="p">:</span> <span class="p p-Indicator">[]</span>
+ <span class="nt">container_images</span><span class="p">:</span> <span class="p p-Indicator">[]</span>
+ <span class="nt">web</span><span class="p">:</span> <span class="p p-Indicator">[]</span>
+ <span class="nt">generic</span><span class="p">:</span> <span class="p p-Indicator">[]</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="resolvable-component-references-v1">
+<h2>Resolvable Component References (v1)<a class="headerlink" href="#resolvable-component-references-v1" title="Permalink to this headline">¶</a></h2>
+<p>Resolvable Component References consist exactly of the attributes <cite>name</cite>, <cite>version</cite>, where:</p>
+<ul class="simple">
+<li><p><cite>name</cite> is the name of a Gardener Component</p></li>
+<li><p><cite>version</cite> is version of a Gardener Component version</p></li>
+</ul>
+<p><em>Example</em></p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">name</span><span class="p">:</span> <span class="s">&#39;component-name&#39;</span>
+<span class="nt">version</span><span class="p">:</span> <span class="s">&#39;1.0.0&#39;</span>
+</pre></div>
+</div>
+<div class="section" id="gardener-component-type">
+<h3>Gardener Component Type<a class="headerlink" href="#gardener-component-type" title="Permalink to this headline">¶</a></h3>
+<p><em>since: `v1`</em></p>
+<p><cite>Gardener Components</cite> are resolvable components that reside in a <a class="reference external" href="https://github.com">GitHub</a>
+repository. Each GitHub release is a component version and <em>MUST</em> contain a <cite>Component Descriptor</cite>
+as GitHub release asset named <cite>component_descriptor.yaml</cite>.</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 34%" />
+<col style="width: 66%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p>component name</p></td>
+<td><p>GitHub repository URL (without schema)</p></td>
+</tr>
+<tr class="row-even"><td><p>component version</p></td>
+<td><p>GitHub release tag</p></td>
+</tr>
+<tr class="row-odd"><td><p>component descriptor</p></td>
+<td><p>release asset <cite>component_descriptor.yaml</cite></p></td>
+</tr>
+</tbody>
+</table>
+<div class="section" id="schema-v1">
+<h4>Schema (v1)<a class="headerlink" href="#schema-v1" title="Permalink to this headline">¶</a></h4>
+<p>Gardener Components do not define additional attributes.</p>
+<p><em>Example</em></p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">name</span><span class="p">:</span> <span class="s">&#39;github.com/gardener/gardener&#39;</span>
+<span class="nt">version</span><span class="p">:</span> <span class="s">&#39;v1.7.2&#39;</span>
+<span class="nt">dependencies</span><span class="p">:</span>
+ <span class="nt">components</span><span class="p">:</span>
+   <span class="p p-Indicator">-</span> <span class="nt">name</span><span class="p">:</span> <span class="s">&#39;github.com/gardener/etcd-druid&#39;</span>
+     <span class="nt">version</span><span class="p">:</span> <span class="s">&#39;v0.3.0&#39;</span>
+ <span class="nt">container_images</span><span class="p">:</span>
+   <span class="p p-Indicator">-</span> <span class="nt">name</span><span class="p">:</span> <span class="s">&#39;apiserver&#39;</span>
+     <span class="nt">version</span><span class="p">:</span> <span class="s">&#39;v1.7.2&#39;</span>
+     <span class="nt">image_reference</span><span class="p">:</span> <span class="s">&#39;eu.gcr.io/gardener-project/gardener/apiserver:v1.7.2&#39;</span>
+ <span class="nt">web</span><span class="p">:</span> <span class="p p-Indicator">[]</span>
+ <span class="nt">generic</span><span class="p">:</span> <span class="p p-Indicator">[]</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="dependency-types">
+<h2>Dependency Types<a class="headerlink" href="#dependency-types" title="Permalink to this headline">¶</a></h2>
+<p>Any known type that is not a <cite>Resolvable Component</cite> is a <cite>Dependency Type</cite>. Dependencies
+are used to describe technical artifacts the declaring resolvable component depends
+upon. Dependencies are always defined by a <cite>Resolvable Component</cite></p>
+</div>
+<div class="section" id="dependency-type-schema-v1">
+<h2>Dependency Type Schema (v1)<a class="headerlink" href="#dependency-type-schema-v1" title="Permalink to this headline">¶</a></h2>
+<p>Each <cite>Dependency Types</cite> <em>MUST</em> define the following attributes; <cite>Dependencies</cite> <em>MAY</em>
+define additional components, according to their schema. Dependencies <em>MUST</em> only be
+defined below the type-specific attribute below the <cite>dependencies</cite> attribute of a
+<cite>Resolvable Component</cite>.</p>
+<ul class="simple">
+<li><p>name: str</p></li>
+<li><p>version: str, relaxed semver (see above)</p></li>
+</ul>
+<p><em>Example</em></p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">name</span><span class="p">:</span> <span class="s">&#39;dependency-name&#39;</span>
+<span class="nt">version</span><span class="p">:</span> <span class="s">&#39;1.0.0&#39;</span>
+</pre></div>
+</div>
+<div class="section" id="oci-image-dependency-type">
+<h3>OCI Image Dependency Type<a class="headerlink" href="#oci-image-dependency-type" title="Permalink to this headline">¶</a></h3>
+<p><em>since: `v1`</em></p>
+<p>An OCI Container Image published to an OCI Image registry.</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 30%" />
+<col style="width: 70%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p>name</p></td>
+<td><p>arbitrary name (ASCII recommened)</p></td>
+</tr>
+<tr class="row-even"><td><p>version</p></td>
+<td><p>relaxed semver</p></td>
+</tr>
+<tr class="row-odd"><td><p>image_reference</p></td>
+<td><p>OCI image reference</p></td>
+</tr>
+</tbody>
+</table>
+<p><em>Example (v1)</em></p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">dependencies</span><span class="p">:</span>
+  <span class="nt">container_images</span><span class="p">:</span>
+    <span class="p p-Indicator">-</span> <span class="nt">name</span><span class="p">:</span> <span class="s">&#39;example-image&#39;</span>
+      <span class="nt">version</span><span class="p">:</span> <span class="s">&#39;1.2.3&#39;</span>
+      <span class="nt">image_reference</span><span class="p">:</span> <span class="s">&#39;eu.gcr.io/some-project/some-image:1.2.3&#39;</span>
+</pre></div>
+</div>
+<p><em>Example (v2)</em></p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">dependencies</span><span class="p">:</span>
+  <span class="p p-Indicator">-</span> <span class="nt">name</span><span class="p">:</span> <span class="s">&#39;example-image&#39;</span>
+    <span class="nt">version</span><span class="p">:</span> <span class="s">&#39;1.2.3&#39;</span>
+    <span class="nt">type</span><span class="p">:</span> <span class="s">&#39;ociImage&#39;</span>
+    <span class="nt">image_reference</span><span class="p">:</span> <span class="s">&#39;eu.gcr.io/some-project/some-image:1.2.3&#39;</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="web-dependency-type">
+<h3>Web Dependency Type<a class="headerlink" href="#web-dependency-type" title="Permalink to this headline">¶</a></h3>
+<p><em>since: `v1`</em></p>
+<p>A dependency retrievable via HTTP-GET</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 30%" />
+<col style="width: 70%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p>name</p></td>
+<td><p>arbitrary name (ASCII recommened)</p></td>
+</tr>
+<tr class="row-even"><td><p>version</p></td>
+<td><p>relaxed semver</p></td>
+</tr>
+<tr class="row-odd"><td><p>url</p></td>
+<td><p>a Unified Resource Locator</p></td>
+</tr>
+</tbody>
+</table>
+<p><em>Example (v1)</em></p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">dependencies</span><span class="p">:</span>
+  <span class="nt">web</span><span class="p">:</span>
+    <span class="p p-Indicator">-</span> <span class="nt">name</span><span class="p">:</span> <span class="s">&#39;example-web-dependency&#39;</span>
+      <span class="nt">version</span><span class="p">:</span> <span class="s">&#39;1.2.3&#39;</span>
+      <span class="nt">url</span><span class="p">:</span> <span class="s">&#39;https://example.org/some-file&#39;</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="generic-dependency-type">
+<h3>Generic Dependency Type<a class="headerlink" href="#generic-dependency-type" title="Permalink to this headline">¶</a></h3>
+<p><em>since: `v1`</em></p>
+<p>An informal dependency intended for human interpretation.</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 30%" />
+<col style="width: 70%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p>name</p></td>
+<td><p>arbitrary name (ASCII recommened)</p></td>
+</tr>
+<tr class="row-even"><td><p>version</p></td>
+<td><p>relaxed semver</p></td>
+</tr>
+</tbody>
+</table>
+<p><em>Example (v1)</em></p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">dependencies</span><span class="p">:</span>
+  <span class="nt">generic</span><span class="p">:</span>
+    <span class="p p-Indicator">-</span> <span class="nt">name</span><span class="p">:</span> <span class="s">&#39;example-generic-dependency&#39;</span>
+      <span class="nt">version</span><span class="p">:</span> <span class="s">&#39;1.2.3&#39;</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2020, The Gardener Team
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>
