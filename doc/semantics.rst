@@ -37,24 +37,53 @@ retained, and be appended to with the new (target) repository context.
 Provider
 --------
 
-tbd
+Each component has a provider, which is declared relative to the original repository context.
+In most cases, components are "internal", which means that the entity maintaining the component
+is the same as the proprietor of the repository context.
+
+Opposed to that, components maintained by a third party are declared through the value `external`.
+
+Identities and Accessors
+------------------------
+
+Sources and Resources are unambiguously identified by two-tuples of name and version, in the
+context of their declaring component version.
+
+They also declare a format type (for example OCI Container Image).
+
+Finally, sources and resources also *MUST* declare through their `access` attribute a means to
+access the underlying artifacts. This is done by declaring an access type (for example an OCI
+Image Registry), which defines the protocol through which access is done. Depending on the
+access type, additional attributes are required (e.g. an OCI Image Reference).
 
 Component Sources
 -----------------
 
-tbd
+Components are expected to have at least one source (code) representation. For each component
+version, the corresponding source snapshot from which the component was built *MUST* be
+specified.
 
 Component References
 --------------------
 
-tbd
+Component versions may declare dependencies towards other component versions. Dependencies are
+always resolved in the same repository context. At the time of publishing a `Component Descriptor`,
+`Component Descriptors` for each referenced component version *MUST* already be present in the
+context repository.
+
+A component descriptor registry *MUST* reject component descriptors with references to absent
+component versions.
 
 Local Resources
 ---------------
 
-tbd
+Local resources are technical artifacts of a certain format (or type) that are built from the
+declaring component's sources. Their versions *MUST* always match the version of their component.
 
 External Resources
 ------------------
 
-tbd
+External resources differ from local resources in that they are _required_ by the declaring
+component, but not built from it. Their versions *SHOULD* follow the versioning of their provided
+(upstream) artifacts. External resources are a means to express dependencies towards the technical
+artifacts of an external component that does not abide by the `Component Descriptor` contract.
