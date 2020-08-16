@@ -85,6 +85,7 @@
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Gardener Component Descriptor Semantics</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#repository-contexts-history">Repository Contexts History</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#provider">Provider</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#identities-and-accessors">Identities and Accessors</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#component-sources">Component Sources</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#component-references">Component References</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#local-resources">Local Resources</a></li>
@@ -182,23 +183,47 @@ retained, and be appended to with the new (target) repository context.</p>
 </div>
 <div class="section" id="provider">
 <h2>Provider<a class="headerlink" href="#provider" title="Permalink to this headline">¶</a></h2>
-<p>tbd</p>
+<p>Each component has a provider, which is declared relative to the original repository context.
+In most cases, components are “internal”, which means that the entity maintaining the component
+is the same as the proprietor of the repository context.</p>
+<p>Opposed to that, components maintained by a third party are declared through the value <cite>external</cite>.</p>
+</div>
+<div class="section" id="identities-and-accessors">
+<h2>Identities and Accessors<a class="headerlink" href="#identities-and-accessors" title="Permalink to this headline">¶</a></h2>
+<p>Sources and Resources are unambiguously identified by two-tuples of name and version, in the
+context of their declaring component version.</p>
+<p>They also declare a format type (for example OCI Container Image).</p>
+<p>Finally, sources and resources also <em>MUST</em> declare through their <cite>access</cite> attribute a means to
+access the underlying artifacts. This is done by declaring an access type (for example an OCI
+Image Registry), which defines the protocol through which access is done. Depending on the
+access type, additional attributes are required (e.g. an OCI Image Reference).</p>
 </div>
 <div class="section" id="component-sources">
 <h2>Component Sources<a class="headerlink" href="#component-sources" title="Permalink to this headline">¶</a></h2>
-<p>tbd</p>
+<p>Components are expected to have at least one source (code) representation. For each component
+version, the corresponding source snapshot from which the component was built <em>MUST</em> be
+specified.</p>
 </div>
 <div class="section" id="component-references">
 <h2>Component References<a class="headerlink" href="#component-references" title="Permalink to this headline">¶</a></h2>
-<p>tbd</p>
+<p>Component versions may declare dependencies towards other component versions. Dependencies are
+always resolved in the same repository context. At the time of publishing a <cite>Component Descriptor</cite>,
+<cite>Component Descriptors</cite> for each referenced component version <em>MUST</em> already be present in the
+context repository.</p>
+<p>A component descriptor registry <em>MUST</em> reject component descriptors with references to absent
+component versions.</p>
 </div>
 <div class="section" id="local-resources">
 <h2>Local Resources<a class="headerlink" href="#local-resources" title="Permalink to this headline">¶</a></h2>
-<p>tbd</p>
+<p>Local resources are technical artifacts of a certain format (or type) that are built from the
+declaring component’s sources. Their versions <em>MUST</em> always match the version of their component.</p>
 </div>
 <div class="section" id="external-resources">
 <h2>External Resources<a class="headerlink" href="#external-resources" title="Permalink to this headline">¶</a></h2>
-<p>tbd</p>
+<p>External resources differ from local resources in that they are _required_ by the declaring
+component, but not built from it. Their versions <em>SHOULD</em> follow the versioning of their provided
+(upstream) artifacts. External resources are a means to express dependencies towards the technical
+artifacts of an external component that does not abide by the <cite>Component Descriptor</cite> contract.</p>
 </div>
 </div>
 
