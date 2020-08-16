@@ -15,7 +15,7 @@ def requirements():
 
 setuptools.setup(
     name='gardener-component-model',
-    version='0.0.0-dev',
+    version='0.0.0alpha1',
     description='Gardener Component Model',
     python_requires='>=3.8.*',
     packages=setuptools.find_packages(),
