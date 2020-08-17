@@ -1,6 +1,5 @@
 
 
-
 <!DOCTYPE html>
 <!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
 <!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
@@ -9,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Index &mdash; Gardener Component-Descriptor Contract and Specification  documentation</title>
+  <title>Component Descriptor Registries &mdash; Gardener Component-Descriptor Contract and Specification  documentation</title>
   
 
   
@@ -34,8 +33,9 @@
   
   <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-    <link rel="index" title="Index" href="#" />
-    <link rel="search" title="Search" href="search.html" /> 
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="Gardener Component Descriptor Semantics" href="semantics.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -80,10 +80,13 @@
             
             
               <p class="caption"><span class="caption-text">Contents:</span></p>
-<ul>
+<ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="format.html">Gardener Component Descriptor Format Specification</a></li>
 <li class="toctree-l1"><a class="reference internal" href="semantics.html">Gardener Component Descriptor Semantics</a></li>
-<li class="toctree-l1"><a class="reference internal" href="component_descriptor_registries.html">Component Descriptor Registries</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Component Descriptor Registries</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#component-descriptor-registries-backed-by-oci-image-registry">Component Descriptor Registries backed by OCI Image Registry</a></li>
+</ul>
+</li>
 </ul>
 
             
@@ -129,12 +132,14 @@
     
       <li><a href="index.html">Docs</a> &raquo;</li>
         
-      <li>Index</li>
+      <li>Component Descriptor Registries</li>
     
     
       <li class="wy-breadcrumbs-aside">
         
             
+            <a href="_sources/component_descriptor_registries.rst.txt" rel="nofollow"> View page source</a>
+          
         
       </li>
     
@@ -146,11 +151,33 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-
-<h1 id="index">Index</h1>
-
-<div class="genindex-jumpbox">
- 
+  <div class="section" id="component-descriptor-registries">
+<h1>Component Descriptor Registries<a class="headerlink" href="#component-descriptor-registries" title="Permalink to this headline">¶</a></h1>
+<p>Component Descriptor Registries are used to store <cite>Component Descriptors</cite>. Using a
+<cite>Repository Context</cite> configuration, and a <cite>Component Name</cite> and <cite>Component Version</cite>, it is possible
+to unambiguously reference a <cite>Component Descriptor</cite> for the given component version.</p>
+<p>Component Descriptor Registries <em>MUST</em> implement a WORM-semantics (write-once-read-many).</p>
+<p>There can potentially be many different technical implementations. However, for the time being,
+there is only one, using an OCI Image Registry.</p>
+<div class="section" id="component-descriptor-registries-backed-by-oci-image-registry">
+<h2>Component Descriptor Registries backed by OCI Image Registry<a class="headerlink" href="#component-descriptor-registries-backed-by-oci-image-registry" title="Permalink to this headline">¶</a></h2>
+<p>Component Descriptor Registries backed by an OCI Image Registry <em>MUST</em> specify a <cite>baseUrl</cite>. Said
+URL <em>MUST</em> refer to an OCI Image Registry (for example <cite>eu.gcr.io/gardener-project</cite>).</p>
+<p>The base URL <em>MAY</em> refer to sub-path on a OCI Image Registry.</p>
+<p>Component Descriptor OCI Names are constructed like so:</p>
+<p><cite>&lt;baseUrl&gt;/componentDescriptors/&lt;componentName&gt;:&lt;versionTag&gt;</cite></p>
+<p>Where:</p>
+<ul class="simple">
+<li><p>baseUrl is the already-discussed registry URL</p></li>
+<li><p>componentName is a valid <cite>Component Name</cite> (i.e. a domain name with an optional URL path suffix)</p></li>
+<li><p>versionTag is a valid <cite>Component Version</cite> (i.e. relaxed semver version)</p></li>
+</ul>
+<p>The thus-referenced <cite>Component Descriptor</cite> is stored as an OCI Container Image would be. The
+Image Manifest <em>MUST</em> contain exactly one layer. The layer <em>MUST</em> be a POSIX.1-2001-compliant
+pax archive (commonly also known as “tarball”), containing as first entry a regular file named
+<cite>component-descriptor.yaml</cite>, whose <cite>utf-8</cite>-encoded content is a valid <cite>Component Descriptor</cite> (v2),
+serialised as either YAML or JSON.</p>
+</div>
 </div>
 
 
@@ -158,6 +185,13 @@
            
           </div>
           <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+      
+        <a href="semantics.html" class="btn btn-neutral float-left" title="Gardener Component Descriptor Semantics" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
   
 
   <hr/>
