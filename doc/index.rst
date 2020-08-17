@@ -22,6 +22,7 @@ This contract encompasses:
 
   format
   semantics
+  component_descriptor_registries
   schema_v1/index
 
 
