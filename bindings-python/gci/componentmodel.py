@@ -1,8 +1,10 @@
 import dataclasses
 import enum
+import io
 import typing
 
 import dacite
+import yaml
 
 dc = dataclasses.dataclass
 
@@ -136,3 +138,21 @@ class ComponentDescriptor:
         )
 
         return component_descriptor
+
+    def to_fobj(self, fileobj: io.BytesIO):
+        raw_dict = dataclasses.asdict(self)
+        yaml.dump(
+            data=raw_dict,
+            stream=fileobj,
+            Dumper=EnumValueYamlDumper,
+        )
+
+
+class EnumValueYamlDumper(yaml.SafeDumper):
+    '''
+    a yaml.SafeDumper that will dump enum objects using their values
+    '''
+    def represent_data(self, data):
+        if isinstance(data, enum.Enum):
+            return self.represent_data(data.value)
+        return super().represent_data(data)
