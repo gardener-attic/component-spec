@@ -16,6 +16,14 @@
 
 set -e
 
-echo "> Format"
+echo "> Check"
 
-goimports -l -w --local github.com/gardener/component-spec $@
+echo "Check generated files"
+unformatted_files="$(goimports -l --local github.com/gardener/component-spec $@)"
+if [[ "$unformatted_files" ]]; then
+  echo "Unformatted files:"
+  echo "$unformatted_files"
+  exit 1
+fi
+
+echo "Checks succeeded"
