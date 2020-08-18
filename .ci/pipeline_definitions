@@ -13,3 +13,5 @@ component-spec:
         render_and_update_documentation:
           publish_to: ['github_pages']
         run-unittests: ~
+        run-golang-check:
+          image: golang:1.14-alpine

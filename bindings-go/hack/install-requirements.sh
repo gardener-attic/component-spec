@@ -16,6 +16,8 @@
 
 set -e
 
-echo "> Format"
+echo "> Install requirements"
 
-goimports -l -w --local github.com/gardener/component-spec $@
+GO111MODULE=off go get golang.org/x/tools/cmd/goimports
+GO111MODULE=on curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s -- -b $(go env GOPATH)/bin v1.27.0
+go get -u github.com/go-bindata/go-bindata/...

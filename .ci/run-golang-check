@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+set -e
+
+own_dir="$(readlink -f "$(dirname "${0}")")"
+repo_root="$(readlink -f "${own_dir}/..")"
+
+cd ${repo_root}/bindings-go/
+
+make install-requirements
+go mod vendor
+
+make check
+make test
+
+echo "All checks succeeded"
