@@ -20,7 +20,7 @@ def component_descriptor_to_tarfileobj(
     component_descriptor_buf = io.BytesIO(
         yaml.dump(component_descriptor).encode('utf-8')
     )
-    component_descriptor_buf.seek(0, whence=os.SEEK_END)
+    component_descriptor_buf.seek(0, os.SEEK_END)
     component_descriptor_leng = component_descriptor_buf.tell()
     component_descriptor_buf.seek(0)
 
