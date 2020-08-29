@@ -19,9 +19,9 @@ def component_descriptor_to_tarfileobj(
     if not isinstance(component_descriptor, dict):
         component_descriptor = dataclasses.asdict(component_descriptor)
 
-    component_descriptor_buf = io.BytesIO()
-    component_descriptor.to_fobj(component_descriptor_buf)
-
+    component_descriptor_buf = io.BytesIO(
+        yaml.dump(component_descriptor).encode('utf-8')
+    )
     component_descriptor_buf.seek(0, os.SEEK_END)
     component_descriptor_leng = component_descriptor_buf.tell()
     component_descriptor_buf.seek(0)
