@@ -1,5 +1,6 @@
 import dataclasses
 import io
+import logging
 import os
 import tarfile
 import typing
@@ -7,6 +8,7 @@ import yaml
 
 import gci.componentmodel
 
+logger = logging.getLogger(__name__)
 
 component_descriptor_fname = 'component-descriptor.yaml'
 
@@ -43,7 +45,10 @@ def component_descriptor_from_tarfileobj(
     with tarfile.open(fileobj=fileobj, mode='r') as tf:
         component_descriptor_info = tf.getmember(component_descriptor_fname)
         raw_dict = yaml.safe_load(tf.extractfile(component_descriptor_info).read())
-        print(raw_dict)
-        print('xx')
+
+        logger.debug(raw_dict)
+
+        if raw_dict is None:
+          raise ValueError('Component Descriptor appears to be empty')
 
         gci.componentmodel.ComponentDescriptor.from_dict(raw_dict)
