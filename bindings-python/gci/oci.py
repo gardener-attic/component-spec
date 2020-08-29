@@ -54,4 +54,4 @@ def component_descriptor_from_tarfileobj(
         if raw_dict is None:
           raise ValueError('Component Descriptor appears to be empty')
 
-        gci.componentmodel.ComponentDescriptor.from_dict(raw_dict)
+        return gci.componentmodel.ComponentDescriptor.from_dict(raw_dict)
