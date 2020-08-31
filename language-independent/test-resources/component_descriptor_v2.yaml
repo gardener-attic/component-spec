@@ -11,22 +11,30 @@ component:
 
   provider: 'internal'
 
+  labels:
+    - name: 'a_label'
+      value: 'a_value'
+
   sources:
     - name: 'github.com/gardener/gardener'
       type: 'git'
+      labels: []
       access:
         type: 'github'
         repoUrl: 'github.com/gardener/gardener'
         ref: 'refs/tags/v1.7.2'
 
   componentReferences:
-    - name: 'etc-druid'
+    - name: 'my-etc-druid'
+      componentName: 'etc-druid'
       version: 'v0.3.0'
+      labels: []
 
   localResources:
     - name: 'apiserver'
       version: 'v1.7.2' # version is implied by component, i.e. v1.7.2 in this case
       type: 'ociImage'
+      labels: []
       access:
         type: 'ociRegistry'
         imageReference: 'eu.gcr.io/gardener-project/gardener/apiserver:v1.7.4'
@@ -35,6 +43,7 @@ component:
     - name: 'grafana'
       version: '7.0.3'
       type: 'ociImage'
+      labels: []
       access:
         type: 'ociRegistry'
         imageReference: 'registry-1.docker.io/grafana/grafana/7.0.3'
