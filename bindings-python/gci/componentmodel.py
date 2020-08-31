@@ -52,6 +52,12 @@ class HttpAccess(ResourceAccess):
     url: str
 
 
+@dc(frozen=True)
+class Label:
+    name: str
+    value: typing.Union[str, int, float, bool, dict]
+
+
 class Provider(enum.Enum):
     '''
     internal: from repositoryContext-owner
@@ -71,6 +77,7 @@ class Metadata:
 class ComponentReference:
     name: str
     version: str
+    labels: typing.List[Label] = dc.field(default_factory=list)
 
 
 @dc(frozen=True)
@@ -85,6 +92,7 @@ class Resource:
         HttpAccess,
         None
     ]
+    labels: typing.List[Label] = dc.field(default_factory=list)
 
 
 @dc
@@ -100,6 +108,7 @@ class ComponentSource:
         GithubAccess,
     ]
     type: SourceType = SourceType.GIT
+    labels: typing.List[Label] = dc.field(default_factory=list)
 
 
 @dc
@@ -114,6 +123,8 @@ class Component:
     componentReferences: typing.List[ComponentReference]
     localResources: typing.List[Resource]
     externalResources: typing.List[Resource]
+
+    labels: typing.List[Label] = dc.field(default_factory=list)
 
 
 @dc

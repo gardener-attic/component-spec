@@ -11,6 +11,12 @@ definitions:
       schemaVersion:
         type: 'string'
 
+  label:
+    type: 'object'
+    required:
+      - 'name'
+      - 'value'
+
   repositoryContext:
     type: 'object'
     required:
@@ -65,6 +71,10 @@ definitions:
       type:
         type: 'string'
         enum: ['git']
+      labels:
+        type: 'array'
+        items:
+          $ref: '#/definitions/label'
       access:
         anyOf:
           - $ref: '#/definitions/access'
@@ -76,12 +86,17 @@ definitions:
     description: 'a reference to a component'
     required:
       - 'name'
+      - 'componentName'
       - 'version'
     properties:
       name:
         type: 'string' # actually: component-type w/ special restrictions
       version:
         type: 'string' # actually: relaxed semver?
+      labels:
+        type: 'array'
+        items:
+          $ref: '#/definitions/label'
 
   resourceType:
     type: 'object'
@@ -98,6 +113,10 @@ definitions:
         type: 'string'
       type:
         type: 'string'
+      labels:
+        type: 'array'
+        items:
+          $ref: '#/definitions/label'
       access:
         $ref: '#definitions/access'
 
@@ -128,6 +147,10 @@ definitions:
       type:
         type: 'string'
         enum: ['ociImage']
+      labels:
+        type: 'array'
+        items:
+          $ref: '#/definitions/label'
       access:
         $ref: '#/definitions/ociImageAccess'
 
@@ -167,6 +190,10 @@ definitions:
       type:
         type: 'string'
         enum: ['generic']
+      labels:
+        type: 'array'
+        items:
+          $ref: '#/definitions/label'
       access:
         $ref: '#/definitions/genericAccess'
 
@@ -194,6 +221,10 @@ definitions:
       provider:
         type: 'string'
         enum: ['internal', 'external']
+      labels:
+        type: 'array'
+        items:
+          $ref: '#/definitions/label'
       sources:
         type: 'array'
         items:
