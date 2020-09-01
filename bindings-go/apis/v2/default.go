@@ -20,7 +20,7 @@ func DefaultComponent(component *ComponentDescriptor) error {
 		component.Sources = make([]Resource, 0)
 	}
 	if component.ComponentReferences == nil {
-		component.ComponentReferences = make([]ObjectMeta, 0)
+		component.ComponentReferences = make([]ComponentReference, 0)
 	}
 	if component.LocalResources == nil {
 		component.LocalResources = make([]Resource, 0)

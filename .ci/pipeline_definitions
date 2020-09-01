@@ -14,7 +14,7 @@ component-spec:
           publish_to: ['github_pages']
         run-unittests: ~
         run-golang-check:
-          image: golang:1.14-alpine
+          image: golang:1.14
     release:
       traits:
         component_descriptor: ~
