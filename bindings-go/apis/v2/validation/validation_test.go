@@ -154,12 +154,33 @@ var _ = Describe("Validation", func() {
 
 	})
 
+	Context("#Sources", func() {
+		It("should forbid if a duplicated component's source is defined", func() {
+			comp.Sources = []v2.Resource{
+				{
+					ObjectMeta: v2.ObjectMeta{Name: "a"},
+				},
+				{
+					ObjectMeta: v2.ObjectMeta{Name: "a"},
+				},
+			}
+			errList := validate(nil, comp)
+			Expect(errList).To(ContainElement(PointTo(MatchFields(IgnoreExtras, Fields{
+				"Type":  Equal(field.ErrorTypeDuplicate),
+				"Field": Equal("component.sources[1]"),
+			}))))
+		})
+	})
+
 	Context("#ComponentReferences", func() {
 		It("should pass if a reference is set", func() {
-			comp.ComponentReferences = []v2.ObjectMeta{
+			comp.ComponentReferences = []v2.ComponentReference{
 				{
-					Name:    "test",
-					Version: "1.2.3",
+					ComponentName: "test",
+					ObjectMeta: v2.ObjectMeta{
+						Name:    "test",
+						Version: "1.2.3",
+					},
 				},
 			}
 			errList := validate(nil, comp)
@@ -174,9 +195,12 @@ var _ = Describe("Validation", func() {
 		})
 
 		It("should forbid if a reference's name is missing", func() {
-			comp.ComponentReferences = []v2.ObjectMeta{
+			comp.ComponentReferences = []v2.ComponentReference{
 				{
-					Version: "1.2.3",
+					ComponentName: "test",
+					ObjectMeta: v2.ObjectMeta{
+						Version: "1.2.3",
+					},
 				},
 			}
 			errList := validate(nil, comp)
@@ -186,16 +210,55 @@ var _ = Describe("Validation", func() {
 			}))))
 		})
 
-		It("should forbid if a reference's version is missing", func() {
-			comp.ComponentReferences = []v2.ObjectMeta{
+		It("should forbid if a reference's component name is missing", func() {
+			comp.ComponentReferences = []v2.ComponentReference{
 				{
-					Name: "test",
+					ObjectMeta: v2.ObjectMeta{
+						Name:    "test",
+						Version: "1.2.3",
+					},
+				},
+			}
+			errList := validate(nil, comp)
+			Expect(errList).To(ContainElement(PointTo(MatchFields(IgnoreExtras, Fields{
+				"Type":  Equal(field.ErrorTypeRequired),
+				"Field": Equal("component.componentReferences[0].componentName"),
+			}))))
+		})
+
+		It("should forbid if a reference's version is missing", func() {
+			comp.ComponentReferences = []v2.ComponentReference{
+				{
+					ComponentName: "test",
+					ObjectMeta: v2.ObjectMeta{
+						Name: "test",
+					},
 				},
 			}
 			errList := validate(nil, comp)
 			Expect(errList).To(ContainElement(PointTo(MatchFields(IgnoreExtras, Fields{
 				"Type":  Equal(field.ErrorTypeRequired),
 				"Field": Equal("component.componentReferences[0].version"),
+			}))))
+		})
+
+		It("should forbid if a duplicated component reference is defined", func() {
+			comp.ComponentReferences = []v2.ComponentReference{
+				{
+					ObjectMeta: v2.ObjectMeta{
+						Name: "test",
+					},
+				},
+				{
+					ObjectMeta: v2.ObjectMeta{
+						Name: "test",
+					},
+				},
+			}
+			errList := validate(nil, comp)
+			Expect(errList).To(ContainElement(PointTo(MatchFields(IgnoreExtras, Fields{
+				"Type":  Equal(field.ErrorTypeDuplicate),
+				"Field": Equal("component.componentReferences[1]"),
 			}))))
 		})
 	})
@@ -216,5 +279,107 @@ var _ = Describe("Validation", func() {
 				"Field": Equal("component.localResources[0].version"),
 			}))))
 		})
+
+		It("should forbid if a duplicated local resource is defined", func() {
+			comp.LocalResources = []v2.Resource{
+				{
+					ObjectMeta: v2.ObjectMeta{
+						Name: "test",
+					},
+				},
+				{
+					ObjectMeta: v2.ObjectMeta{
+						Name: "test",
+					},
+				},
+			}
+			errList := validate(nil, comp)
+			Expect(errList).To(ContainElement(PointTo(MatchFields(IgnoreExtras, Fields{
+				"Type":  Equal(field.ErrorTypeDuplicate),
+				"Field": Equal("component.localResources[1]"),
+			}))))
+		})
+	})
+
+	Context("#ExternalResources", func() {
+		It("should forbid if a duplicated local resource is defined", func() {
+			comp.ExternalResources = []v2.Resource{
+				{
+					ObjectMeta: v2.ObjectMeta{
+						Name: "test",
+					},
+				},
+				{
+					ObjectMeta: v2.ObjectMeta{
+						Name: "test",
+					},
+				},
+			}
+			errList := validate(nil, comp)
+			Expect(errList).To(ContainElement(PointTo(MatchFields(IgnoreExtras, Fields{
+				"Type":  Equal(field.ErrorTypeDuplicate),
+				"Field": Equal("component.externalResources[1]"),
+			}))))
+		})
+	})
+
+	Context("#labels", func() {
+
+		It("should forbid if labels are defined multiple times in the same context", func() {
+			comp.ComponentReferences = []v2.ComponentReference{
+				{
+					ComponentName: "test",
+					ObjectMeta: v2.ObjectMeta{
+						Name:    "test",
+						Version: "1.2.3",
+						Labels: []v2.Label{
+							{
+								Name:  "l1",
+								Value: []byte{},
+							},
+							{
+								Name:  "l1",
+								Value: []byte{},
+							},
+						},
+					},
+				},
+			}
+
+			errList := validate(nil, comp)
+			Expect(errList).To(ContainElement(PointTo(MatchFields(IgnoreExtras, Fields{
+				"Type":  Equal(field.ErrorTypeDuplicate),
+				"Field": Equal("component.componentReferences[0].labels[1]"),
+			}))))
+		})
+
+		It("should pass if labels are defined multiple times in the same context with differnet names", func() {
+			comp.ComponentReferences = []v2.ComponentReference{
+				{
+					ComponentName: "test",
+					ObjectMeta: v2.ObjectMeta{
+						Name:    "test",
+						Version: "1.2.3",
+						Labels: []v2.Label{
+							{
+								Name:  "l1",
+								Value: []byte{},
+							},
+							{
+								Name:  "l2",
+								Value: []byte{},
+							},
+						},
+					},
+				},
+			}
+
+			errList := validate(nil, comp)
+			Expect(errList).ToNot(ContainElement(PointTo(MatchFields(IgnoreExtras, Fields{
+				"Type":  Equal(field.ErrorTypeDuplicate),
+				"Field": Equal("component.componentReferences[0].labels[1]"),
+			}))))
+		})
+
 	})
 })

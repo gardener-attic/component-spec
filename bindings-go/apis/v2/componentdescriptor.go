@@ -64,7 +64,7 @@ type ComponentSpec struct {
 	// Sources defines sources that produced the component
 	Sources []Resource `json:"sources"`
 	// ComponentReferences references component dependencies that can be resolved in the current context.
-	ComponentReferences []ObjectMeta `json:"componentReferences"`
+	ComponentReferences []ComponentReference `json:"componentReferences"`
 	// LocalResources defines internal resources that are created by the component
 	LocalResources []Resource `json:"localResources"`
 	// ExternalResources defines external resources that are not produced by a third party.
@@ -79,12 +79,24 @@ type RepositoryContext struct {
 	BaseURL string `json:"baseUrl"`
 }
 
+// Label is a label that can be set on objects.
+type Label struct {
+	// Name is the unique name of the label.
+	Name string `json:"name"`
+	// Value is the json/yaml data of the label
+	Value json.RawMessage `json:"value"`
+}
+
 // ObjectMeta defines a object that is uniquely identified by its name and version.
 type ObjectMeta struct {
 	// Name is the context unique name of the object.
 	Name string `json:"name"`
 	// Version is the semver version of the object.
 	Version string `json:"version"`
+	// Labels defines an optional set of additional labels
+	// describing the object.
+	// +optional
+	Labels []Label `json:"labels,omitempty"`
 }
 
 // GetName returns the name of the object.
@@ -105,6 +117,16 @@ func (o ObjectMeta) GetVersion() string {
 // SetVersion sets the version of the object.
 func (o *ObjectMeta) SetVersion(version string) {
 	o.Version = version
+}
+
+// GetLabels returns the label of the object.
+func (o ObjectMeta) GetLabels() []Label {
+	return o.Labels
+}
+
+// SetLabels sets the labels of the object.
+func (o *ObjectMeta) SetLabels(labels []Label) {
+	o.Labels = labels
 }
 
 // ObjectType describes the type of a object
@@ -132,6 +154,10 @@ type ObjectMetaAccessor interface {
 	GetVersion() string
 	// SetVersion sets the version of the access object.
 	SetVersion(version string)
+	// GetLabels returns the labels of the access object.
+	GetLabels() string
+	// SetLabels sets the labels of the access object.
+	SetLabels(labels []Label)
 }
 
 // AccessAccessor defines the accessor for a component
@@ -144,6 +170,13 @@ type AccessAccessor interface {
 	GetData() ([]byte, error)
 	// SetData sets the custom data of a component.
 	SetData([]byte) error
+}
+
+// ComponentReference describes the reference to another component in the registry.
+type ComponentReference struct {
+	ObjectMeta `json:",inline"`
+	// ComponentName describes the remote name of the referenced object
+	ComponentName string `json:"componentName"`
 }
 
 // Resource describes a resource dependency of a component.
