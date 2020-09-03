@@ -15,3 +15,11 @@ component-spec:
         run-unittests: ~
         run-golang-check:
           image: golang:1.14-alpine
+    release:
+      traits:
+        version:
+          preprocess: 'finalise'
+          inject_effective_version: True
+        release:
+          nextversion: 'bump_patch'
+          release_callback: '.ci/release'

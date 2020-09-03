@@ -1,0 +1,22 @@
+#!/usr/bin/env bash
+
+set -e
+
+repo_dir="$(readlink -f "$(dirname "$0")/..")"
+python_dir="${repo_dir}/bindings-python"
+
+cd "${python_dir}"
+
+# install build-only dependencies (no need to include in image)
+pip3 install --upgrade pip twine wheel setuptools
+
+# build into "${python_dir}/dist"
+python3 "${python_dir}/setup.py" sdist bdist_wheel
+
+model_element_cmd="cli.py config model_element --cfg-type pypi --cfg-name gardener"
+
+username="$(${model_element_cmd} --key credentials.username)"
+passwd="$(${model_element_cmd} --key credentials.passwd)"
+
+# upload to pypi
+twine upload --user "${username}" --password "${passwd}" dist/*
