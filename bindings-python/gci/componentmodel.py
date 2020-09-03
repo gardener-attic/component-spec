@@ -92,7 +92,7 @@ class Resource:
         HttpAccess,
         None
     ]
-    labels: typing.List[Label] = dc.field(default_factory=list)
+    labels: typing.List[Label] = dataclasses.field(default_factory=list)
 
 
 @dc
@@ -108,7 +108,7 @@ class ComponentSource:
         GithubAccess,
     ]
     type: SourceType = SourceType.GIT
-    labels: typing.List[Label] = dc.field(default_factory=list)
+    labels: typing.List[Label] = dataclasses.field(default_factory=list)
 
 
 @dc
@@ -124,7 +124,7 @@ class Component:
     localResources: typing.List[Resource]
     externalResources: typing.List[Resource]
 
-    labels: typing.List[Label] = dc.field(default_factory=list)
+    labels: typing.List[Label] = dataclasses.field(default_factory=list)
 
 
 @dc
