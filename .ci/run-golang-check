@@ -5,7 +5,7 @@ own_dir="$(readlink -f "$(dirname "${0}")")"
 repo_root="$(readlink -f "${own_dir}/..")"
 
 # XXX maybe we should pre-install this into the image?
-apk add make bash
+apk add make bash git
 
 cd ${repo_root}/bindings-go/
 
