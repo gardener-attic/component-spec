@@ -17,6 +17,7 @@ component-spec:
           image: golang:1.14-alpine
     release:
       traits:
+        component_descriptor: ~
         version:
           preprocess: 'finalise'
           inject_effective_version: True
