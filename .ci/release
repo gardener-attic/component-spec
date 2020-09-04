@@ -2,7 +2,7 @@
 
 set -eu
 
-own_dir="$(readlink -f "$(dirname "$0")/..")"
+own_dir="$(readlink -f "$(dirname "$0")")"
 
 effective_version="${EFFECTIVE_VERSION}"
 
