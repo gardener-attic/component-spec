@@ -76,6 +76,7 @@ class Metadata:
 @dc(frozen=True)
 class ComponentReference:
     name: str
+    componentName: str
     version: str
     labels: typing.List[Label] = dataclasses.field(default_factory=list)
 
