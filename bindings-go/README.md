@@ -16,7 +16,7 @@ package main
 import (
     "fmt"
 
-    "github.com/gardener/component-spec/bindings-go/codec" 
+    "github.com/gardener/component-spec/bindings-go/codec"
     "github.com/gardener/component-spec/bindings-go/apis/v2"
 )
 
