@@ -1,0 +1,9 @@
+setup.py
+gardener_component_model.egg-info/PKG-INFO
+gardener_component_model.egg-info/SOURCES.txt
+gardener_component_model.egg-info/dependency_links.txt
+gardener_component_model.egg-info/requires.txt
+gardener_component_model.egg-info/top_level.txt
+gci/__init__.py
+gci/componentmodel.py
+gci/oci.py
