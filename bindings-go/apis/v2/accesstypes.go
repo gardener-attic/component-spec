@@ -111,6 +111,53 @@ var webCodec = &AccessCodecWrapper{
 	}),
 }
 
+// WebType is the type of a web component
+const GitHubAccessType = "github"
+
+// GitHubAccess describes a github respository resource access.
+type GitHubAccess struct {
+	ObjectType `json:",inline"`
+
+	// RepoURL is the url pointing to the remote repository.
+	RepoURL string `json:"repoUrl"`
+	// Ref describes the git reference.
+	Ref string `json:"ref"`
+}
+
+var _ AccessAccessor = &GitHubAccess{}
+
+func (w GitHubAccess) GetData() ([]byte, error) {
+	return yaml.Marshal(w)
+}
+
+func (w *GitHubAccess) SetData(bytes []byte) error {
+	var newGitHubAccess GitHubAccess
+	if err := json.Unmarshal(bytes, &newGitHubAccess); err != nil {
+		return err
+	}
+
+	w.RepoURL = newGitHubAccess.RepoURL
+	w.Ref = newGitHubAccess.Ref
+	return nil
+}
+
+var githubAccessCodec = &AccessCodecWrapper{
+	AccessDecoder: AccessDecoderFunc(func(data []byte) (AccessAccessor, error) {
+		var github GitHubAccess
+		if err := json.Unmarshal(data, &github); err != nil {
+			return nil, err
+		}
+		return &github, nil
+	}),
+	AccessEncoder: AccessEncoderFunc(func(accessor AccessAccessor) ([]byte, error) {
+		github, ok := accessor.(*GitHubAccess)
+		if !ok {
+			return nil, fmt.Errorf("accessor is not of type %s", OCIImageType)
+		}
+		return json.Marshal(github)
+	}),
+}
+
 // CustomAccess describes a generic dependency of a resolvable component.
 type CustomAccess struct {
 	ObjectType `json:",inline"`
