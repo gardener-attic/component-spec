@@ -33,7 +33,7 @@ func TestConfig(t *testing.T) {
 var _ = Describe("serializer", func() {
 
 	It("should decode a simple component", func() {
-		data, err := ioutil.ReadFile("./testdata/01-data.yaml")
+		data, err := ioutil.ReadFile("../../language-independent/test-resources/component_descriptor_v2.yaml")
 		Expect(err).ToNot(HaveOccurred())
 
 		var comp v2.ComponentDescriptor
@@ -45,10 +45,13 @@ var _ = Describe("serializer", func() {
 		Expect(comp.ExternalResources).To(HaveLen(1))
 
 		extDep := comp.ExternalResources[0]
-		Expect(extDep.Name).To(Equal("hyperkube"))
-		Expect(extDep.Version).To(Equal("v1.16.4"))
+		Expect(extDep.Name).To(Equal("grafana"))
+		Expect(extDep.Version).To(Equal("7.0.3"))
 		Expect(extDep.Type).To(Equal(v2.OCIImageType))
 		Expect(extDep.Access).To(BeAssignableToTypeOf(&v2.OCIRegistryAccess{}))
+
+		ociAccess := extDep.Access.(*v2.OCIRegistryAccess)
+		Expect(ociAccess.ImageReference).To(Equal("registry-1.docker.io/grafana/grafana/7.0.3"))
 	})
 
 })
