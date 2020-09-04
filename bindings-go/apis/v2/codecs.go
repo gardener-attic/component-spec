@@ -21,8 +21,9 @@ import (
 
 // KnownAccessTypes contains all known access serializer
 var KnownAccessTypes = map[string]AccessCodec{
-	OCIRegistryType: ociCodec,
-	WebType:         webCodec,
+	OCIRegistryType:  ociCodec,
+	GitHubAccessType: githubAccessCodec,
+	WebType:          webCodec,
 }
 
 // AccessCodec describes a known component type and how it is decoded and encoded
@@ -64,7 +65,7 @@ func (e AccessEncoderFunc) Encode(accessor AccessAccessor) ([]byte, error) {
 }
 
 // ValidateAccessType validates that a type is known or of a generic type.
-// todo: revisit currently "x-" specifies a generic type
+// todo: revisit; currently "x-" specifies a generic type
 func ValidateAccessType(ttype string) error {
 	if _, ok := KnownAccessTypes[ttype]; ok {
 		return nil
