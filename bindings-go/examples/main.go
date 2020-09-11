@@ -68,7 +68,7 @@ component:
 	fmt.Printf("%v\n", res)
 
 	// get the access for a resource
-	// known types implement the AccessAccessor interface and can be cast to the specific type.
+	// known types implement the TypedObjectAccessor interface and can be cast to the specific type.
 	ociAccess := res.Access.(*v2.OCIRegistryAccess)
 	fmt.Println(ociAccess.ImageReference) // prints: eu.gcr.io/gardener-project/gardener/apiserver:v1.7.2
 }

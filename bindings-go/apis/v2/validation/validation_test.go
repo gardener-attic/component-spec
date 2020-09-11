@@ -53,10 +53,8 @@ var _ = Describe("Validation", func() {
 				Name:    "image1",
 				Version: "1.2.3",
 			},
-			ObjectType: v2.ObjectType{
-				Type: v2.OCIImageType,
-			},
-			Access: ociRegistry1,
+			TypedObjectAccessor: v2.NewTypeOnly(v2.OCIImageType),
+			Access:              ociRegistry1,
 		}
 		ociRegistry2 = &v2.OCIRegistryAccess{
 			ObjectType: v2.ObjectType{
@@ -69,10 +67,8 @@ var _ = Describe("Validation", func() {
 				Name:    "image2",
 				Version: "1.2.3",
 			},
-			ObjectType: v2.ObjectType{
-				Type: v2.OCIImageType,
-			},
-			Access: ociRegistry2,
+			TypedObjectAccessor: v2.NewTypeOnly(v2.OCIImageType),
+			Access:              ociRegistry2,
 		}
 
 		comp = &v2.ComponentDescriptor{
@@ -271,6 +267,7 @@ var _ = Describe("Validation", func() {
 						Name:    "locRes",
 						Version: "0.0.1",
 					},
+					TypedObjectAccessor: v2.NewTypeOnly(v2.OCIImageType),
 				},
 			}
 			errList := validate(nil, comp)

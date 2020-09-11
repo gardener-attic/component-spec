@@ -47,7 +47,7 @@ var _ = Describe("serializer", func() {
 		extDep := comp.ExternalResources[0]
 		Expect(extDep.Name).To(Equal("grafana"))
 		Expect(extDep.Version).To(Equal("7.0.3"))
-		Expect(extDep.Type).To(Equal(v2.OCIImageType))
+		Expect(extDep.GetType()).To(Equal(v2.OCIImageType))
 		Expect(extDep.Access).To(BeAssignableToTypeOf(&v2.OCIRegistryAccess{}))
 
 		ociAccess := extDep.Access.(*v2.OCIRegistryAccess)

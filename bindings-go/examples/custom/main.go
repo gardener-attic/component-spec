@@ -62,7 +62,7 @@ component:
 	res, err := component.GetLocalResource("custom1", "ftpRes", "v1.7.2")
 	check(err)
 	// unknown types are serialized as custom type
-	ftpAccess := res.Access.(*v2.CustomAccess)
+	ftpAccess := res.Access.(*v2.CustomType)
 	fmt.Println(ftpAccess.Data["url"]) // prints: ftp://example.com/my-resource
 
 	res, err = component.GetExternalResource("nodeModule", "nodeMod", "0.0.1")
@@ -86,7 +86,7 @@ type NPMAccess struct {
 	Version    string `json:"version"`
 }
 
-var _ v2.AccessAccessor = &NPMAccess{}
+var _ v2.TypedObjectAccessor = &NPMAccess{}
 
 func (n NPMAccess) GetData() ([]byte, error) {
 	return json.Marshal(n)
@@ -103,15 +103,15 @@ func (n *NPMAccess) SetData(bytes []byte) error {
 	return nil
 }
 
-var npmCodec = &v2.AccessCodecWrapper{
-	AccessDecoder: v2.AccessDecoderFunc(func(data []byte) (v2.AccessAccessor, error) {
+var npmCodec = &v2.TypedObjectCodecWrapper{
+	TypedObjectDecoder: v2.TypedObjectDecoderFunc(func(data []byte) (v2.TypedObjectAccessor, error) {
 		var npm NPMAccess
 		if err := json.Unmarshal(data, &npm); err != nil {
 			return nil, err
 		}
 		return &npm, nil
 	}),
-	AccessEncoder: v2.AccessEncoderFunc(func(accessor v2.AccessAccessor) ([]byte, error) {
+	TypedObjectEncoder: v2.TypedObjectEncoderFunc(func(accessor v2.TypedObjectAccessor) ([]byte, error) {
 		npm, ok := accessor.(*NPMAccess)
 		if !ok {
 			return nil, fmt.Errorf("accessor is not of type %s", NPMType)
