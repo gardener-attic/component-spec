@@ -54,16 +54,28 @@ func validate(fldPath *field.Path, component *v2.ComponentDescriptor) field.Erro
 	allErrs = append(allErrs, validateObjectMeta(compPath, component.ObjectMeta)...)
 
 	srcPath := compPath.Child("sources")
-	allErrs = append(allErrs, validateResources(srcPath, component.Sources)...)
+	for i, src := range component.Sources {
+		allErrs = append(allErrs, validateSource(srcPath.Index(i), src)...)
+	}
 
 	refPath := compPath.Child("componentReferences")
-	allErrs = append(allErrs, validateComponentReferences(refPath, component.ComponentReferences)...)
+	for i, ref := range component.ComponentReferences {
+		allErrs = append(allErrs, validateObjectMeta(refPath.Index(i), ref)...)
+	}
 
 	localPath := compPath.Child("localResources")
-	allErrs = append(allErrs, validateLocalResources(localPath, component.GetVersion(), component.LocalResources)...)
+	for i, res := range component.LocalResources {
+		allErrs = append(allErrs, validateResource(localPath.Index(i), res)...)
+		if res.GetVersion() != component.GetVersion() {
+			allErrs = append(allErrs, field.Invalid(localPath.Index(i).Child("version"), "invalid version",
+				"version of local resources must match the component version"))
+		}
+	}
 
 	extPath := compPath.Child("externalResources")
-	allErrs = append(allErrs, validateResources(extPath, component.ExternalResources)...)
+	for i, res := range component.ExternalResources {
+		allErrs = append(allErrs, validateResource(extPath.Index(i), res)...)
+	}
 
 	return allErrs
 }
@@ -76,67 +88,18 @@ func validateObjectMeta(fldPath *field.Path, om v2.ObjectMeta) field.ErrorList {
 	if len(om.Version) == 0 {
 		allErrs = append(allErrs, field.Required(fldPath.Child("version"), "must specify a version"))
 	}
-	allErrs = append(allErrs, validateLabels(fldPath.Child("labels"), om.Labels)...)
 	return allErrs
 }
 
-func validateLabels(fldPath *field.Path, labels []v2.Label) field.ErrorList {
+func validateSource(fldPath *field.Path, res v2.Source) field.ErrorList {
 	allErrs := field.ErrorList{}
-	labelNames := make(map[string]struct{})
-	for i, label := range labels {
-		labelPath := fldPath.Index(i)
-		if len(label.Name) == 0 {
-			allErrs = append(allErrs, field.Required(labelPath.Child("name"), "must specify a name"))
-			continue
-		}
-
-		if _, ok := labelNames[label.Name]; ok {
-			allErrs = append(allErrs, field.Duplicate(labelPath, "duplicate label name"))
-			continue
-		}
-		labelNames[label.Name] = struct{}{}
+	if len(res.GetName()) == 0 {
+		allErrs = append(allErrs, field.Required(fldPath.Child("name"), "must specify a name"))
 	}
-	return allErrs
-}
-
-func validateComponentReferences(fldPath *field.Path, refs []v2.ComponentReference) field.ErrorList {
-	allErrs := field.ErrorList{}
-	refNames := make(map[string]struct{})
-	for i, ref := range refs {
-		refPath := fldPath.Index(i)
-		allErrs = append(allErrs, validateComponentReference(refPath, ref)...)
-
-		if _, ok := refNames[ref.Name]; ok {
-			allErrs = append(allErrs, field.Duplicate(refPath, "duplicate component reference name"))
-			continue
-		}
-		refNames[ref.Name] = struct{}{}
+	if len(res.GetType()) == 0 {
+		allErrs = append(allErrs, field.Required(fldPath.Child("type"), "must specify a type"))
 	}
-	return allErrs
-}
 
-func validateComponentReference(fldPath *field.Path, cr v2.ComponentReference) field.ErrorList {
-	allErrs := field.ErrorList{}
-	if len(cr.ComponentName) == 0 {
-		allErrs = append(allErrs, field.Required(fldPath.Child("componentName"), "must specify a component name"))
-	}
-	allErrs = append(allErrs, validateObjectMeta(fldPath, cr.ObjectMeta)...)
-	return allErrs
-}
-
-func validateResources(fldPath *field.Path, resources []v2.Resource) field.ErrorList {
-	allErrs := field.ErrorList{}
-	resourceNames := make(map[string]struct{})
-	for i, res := range resources {
-		resPath := fldPath.Index(i)
-		allErrs = append(allErrs, validateResource(resPath, res)...)
-
-		if _, ok := resourceNames[res.Name]; ok {
-			allErrs = append(allErrs, field.Duplicate(resPath, "duplicate resource"))
-			continue
-		}
-		resourceNames[res.Name] = struct{}{}
-	}
 	return allErrs
 }
 
@@ -144,29 +107,10 @@ func validateResource(fldPath *field.Path, res v2.Resource) field.ErrorList {
 	allErrs := field.ErrorList{}
 	allErrs = append(allErrs, validateObjectMeta(fldPath, res.ObjectMeta)...)
 
-	if len(res.Type) == 0 {
+	if len(res.GetType()) == 0 {
 		allErrs = append(allErrs, field.Required(fldPath.Child("type"), "must specify a type"))
 	}
 
-	return allErrs
-}
-
-func validateLocalResources(fldPath *field.Path, componentVersion string, resources []v2.Resource) field.ErrorList {
-	allErrs := field.ErrorList{}
-	resourceNames := make(map[string]struct{})
-	for i, res := range resources {
-		localPath := fldPath.Index(i)
-		allErrs = append(allErrs, validateResource(localPath, res)...)
-		if res.GetVersion() != componentVersion {
-			allErrs = append(allErrs, field.Invalid(localPath.Child("version"), "invalid version",
-				"version of local resources must match the component version"))
-		}
-		if _, ok := resourceNames[res.Name]; ok {
-			allErrs = append(allErrs, field.Duplicate(localPath, "duplicated local resource"))
-			continue
-		}
-		resourceNames[res.Name] = struct{}{}
-	}
 	return allErrs
 }
 
