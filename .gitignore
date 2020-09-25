@@ -3,5 +3,6 @@ __pycache__/
 .pytest_cache/
 
 .idea
+.vscode/
 
 bindings-go/vendor
