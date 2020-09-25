@@ -1,0 +1,33 @@
+Format: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
+Upstream-Name: Gardener component-spec
+Upstream-Contact: The Gardener project <gardener@googlegroups.com>
+Source: https://github.com/gardener/component-spec
+
+# --------------------------------------------------
+# source code
+
+Files:
+  .github/
+  .gitignore
+  bindings-go/go.mod
+  bindings-go/go.sum
+  bindings-python/.gitignore
+  CODEOWNERS
+  VERSION
+Copyright: 2020 SAP SE or an SAP affiliate company and Gardener contributors
+License: Apache-2.0
+
+# --------------------------------------------------
+# documentation
+
+Files:
+  *.rst
+  bindings-go/README.md
+  bindings-python/requirements.txt
+  CONTRIBUTING.md
+  README.md
+Copyright: 2020 SAP SE or an SAP affiliate company and Gardener contributors
+License: CC-BY-4.0
+
+# --------------------------------------------------
+# source dependencies

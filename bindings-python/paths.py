@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2020 SAP SE or an SAP affiliate company and Gardener contributors
+#
+# SPDX-License-Identifier: Apache-2.0
+
 import os
 
 own_dir = os.path.abspath(os.path.dirname(__file__))
