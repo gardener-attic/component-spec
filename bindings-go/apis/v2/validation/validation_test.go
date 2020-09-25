@@ -152,12 +152,14 @@ var _ = Describe("Validation", func() {
 
 	Context("#Sources", func() {
 		It("should forbid if a duplicated component's source is defined", func() {
-			comp.Sources = []v2.Resource{
+			comp.Sources = []v2.Source{
 				{
-					ObjectMeta: v2.ObjectMeta{Name: "a"},
+					Name:                "a",
+					TypedObjectAccessor: v2.NewCustomType("custom", nil),
 				},
 				{
-					ObjectMeta: v2.ObjectMeta{Name: "a"},
+					Name:                "a",
+					TypedObjectAccessor: v2.NewCustomType("custom", nil),
 				},
 			}
 			errList := validate(nil, comp)
@@ -172,11 +174,9 @@ var _ = Describe("Validation", func() {
 		It("should pass if a reference is set", func() {
 			comp.ComponentReferences = []v2.ComponentReference{
 				{
+					Name:          "test",
 					ComponentName: "test",
-					ObjectMeta: v2.ObjectMeta{
-						Name:    "test",
-						Version: "1.2.3",
-					},
+					Version:       "1.2.3",
 				},
 			}
 			errList := validate(nil, comp)
@@ -194,9 +194,7 @@ var _ = Describe("Validation", func() {
 			comp.ComponentReferences = []v2.ComponentReference{
 				{
 					ComponentName: "test",
-					ObjectMeta: v2.ObjectMeta{
-						Version: "1.2.3",
-					},
+					Version:       "1.2.3",
 				},
 			}
 			errList := validate(nil, comp)
@@ -209,10 +207,8 @@ var _ = Describe("Validation", func() {
 		It("should forbid if a reference's component name is missing", func() {
 			comp.ComponentReferences = []v2.ComponentReference{
 				{
-					ObjectMeta: v2.ObjectMeta{
-						Name:    "test",
-						Version: "1.2.3",
-					},
+					Name:    "test",
+					Version: "1.2.3",
 				},
 			}
 			errList := validate(nil, comp)
@@ -226,9 +222,7 @@ var _ = Describe("Validation", func() {
 			comp.ComponentReferences = []v2.ComponentReference{
 				{
 					ComponentName: "test",
-					ObjectMeta: v2.ObjectMeta{
-						Name: "test",
-					},
+					Name:          "test",
 				},
 			}
 			errList := validate(nil, comp)
@@ -241,14 +235,10 @@ var _ = Describe("Validation", func() {
 		It("should forbid if a duplicated component reference is defined", func() {
 			comp.ComponentReferences = []v2.ComponentReference{
 				{
-					ObjectMeta: v2.ObjectMeta{
-						Name: "test",
-					},
+					Name: "test",
 				},
 				{
-					ObjectMeta: v2.ObjectMeta{
-						Name: "test",
-					},
+					Name: "test",
 				},
 			}
 			errList := validate(nil, comp)
@@ -299,7 +289,7 @@ var _ = Describe("Validation", func() {
 	})
 
 	Context("#ExternalResources", func() {
-		It("should forbid if a duplicated local resource is defined", func() {
+		It("should forbid if a duplicated external resource is defined", func() {
 			comp.ExternalResources = []v2.Resource{
 				{
 					ObjectMeta: v2.ObjectMeta{
@@ -326,18 +316,16 @@ var _ = Describe("Validation", func() {
 			comp.ComponentReferences = []v2.ComponentReference{
 				{
 					ComponentName: "test",
-					ObjectMeta: v2.ObjectMeta{
-						Name:    "test",
-						Version: "1.2.3",
-						Labels: []v2.Label{
-							{
-								Name:  "l1",
-								Value: []byte{},
-							},
-							{
-								Name:  "l1",
-								Value: []byte{},
-							},
+					Name:          "test",
+					Version:       "1.2.3",
+					Labels: []v2.Label{
+						{
+							Name:  "l1",
+							Value: []byte{},
+						},
+						{
+							Name:  "l1",
+							Value: []byte{},
 						},
 					},
 				},
@@ -354,18 +342,16 @@ var _ = Describe("Validation", func() {
 			comp.ComponentReferences = []v2.ComponentReference{
 				{
 					ComponentName: "test",
-					ObjectMeta: v2.ObjectMeta{
-						Name:    "test",
-						Version: "1.2.3",
-						Labels: []v2.Label{
-							{
-								Name:  "l1",
-								Value: []byte{},
-							},
-							{
-								Name:  "l2",
-								Value: []byte{},
-							},
+					Name:          "test",
+					Version:       "1.2.3",
+					Labels: []v2.Label{
+						{
+							Name:  "l1",
+							Value: []byte{},
+						},
+						{
+							Name:  "l2",
+							Value: []byte{},
 						},
 					},
 				},
