@@ -87,10 +87,10 @@ class Resource:
     version: str
     type: ResourceType
     access: typing.Union[
-        ResourceAccess,
         OciAccess,
         GithubAccess,
         HttpAccess,
+        ResourceAccess,
         None
     ]
     labels: typing.List[Label] = dataclasses.field(default_factory=list)
