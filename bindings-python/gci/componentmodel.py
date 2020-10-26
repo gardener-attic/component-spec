@@ -1,7 +1,9 @@
 import dataclasses
 import enum
+import functools
 import io
 import typing
+import urllib.parse
 
 import dacite
 import yaml
@@ -45,6 +47,38 @@ class GithubAccess(ResourceAccess):
     repoUrl: str
     ref: str
     type: AccessType
+
+    def __post_init__(self):
+        parsed = self._normalise_and_parse_url()
+        if not len(parsed.path[1:].split('/')):
+            raise ValueError(f'{self.repoUrl=} must have exactly two path components')
+
+    @functools.lru_cache
+    def _normalise_and_parse_url(self):
+        parsed = urllib.parse.urlparse(self.repoUrl)
+        if not parsed.scheme:
+            # prepend dummy-schema to properly parse hostname and path (and rm it again later)
+            parsed = urllib.parse.urlparse('dummy://' + self.repoUrl)
+            parsed = urllib.parse.urlunparse((
+                '',
+                parsed.netloc,
+                parsed.path,
+                '',
+                '',
+                '',
+            ))
+            parsed = urllib.parse.urlparse(parsed)
+
+        return parsed
+
+    def repository_name(self):
+        return self._normalise_and_parse_url().path[1:].split('/')[1]
+
+    def org_name(self):
+        return self._normalise_and_parse_url().path[1:].split('/')[0]
+
+    def hostname(self):
+        return self._normalise_and_parse_url().hostname
 
 
 @dc(frozen=True)
@@ -126,6 +160,11 @@ class Component:
     externalResources: typing.List[Resource]
 
     labels: typing.List[Label] = dataclasses.field(default_factory=list)
+
+    def current_repository_ctx(self):
+        if not self.repositoryContexts:
+            return None
+        return self.repositoryContexts[-1]
 
 
 @dc
