@@ -42,8 +42,7 @@ def test_component():
         provider=None,
         sources=(),
         componentReferences=(),
-        localResources=(),
-        externalResources=(),
+        resources=(),
         labels=(),
     )
 

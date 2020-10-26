@@ -30,19 +30,19 @@ component:
       version: 'v0.3.0'
       labels: []
 
-  localResources:
+  resources:
     - name: 'apiserver'
       version: 'v1.7.2' # version is implied by component, i.e. v1.7.2 in this case
       type: 'ociImage'
+      relation: 'local'
       labels: []
       access:
         type: 'ociRegistry'
         imageReference: 'eu.gcr.io/gardener-project/gardener/apiserver:v1.7.4'
-
-  externalResources:
     - name: 'grafana'
       version: '7.0.3'
       type: 'ociImage'
+      relation: 'external'
       labels: []
       access:
         type: 'ociRegistry'

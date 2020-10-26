@@ -103,8 +103,9 @@ definitions:
     description: 'base type for resources'
     required:
       - 'name'
-      - 'version' # for localResources, this must match component's version
+      - 'version' # for local resources, this must match component's version
       - 'type'
+      - 'relation'
       - 'access'
     properties:
       name:
@@ -113,6 +114,9 @@ definitions:
         type: 'string'
       type:
         type: 'string'
+      relation:
+        type: 'string'
+        enum: ['local', 'external']
       labels:
         type: 'array'
         items:
@@ -207,8 +211,7 @@ definitions:
       - 'provider'
       - 'sources'
       - 'componentReferences'
-      - 'localResources'
-      - 'externalResources'
+      - 'resources'
     properties:
       name:
         type: 'string' # actually: component-type w/ special restrictions
@@ -233,14 +236,7 @@ definitions:
         type: 'array'
         items:
           $ref: '#/definitions/componentReference'
-      localResources:
-        type: 'array'
-        items:
-          anyOf:
-            - $ref: '#/definitions/resourceType'
-            - $ref: '#/definitions/ociImageResource'
-            - $ref: '#/definitions/genericResource'
-      externalResources:
+      resources:
         type: 'array'
         items:
           anyOf:
