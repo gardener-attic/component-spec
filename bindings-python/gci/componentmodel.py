@@ -32,6 +32,11 @@ class ResourceType(enum.Enum):
     GENERIC = 'generic'
 
 
+class ResourceRelation(enum.Enum):
+    LOCAL = 'local'
+    EXTERNAL = 'external'
+
+
 @dc(frozen=True)
 class ResourceAccess:
     type: AccessType
@@ -156,8 +161,7 @@ class Component:
 
     sources: typing.List[ComponentSource]
     componentReferences: typing.List[ComponentReference]
-    localResources: typing.List[Resource]
-    externalResources: typing.List[Resource]
+    resources: typing.List[Resource]
 
     labels: typing.List[Label] = dataclasses.field(default_factory=list)
 
@@ -165,6 +169,10 @@ class Component:
         if not self.repositoryContexts:
             return None
         return self.repositoryContexts[-1]
+
+    # XXX rm asap - keep for backards-compat
+    localResources: typing.List[Resource] = dataclasses.field(default_factory=list)
+    externalResources: typing.List[Resource] = dataclasses.field(default_factory=list)
 
 
 @dc
