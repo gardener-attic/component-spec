@@ -37,6 +37,11 @@ class ComponentDescriptorOciCfgBlobRef(OciBlobRef):
 
 
 @dc
+class ComponentDescriptorOciBlobRef(OciBlobRef):
+    mediaType: str = component_descriptor_mimetype
+
+
+@dc
 class ComponentDescriptorOciCfg:
     '''
     a Component-Descriptor OCI configuration; it is used to store the reference to the
