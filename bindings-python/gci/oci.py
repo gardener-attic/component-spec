@@ -42,7 +42,7 @@ class ComponentDescriptorOciCfg:
     a Component-Descriptor OCI configuration; it is used to store the reference to the
     (pseudo-)layer used to store the Component-Descriptor in
     '''
-    componentDescriptorLayer: OciBlobRef
+    componentDescriptorLayer: ComponentDescriptorOciCfgBlobRef
 
 
 def component_descriptor_to_tarfileobj(
