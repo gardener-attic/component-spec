@@ -35,18 +35,19 @@ component:
   sources: []
   references: []
 
-  localResources:
+  resources:
   - name: 'ftpRes'
     version: 'v1.7.2'
     type: 'custom1'
+    relation: local
     access:
       type: 'x-ftp'
       url: ftp://example.com/my-resource
 
-  externalResources:
   - name: 'nodeMod'
     version: '0.0.1'
     type: 'nodeModule'
+    relation: external
     access:
       type: 'npm'
       nodeModule: my-module

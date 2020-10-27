@@ -53,6 +53,7 @@ var _ = Describe("Validation", func() {
 				Name:    "image1",
 				Version: "1.2.3",
 			},
+			Relation:            v2.ExternalRelation,
 			TypedObjectAccessor: v2.NewTypeOnly(v2.OCIImageType),
 			Access:              ociRegistry1,
 		}
@@ -67,6 +68,7 @@ var _ = Describe("Validation", func() {
 				Name:    "image2",
 				Version: "1.2.3",
 			},
+			Relation:            v2.ExternalRelation,
 			TypedObjectAccessor: v2.NewTypeOnly(v2.OCIImageType),
 			Access:              ociRegistry2,
 		}
@@ -84,8 +86,7 @@ var _ = Describe("Validation", func() {
 				RepositoryContexts:  nil,
 				Sources:             nil,
 				ComponentReferences: nil,
-				LocalResources:      nil,
-				ExternalResources:   []v2.Resource{*ociImage1, *ociImage2},
+				Resources:           []v2.Resource{*ociImage1, *ociImage2},
 			},
 		}
 	})
@@ -249,9 +250,9 @@ var _ = Describe("Validation", func() {
 		})
 	})
 
-	Context("#LocalResources", func() {
+	Context("#Resources", func() {
 		It("should forbid if a local resource's version differs from the version of the parent", func() {
-			comp.LocalResources = []v2.Resource{
+			comp.Resources = []v2.Resource{
 				{
 					ObjectMeta: v2.ObjectMeta{
 						Name:    "locRes",
@@ -263,12 +264,12 @@ var _ = Describe("Validation", func() {
 			errList := validate(nil, comp)
 			Expect(errList).To(ContainElement(PointTo(MatchFields(IgnoreExtras, Fields{
 				"Type":  Equal(field.ErrorTypeInvalid),
-				"Field": Equal("component.localResources[0].version"),
+				"Field": Equal("component.resources[0].version"),
 			}))))
 		})
 
 		It("should forbid if a duplicated local resource is defined", func() {
-			comp.LocalResources = []v2.Resource{
+			comp.Resources = []v2.Resource{
 				{
 					ObjectMeta: v2.ObjectMeta{
 						Name: "test",
@@ -283,29 +284,7 @@ var _ = Describe("Validation", func() {
 			errList := validate(nil, comp)
 			Expect(errList).To(ContainElement(PointTo(MatchFields(IgnoreExtras, Fields{
 				"Type":  Equal(field.ErrorTypeDuplicate),
-				"Field": Equal("component.localResources[1]"),
-			}))))
-		})
-	})
-
-	Context("#ExternalResources", func() {
-		It("should forbid if a duplicated external resource is defined", func() {
-			comp.ExternalResources = []v2.Resource{
-				{
-					ObjectMeta: v2.ObjectMeta{
-						Name: "test",
-					},
-				},
-				{
-					ObjectMeta: v2.ObjectMeta{
-						Name: "test",
-					},
-				},
-			}
-			errList := validate(nil, comp)
-			Expect(errList).To(ContainElement(PointTo(MatchFields(IgnoreExtras, Fields{
-				"Type":  Equal(field.ErrorTypeDuplicate),
-				"Field": Equal("component.externalResources[1]"),
+				"Field": Equal("component.resources[1]"),
 			}))))
 		})
 	})

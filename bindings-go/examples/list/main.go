@@ -36,18 +36,19 @@ components:
     sources: []
     references: []
 
-    localResources:
+    resources:
     - name: 'apiserver'
       version: 'v1.7.2'
       type: 'ociImage'
+      relation: local
       access:
         type: 'ociRegistry'
         imageReference: 'eu.gcr.io/gardener-project/gardener/apiserver:v1.7.2'
 
-    externalResources:
     - name: 'hyperkube'
       version: 'v1.16.4'
       type: 'ociImage'
+      relation: external
       access:
         type: 'ociRegistry'
         imageReference: 'k8s.gcr.io/hyperkube:v1.16.4'
@@ -61,10 +62,11 @@ components:
     references: []
     localResources: []
 
-    externalResources:
+    resources:
     - name: 'etcd'
       version: 'v3.5.4'
       type: 'ociImage'
+      relation: external
       access:
         type: 'ociRegistry'
         imageReference: 'quay.io/coreos/etcd:v3.5.4'
@@ -78,7 +80,7 @@ components:
 	comp, err := list.GetComponent("github.com/gardener/etcd", "v1.3.0")
 	check(err)
 
-	fmt.Println(comp.ExternalResources[0].Name) // prints: etcd
+	fmt.Println(comp.Resources[0].Name) // prints: etcd
 
 	// get a component by its name
 	// The method returns a list as there could be multiple components with the same name but different version
