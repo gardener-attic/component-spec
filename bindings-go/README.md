@@ -29,13 +29,21 @@ component:
   name: 'github.com/gardener/gardener'
   version: 'v1.7.2'
 
-  externalResources:
-  - name: 'hyperkube'
-    version: 'v1.16.4'
+  resources:
+  - name: 'apiserver'
+    version: 'v1.7.2'
     type: 'ociImage'
+    relation: local
     access:
       type: 'ociRegistry'
       imageReference: 'eu.gcr.io/gardener-project/gardener/apiserver:v1.7.2'
+  - name: 'hyperkube'
+    version: 'v1.16.4'
+    type: 'ociImage'
+    relation: external
+    access:
+      type: 'ociRegistry'
+      imageReference: 'eu.gcr.io/gardener-project/gardener/hyperkube:v1.16.4'
 `)
     component := &v2.ComponentDescriptor{}
     err := codec.Decode(data, component)

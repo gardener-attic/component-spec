@@ -42,12 +42,20 @@ var _ = Describe("serializer", func() {
 
 		Expect(comp.Name).To(Equal("github.com/gardener/gardener"))
 		Expect(comp.Version).To(Equal("v1.7.2"))
-		Expect(comp.ExternalResources).To(HaveLen(1))
+		Expect(comp.Resources).To(HaveLen(2))
 
-		extDep := comp.ExternalResources[0]
+		intDep := comp.Resources[0]
+		Expect(intDep.Name).To(Equal("apiserver"))
+		Expect(intDep.Version).To(Equal("v1.7.2"))
+		Expect(intDep.GetType()).To(Equal(v2.OCIImageType))
+		Expect(intDep.Relation).To(Equal(v2.LocalRelation))
+		Expect(intDep.Access).To(BeAssignableToTypeOf(&v2.OCIRegistryAccess{}))
+
+		extDep := comp.Resources[1]
 		Expect(extDep.Name).To(Equal("grafana"))
 		Expect(extDep.Version).To(Equal("7.0.3"))
 		Expect(extDep.GetType()).To(Equal(v2.OCIImageType))
+		Expect(extDep.Relation).To(Equal(v2.ExternalRelation))
 		Expect(extDep.Access).To(BeAssignableToTypeOf(&v2.OCIRegistryAccess{}))
 
 		ociAccess := extDep.Access.(*v2.OCIRegistryAccess)
