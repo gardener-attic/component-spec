@@ -25,7 +25,7 @@ import (
 // KnownAccessTypes contains all known access serializer
 var KnownAccessTypes = KnownTypes{
 	OCIRegistryType:  ociRegistryCodec,
-	OCILayerType:     ociLayerCodec,
+	OCIBlobType:      ociBlobCodec,
 	GitHubAccessType: githubAccessCodec,
 	WebType:          webCodec,
 }
@@ -75,43 +75,55 @@ var ociRegistryCodec = &TypedObjectCodecWrapper{
 	}),
 }
 
-// OCIRegistryType is the access type of a oci registry.
-const OCILayerType = "ociLayer"
+// OCIBlobType is the access type of a oci blob in a manifest.
+const OCIBlobType = "ociBlob"
 
 // OCIRegistryAccess describes the access for a oci registry.
-type OCILayerAccess struct {
+type OCIBlobAccess struct {
 	ObjectType `json:",inline"`
 
-	// Layer is index of the layer in the current component descriptor oci blob.
-	Layer int64 `json:"layer"`
+	// Reference is the oci reference to the manifest
+	Reference string `json:"ref"`
+
+	// MediaType is the media type of the object this schema refers to.
+	MediaType string `json:"mediaType,omitempty"`
+
+	// Digest is the digest of the targeted content.
+	Digest string `json:"digest"`
+
+	// Size specifies the size in bytes of the blob.
+	Size int64 `json:"size"`
 }
 
-var _ TypedObjectAccessor = &OCILayerAccess{}
+var _ TypedObjectAccessor = &OCIBlobAccess{}
 
-func (O OCILayerAccess) GetData() ([]byte, error) {
-	return json.Marshal(O)
+func (a OCIBlobAccess) GetData() ([]byte, error) {
+	return json.Marshal(a)
 }
 
-func (O *OCILayerAccess) SetData(bytes []byte) error {
-	var newOCILayer OCILayerAccess
+func (a *OCIBlobAccess) SetData(bytes []byte) error {
+	var newOCILayer OCIBlobAccess
 	if err := json.Unmarshal(bytes, &newOCILayer); err != nil {
 		return err
 	}
 
-	O.Layer = newOCILayer.Layer
+	a.Reference = newOCILayer.Reference
+	a.MediaType = newOCILayer.MediaType
+	a.Digest = newOCILayer.Digest
+	a.Size = newOCILayer.Size
 	return nil
 }
 
-var ociLayerCodec = &TypedObjectCodecWrapper{
+var ociBlobCodec = &TypedObjectCodecWrapper{
 	TypedObjectDecoder: TypedObjectDecoderFunc(func(data []byte) (TypedObjectAccessor, error) {
-		var ociLayer OCILayerAccess
+		var ociLayer OCIBlobAccess
 		if err := json.Unmarshal(data, &ociLayer); err != nil {
 			return nil, err
 		}
 		return &ociLayer, nil
 	}),
 	TypedObjectEncoder: TypedObjectEncoderFunc(func(accessor TypedObjectAccessor) ([]byte, error) {
-		ociLayer, ok := accessor.(*OCILayerAccess)
+		ociLayer, ok := accessor.(*OCIBlobAccess)
 		if !ok {
 			return nil, fmt.Errorf("accessor is not of type %s", OCIImageType)
 		}
