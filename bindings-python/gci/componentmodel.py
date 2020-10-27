@@ -193,6 +193,7 @@ class ComponentDescriptor:
                     ResourceType,
                     SchemaVersion,
                     SourceType,
+                    ResourceRelation,
                 ]
             )
         )
