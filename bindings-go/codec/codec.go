@@ -24,6 +24,7 @@ import (
 
 	"github.com/gardener/component-spec/bindings-go/apis"
 	v2 "github.com/gardener/component-spec/bindings-go/apis/v2"
+	"github.com/gardener/component-spec/bindings-go/apis/v2/jsonscheme"
 	"github.com/gardener/component-spec/bindings-go/apis/v2/validation"
 )
 
@@ -33,6 +34,10 @@ func Decode(data []byte, obj interface{}) error {
 	objType := reflect.TypeOf(obj)
 	if objType.Kind() != reflect.Ptr {
 		return fmt.Errorf("object is expected to be of type pointer but is of type %T", obj)
+	}
+
+	if err := jsonscheme.Validate(data); err != nil {
+		return err
 	}
 
 	raw := make(map[string]json.RawMessage)

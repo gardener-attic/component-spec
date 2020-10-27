@@ -59,8 +59,8 @@ func validate(fldPath *field.Path, component *v2.ComponentDescriptor) field.Erro
 	refPath := compPath.Child("componentReferences")
 	allErrs = append(allErrs, validateComponentReferences(refPath, component.ComponentReferences)...)
 
-	localPath := compPath.Child("resources")
-	allErrs = append(allErrs, validateResources(localPath, component.Resources, component.GetVersion())...)
+	resourcePath := compPath.Child("resources")
+	allErrs = append(allErrs, validateResources(resourcePath, component.Resources, component.GetVersion())...)
 
 	return allErrs
 }

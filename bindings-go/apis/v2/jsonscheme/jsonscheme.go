@@ -17,48 +17,52 @@
 package jsonscheme
 
 import (
-	"context"
 	"errors"
 	"fmt"
 
 	"github.com/ghodss/yaml"
-	"github.com/qri-io/jsonschema"
+	"github.com/xeipuuv/gojsonschema"
 )
 
-var Schema *jsonschema.Schema
+var Schema *gojsonschema.Schema
 
 func init() {
-	data, err := ComponentDescriptorV2SchemaYamlBytes()
+	dataBytes, err := ComponentDescriptorV2SchemaYamlBytes()
 	if err != nil {
 		panic(err)
 	}
 
-	Schema = &jsonschema.Schema{}
-	if err := yaml.Unmarshal(data, Schema); err != nil {
+	var data interface{}
+	if err := yaml.Unmarshal(dataBytes, &data); err != nil {
+		panic(err)
+	}
+
+	Schema, err = gojsonschema.NewSchema(gojsonschema.NewGoLoader(data))
+	if err != nil {
 		panic(err)
 	}
 }
 
 // Validate validates the given data against the component descriptor v2 jsonscheme.
-func Validate(data []byte) error {
-	ctx := context.Background()
-	defer ctx.Done()
-	var doc interface{}
-	if err := yaml.Unmarshal(data, &doc); err != nil {
+func Validate(src []byte) error {
+	data, err := yaml.YAMLToJSON(src)
+	if err != nil {
 		return err
 	}
-	state := Schema.Validate(ctx, doc)
-	if state == nil {
-		return nil
+	documentLoader := gojsonschema.NewBytesLoader(data)
+	res, err := Schema.Validate(documentLoader)
+	if err != nil {
+		return err
 	}
 
-	if state.Errs == nil || len(*state.Errs) == 0 {
-		return nil
+	if !res.Valid() {
+		errs := res.Errors()
+		errMsg := errs[0].String()
+		for i := 1; i < len(errs); i++ {
+			errMsg = fmt.Sprintf("%s;%s", errMsg, errs[i].String())
+		}
+		return errors.New(errMsg)
 	}
-	errs := *state.Errs
-	errMsg := errs[0].Error()
-	for i := 1; i < len(errs); i++ {
-		errMsg = fmt.Sprintf("%s;%s", errMsg, errs[i].Error())
-	}
-	return errors.New(errMsg)
+
+	return nil
 }

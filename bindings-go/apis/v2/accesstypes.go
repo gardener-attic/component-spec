@@ -24,7 +24,8 @@ import (
 
 // KnownAccessTypes contains all known access serializer
 var KnownAccessTypes = KnownTypes{
-	OCIRegistryType:  ociCodec,
+	OCIRegistryType:  ociRegistryCodec,
+	OCILayerType:     ociLayerCodec,
 	GitHubAccessType: githubAccessCodec,
 	WebType:          webCodec,
 }
@@ -57,7 +58,7 @@ func (O *OCIRegistryAccess) SetData(bytes []byte) error {
 	return nil
 }
 
-var ociCodec = &TypedObjectCodecWrapper{
+var ociRegistryCodec = &TypedObjectCodecWrapper{
 	TypedObjectDecoder: TypedObjectDecoderFunc(func(data []byte) (TypedObjectAccessor, error) {
 		var ociImage OCIRegistryAccess
 		if err := json.Unmarshal(data, &ociImage); err != nil {
@@ -71,6 +72,50 @@ var ociCodec = &TypedObjectCodecWrapper{
 			return nil, fmt.Errorf("accessor is not of type %s", OCIImageType)
 		}
 		return json.Marshal(ociImage)
+	}),
+}
+
+// OCIRegistryType is the access type of a oci registry.
+const OCILayerType = "ociLayer"
+
+// OCIRegistryAccess describes the access for a oci registry.
+type OCILayerAccess struct {
+	ObjectType `json:",inline"`
+
+	// Layer is index of the layer in the current component descriptor oci blob.
+	Layer int64 `json:"layer"`
+}
+
+var _ TypedObjectAccessor = &OCILayerAccess{}
+
+func (O OCILayerAccess) GetData() ([]byte, error) {
+	return json.Marshal(O)
+}
+
+func (O *OCILayerAccess) SetData(bytes []byte) error {
+	var newOCILayer OCILayerAccess
+	if err := json.Unmarshal(bytes, &newOCILayer); err != nil {
+		return err
+	}
+
+	O.Layer = newOCILayer.Layer
+	return nil
+}
+
+var ociLayerCodec = &TypedObjectCodecWrapper{
+	TypedObjectDecoder: TypedObjectDecoderFunc(func(data []byte) (TypedObjectAccessor, error) {
+		var ociLayer OCILayerAccess
+		if err := json.Unmarshal(data, &ociLayer); err != nil {
+			return nil, err
+		}
+		return &ociLayer, nil
+	}),
+	TypedObjectEncoder: TypedObjectEncoderFunc(func(accessor TypedObjectAccessor) ([]byte, error) {
+		ociLayer, ok := accessor.(*OCILayerAccess)
+		if !ok {
+			return nil, fmt.Errorf("accessor is not of type %s", OCIImageType)
+		}
+		return json.Marshal(ociLayer)
 	}),
 }
 
