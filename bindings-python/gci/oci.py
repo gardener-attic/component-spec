@@ -18,6 +18,32 @@ component_descriptor_mimetype = \
 component_descriptor_cfg_mimetype = \
     'application/vnd.oci.gardener.cloud.cnudie.component-descriptor-metadata.config.v2+json'
 
+dc = dataclasses.dataclass
+
+
+@dc
+class OciBlobRef:
+    '''
+    a single OCI registry layer reference as used in OCI Image Manifests
+    '''
+    digest: str
+    size: int
+    mediaType: str
+
+
+@dc
+class ComponentDescriptorOciCfgBlobRef(OciBlobRef):
+    mediaType: str = component_descriptor_cfg_mimetype
+
+
+@dc
+class ComponentDescriptorOciCfg:
+    '''
+    a Component-Descriptor OCI configuration; it is used to store the reference to the
+    (pseudo-)layer used to store the Component-Descriptor in
+    '''
+    componentDescriptorLayer: OciBlobRef
+
 
 def component_descriptor_to_tarfileobj(
     component_descriptor: typing.Union[dict, gci.componentmodel.ComponentDescriptor],
