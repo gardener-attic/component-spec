@@ -136,6 +136,28 @@ definitions:
       imageReference:
         type: 'string'
 
+  ociBlobAccess:
+    type: 'object'
+    required:
+    - 'type'
+    - 'layer'
+    properties:
+      type:
+        type: 'string'
+        enum: [ 'ociBlob' ]
+      ref:
+        description: 'A oci reference to the manifest'
+        type: 'string'
+      mediaType:
+        description: 'The media type of the object this access refers to'
+        type: 'string'
+      digest:
+        description: 'The digest of the targeted content'
+        type: 'string'
+      size:
+        description: 'The size in bytes of the blob'
+        type: 'number'
+
   ociImageResource:
     type: 'object'
     required:

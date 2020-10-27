@@ -15,7 +15,7 @@
 package oci
 
 // ComponentDescriptorMimeType is the mimetype for component-descriptor-blobs.
-const ComponentDescriptorMimeType = "application/vnd.oci.gardener.cloud.cnudie.component-descriptor.config.v2+yaml+tar"
+const ComponentDescriptorMimeType = "application/vnd.gardener.cloud.cnudie.component-descriptor.v2+yaml+tar"
 
 // ComponentDescriptorConfigMimeType is the mimetype for component-descriptor-oci-cfg-blobs.
-const ComponentDescriptorConfigMimeType = "application/vnd.oci.gardener.cloud.cnudie.component-descriptor-metadata.config.v2+json"
+const ComponentDescriptorConfigMimeType = "application/vnd.gardener.cloud.cnudie.component-descriptor.config.v1+json"

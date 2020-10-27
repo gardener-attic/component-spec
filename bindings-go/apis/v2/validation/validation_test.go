@@ -258,6 +258,7 @@ var _ = Describe("Validation", func() {
 						Name:    "locRes",
 						Version: "0.0.1",
 					},
+					Relation:            v2.LocalRelation,
 					TypedObjectAccessor: v2.NewTypeOnly(v2.OCIImageType),
 				},
 			}
