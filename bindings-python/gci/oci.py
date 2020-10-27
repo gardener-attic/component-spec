@@ -11,6 +11,12 @@ import gci.componentmodel
 logger = logging.getLogger(__name__)
 
 component_descriptor_fname = 'component-descriptor.yaml'
+# mimetype for component-descriptor-blobs
+component_descriptor_mimetype = \
+    'application/vnd.oci.gardener.cloud.cnudie.component-descriptor.config.v2+yaml+tar'
+# mimetype for component-descriptor-oci-cfg-blobs
+component_descriptor_cfg_mimetype = \
+    'application/vnd.oci.gardener.cloud.cnudie.component-descriptor-metadata.config.v2+json'
 
 
 def component_descriptor_to_tarfileobj(
