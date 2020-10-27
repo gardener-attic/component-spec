@@ -132,6 +132,7 @@ class Resource:
         ResourceAccess,
         None
     ]
+    relation: ResourceRelation = ResourceRelation.LOCAL
     labels: typing.List[Label] = dataclasses.field(default_factory=list)
 
 
