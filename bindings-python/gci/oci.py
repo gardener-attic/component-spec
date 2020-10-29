@@ -16,7 +16,7 @@ component_descriptor_mimetype = \
     'application/vnd.gardener.cloud.cnudie.component-descriptor.v2+yaml+tar'
 # mimetype for component-descriptor-oci-cfg-blobs
 component_descriptor_cfg_mimetype = \
-    'application/vnd.gardener.cloud.cnudie.component-descriptor.config.v1+json'
+    'application/vnd.gardener.cloud.cnudie.component.config.v1+json'
 
 dc = dataclasses.dataclass
 
