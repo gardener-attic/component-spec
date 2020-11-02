@@ -23,6 +23,7 @@ This contract encompasses:
   format
   semantics
   component_descriptor_registries
+  oci
   schema_v1/index
 
 
