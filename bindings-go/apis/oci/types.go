@@ -12,10 +12,22 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package v2
+package oci
 
-// ComponentDescriptorOCIMediaType is the media type containing the tared component descriptor in an oci registry.
-const ComponentDescriptorOCIMediaType = "application/sap-cnudie+tar"
+// OciBlobRef is a single OCI registry layer reference as used in OCI Image Manifests.
+type OciBlobRef struct {
+	// MediaType is the media type of the object this schema refers to.
+	MediaType string `json:"mediaType,omitempty"`
 
-// ComponentDescriptorOCIFileName is the name of the file in the tar.
-const ComponentDescriptorOCIFileName = "component-descriptor.yaml"
+	// Digest is the digest of the targeted content.
+	Digest string `json:"digest"`
+
+	// Size specifies the size in bytes of the blob.
+	Size int64 `json:"size"`
+}
+
+// ComponentDescriptorConfig is a Component-Descriptor OCI configuration that is used to store the reference to the
+// (pseudo-)layer used to store the Component-Descriptor in.
+type ComponentDescriptorConfig struct {
+	ComponentDescriptorLayer *OciBlobRef `json:"componentDescriptorLayer,omitempty"`
+}
