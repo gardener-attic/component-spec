@@ -97,6 +97,25 @@ class Label:
     value: typing.Union[str, int, float, bool, dict]
 
 
+_no_default = object()
+
+
+class FindLabelMixin:
+    def find_label(
+        self,
+        name: str,
+        default=_no_default,
+
+    ):
+        for label in self.labels:
+            if label.name == name:
+                return label
+        else:
+            if default is _no_default:
+                raise ValueError(f'no such label: {name=}')
+            return default
+
+
 class Provider(enum.Enum):
     '''
     internal: from repositoryContext-owner
@@ -113,7 +132,7 @@ class Metadata:
 
 
 @dc(frozen=True)
-class ComponentReference:
+class ComponentReference(FindLabelMixin):
     name: str
     componentName: str
     version: str
@@ -121,7 +140,7 @@ class ComponentReference:
 
 
 @dc(frozen=True)
-class Resource:
+class Resource(FindLabelMixin):
     name: str
     version: str
     type: ResourceType
@@ -143,7 +162,7 @@ class RepositoryContext:
 
 
 @dc
-class ComponentSource:
+class ComponentSource(FindLabelMixin):
     name: str
     access: typing.Union[
         GithubAccess,
@@ -153,7 +172,7 @@ class ComponentSource:
 
 
 @dc
-class Component:
+class Component(FindLabelMixin):
     name: str    # must be valid URL w/o schema
     version: str # relaxed semver
 
