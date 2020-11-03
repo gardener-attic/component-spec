@@ -32,12 +32,12 @@ func init() {
 		panic(err)
 	}
 
-	var data interface{}
-	if err := yaml.Unmarshal(dataBytes, &data); err != nil {
+	data, err := yaml.YAMLToJSON(dataBytes)
+	if err != nil {
 		panic(err)
 	}
 
-	Schema, err = gojsonschema.NewSchema(gojsonschema.NewGoLoader(data))
+	Schema, err = gojsonschema.NewSchema(gojsonschema.NewBytesLoader(data))
 	if err != nil {
 		panic(err)
 	}

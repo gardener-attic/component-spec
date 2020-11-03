@@ -33,8 +33,9 @@ components:
     version: 'v1.7.2'
     provider: internal
 
+    repositoryContexts: []
     sources: []
-    references: []
+    componentReferences: []
 
     resources:
     - name: 'apiserver'
@@ -58,9 +59,9 @@ components:
 
     provider: internal
 
+    repositoryContexts: []
     sources: []
-    references: []
-    localResources: []
+    componentReferences: []
 
     resources:
     - name: 'etcd'
