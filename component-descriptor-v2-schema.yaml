@@ -122,7 +122,7 @@ definitions:
         items:
           $ref: '#/definitions/label'
       access:
-        $ref: '#definitions/access'
+        $ref: '#/definitions/access'
 
   ociImageAccess:
     type: 'object'

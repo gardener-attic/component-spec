@@ -32,8 +32,9 @@ component:
   name: 'github.com/gardener/gardener'
   version: 'v1.7.2'
   provider: internal
+  repositoryContexts: []
   sources: []
-  references: []
+  componentReferences: []
 
   resources:
   - name: 'ftpRes'
