@@ -190,10 +190,6 @@ class Component(FindLabelMixin):
             return None
         return self.repositoryContexts[-1]
 
-    # XXX rm asap - keep for backards-compat
-    localResources: typing.List[Resource] = dataclasses.field(default_factory=list)
-    externalResources: typing.List[Resource] = dataclasses.field(default_factory=list)
-
 
 @dc
 class ComponentDescriptor:
