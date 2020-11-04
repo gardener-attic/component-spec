@@ -427,7 +427,7 @@ func (r Resource) MarshalJSON() ([]byte, error) {
 	for key, val := range typedObjectJSON {
 		resourceJSON[key] = val
 	}
-	return json.Marshal(jsonRes)
+	return json.Marshal(resourceJSON)
 }
 
 // UnmarshalTypedObjectAccessor unmarshals a type object into a valid json.

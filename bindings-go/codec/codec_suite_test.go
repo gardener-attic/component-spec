@@ -62,4 +62,19 @@ var _ = Describe("serializer", func() {
 		Expect(ociAccess.ImageReference).To(Equal("registry-1.docker.io/grafana/grafana/7.0.3"))
 	})
 
+	It("should encode a simple component", func() {
+		data, err := ioutil.ReadFile("../../language-independent/test-resources/component_descriptor_v2.yaml")
+		Expect(err).ToNot(HaveOccurred())
+
+		var comp v2.ComponentDescriptor
+		err = codec.Decode(data, &comp)
+		Expect(err).ToNot(HaveOccurred())
+
+		data, err = codec.Encode(&comp)
+		Expect(err).ToNot(HaveOccurred())
+
+		err = codec.Decode(data, &comp)
+		Expect(err).ToNot(HaveOccurred())
+	})
+
 })
