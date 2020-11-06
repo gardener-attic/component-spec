@@ -171,10 +171,20 @@ by an access type, regardless of the type of the artefact. There are dedicated
 access types to refer to artefacts stored in an OCI registry.</p>
 <div class="section" id="storing-components">
 <h2>Storing Components<a class="headerlink" href="#storing-components" title="Permalink to this headline">¶</a></h2>
-<p>The content of a component is stored in the OCI registry as OCI artefact of the media type <code class="docutils literal notranslate"><span class="pre">application/vnd.gardener.cloud.cnudie.component.config.v1+json</span></code>. Hereby the content consists at least of the component descriptor itself, which is basically stored as blob described as first layer in the oci manifest.
-The media type is used as type for the config blob described in the oci manifest. The blob confains a config json describing the digest of the component descriptor blob (first layer).</p>
-<p>The component descriptor blob uses the media type <code class="docutils literal notranslate"><span class="pre">application/vnd.gardener.cloud.cnudie.component-descriptor.v2+json</span></code>.</p>
-<p>Together with the component descriptor a set of artefacts local to the component may be delivered. Those component local artefact blobs are stored as additional layers of the appropriate media type. To describe the access to such artefacts local to the component the component descriptor supports a dedicated access type <code class="docutils literal notranslate"><span class="pre">LocalBlob</span></code> with the blob digest as reference name.</p>
+<p>The content of a component is stored in the OCI registry as OCI artefact of the
+media type <code class="docutils literal notranslate"><span class="pre">application/vnd.gardener.cloud.cnudie.component.config.v1+json</span></code>.
+Hereby the content consists at least of the component descriptor itself, which
+is basically stored as blob described as first layer in the oci manifest.  The
+media type is used as type for the config blob described in the oci manifest.
+The blob confains a config json describing the digest of the component
+descriptor blob (first layer).</p>
+<p>The component descriptor blob uses the media type
+<code class="docutils literal notranslate"><span class="pre">application/vnd.gardener.cloud.cnudie.component-descriptor.v2+json</span></code>.</p>
+<p>Together with the component descriptor a set of artefacts local to the
+component may be delivered. Those component local artefact blobs are stored as
+additional layers of the appropriate media type. To describe the access to such
+artefacts local to the component the component descriptor supports a dedicated
+access type <code class="docutils literal notranslate"><span class="pre">LocalBlob</span></code> with the blob digest as reference name.</p>
 </div>
 <div class="section" id="creating-components-during-the-build">
 <h2>Creating Components during the Build<a class="headerlink" href="#creating-components-during-the-build" title="Permalink to this headline">¶</a></h2>
@@ -250,24 +260,41 @@ support streaming, followed by the oci manifest.</p>
 <p>To be able to describe access to artefacts stored in an OCU repository the
 component descriptor supports several dedicated access types.
 There are two ways to refernce OCI stored artefacts:
-- using the fully qualified access url to address artefacts stored in repositories different from the one hosting the using component descriptor.
-- using repository local names used to refer artefacts in the same repository. Supporting such local references enables the usage of technical replication tools for copying complete content of repositories without knowing about the component model and the structure of component descriptor files.</p>
+- using the fully qualified access url to address artefacts stored in</p>
+<blockquote>
+<div><p>repositories different from the one hosting the using component descriptor.</p>
+</div></blockquote>
+<ul class="simple">
+<li><p>using repository local names used to refer artefacts in the same repository.
+Supporting such local references enables the usage of technical replication
+tools for copying complete content of repositories without knowing about the
+component model and the structure of component descriptor files.</p></li>
+</ul>
 <p>Additionally there are two kinds of artefacts that have to be addressed in an
 OCI registry:
 - Direct blob artefacts (using the digest based blob access for a registry)
 - OCI artefacts consisting of multiple blobs described by oci manifest.</p>
-<p>For direct blobs there is also the possibility to store such artefacts directly as part of the content of a component.</p>
+<p>For direct blobs there is also the possibility to store such artefacts directly
+as part of the content of a component.</p>
 <p>In summery there are therefor five access combinations, that are described by dedicated access types:</p>
 <dl class="simple">
-<dt><code class="docutils literal notranslate"><span class="pre">OCIBlob</span></code></dt><dd><p>A fully qualified URL for accessing a blob using the OCI blob api using a repository URL, a blob digest and a repository path.</p>
+<dt><code class="docutils literal notranslate"><span class="pre">OCIBlob</span></code></dt><dd><p>A fully qualified URL for accessing a blob using the OCI blob api using a
+repository URL, a blob digest and a repository path.</p>
 </dd>
-<dt><code class="docutils literal notranslate"><span class="pre">OCIArtefact</span></code></dt><dd><p>A fully qualified URL for accessing an OCI aretfact using the OCI artefact api using a repository URL, a manifest digest/version and a respository path</p>
+<dt><code class="docutils literal notranslate"><span class="pre">OCIArtefact</span></code></dt><dd><p>A fully qualified URL for accessing an OCI aretfact using the OCI artefact
+api using a repository URL, a manifest digest/version and a respository path</p>
 </dd>
-<dt><code class="docutils literal notranslate"><span class="pre">RepositoryLocalOCIBlob</span></code></dt><dd><p>A path in the local repository (the artefact name) and the blob digest used to access the blob via the OCI blob api in the repository hosting the artefact reference.</p>
+<dt><code class="docutils literal notranslate"><span class="pre">RepositoryLocalOCIBlob</span></code></dt><dd><p>A path in the local repository (the artefact name) and the blob digest used
+to access the blob via the OCI blob api in the repository hosting the
+artefact reference.</p>
 </dd>
-<dt><code class="docutils literal notranslate"><span class="pre">RepositoryLocalOCIArtefact</span></code></dt><dd><p>A path in the local repository (the artefact name) and the manifest digest used to access the blob via the OCI artefact api in the repository hosting the artefact reference.</p>
+<dt><code class="docutils literal notranslate"><span class="pre">RepositoryLocalOCIArtefact</span></code></dt><dd><p>A path in the local repository (the artefact name) and the manifest digest
+used to access the blob via the OCI artefact api in the repository hosting
+the artefact reference.</p>
 </dd>
-<dt><code class="docutils literal notranslate"><span class="pre">LocalBlob</span></code></dt><dd><p>The digest of the blob using the OCI blob api to access the blob as blob nested to the actual component in the repository hosting the component descriptor.</p>
+<dt><code class="docutils literal notranslate"><span class="pre">LocalBlob</span></code></dt><dd><p>The digest of the blob using the OCI blob api to access the blob as blob
+nested to the actual component in the repository hosting the component
+descriptor.</p>
 </dd>
 </dl>
 <img alt="_images/Blob.png" src="_images/Blob.png" />
