@@ -13,3 +13,4 @@ programming languages relevant to the Gardener ecosystem.
 *Language-Bindings*
 
 - `bindings-python` (Python3 bindings)
+- `bindings-go` (golang bindings)
