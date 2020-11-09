@@ -17,6 +17,14 @@ definitions:
       - 'name'
       - 'value'
 
+  identityAttribute:
+    type: 'object'
+    patternProperties:
+      '.*':
+        type: 'string'
+    additionalProperties: False
+
+
   repositoryContext:
     type: 'object'
     required:
@@ -68,6 +76,8 @@ definitions:
     properties:
       name:
         type: 'string'
+      extraIdentity:
+        $ref: '#/definitions/identityAttribute'
       type:
         type: 'string'
         enum: ['git']
@@ -91,6 +101,8 @@ definitions:
     properties:
       name:
         type: 'string' # actually: component-type w/ special restrictions
+      extraIdentity:
+        $ref: '#/definitions/identityAttribute'
       version:
         type: 'string' # actually: relaxed semver?
       labels:
@@ -110,6 +122,8 @@ definitions:
     properties:
       name:
         type: 'string'
+      extraIdentity:
+        $ref: '#/definitions/identityAttribute'
       version:
         type: 'string'
       type:
