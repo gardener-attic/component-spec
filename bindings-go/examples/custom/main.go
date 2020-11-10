@@ -16,6 +16,7 @@ package main
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
 	"os"
 
@@ -54,8 +55,6 @@ component:
       nodeModule: my-module
       version: 0.0.1
 `)
-	// register additional types
-	v2.KnownAccessTypes[NPMType] = npmCodec
 
 	component := &v2.ComponentDescriptor{}
 	err := codec.Decode(data, component)
@@ -63,13 +62,19 @@ component:
 
 	res, err := component.GetLocalResource("custom1", "ftpRes", "v1.7.2")
 	check(err)
-	// unknown types are serialized as custom type
-	ftpAccess := res.Access.(*v2.CustomType)
-	fmt.Println(ftpAccess.Data["url"]) // prints: ftp://example.com/my-resource
+	// by default all types are serialized as unstructured type
+	ftpAccess := res.Access
+	fmt.Println(ftpAccess.Object["url"]) // prints: ftp://example.com/my-resource
 
+	// By default unknown types are decoded with the JSONDecoder.
+	// A specific decoder can be registered by adding it to known types.
+	knownTypes := v2.KnownAccessTypes
+	knownTypes.Register(NPMType, npmCodec)
+	accessTypeCodec := v2.NewCodec(knownTypes, nil, nil)
 	res, err = component.GetExternalResource("nodeModule", "nodeMod", "0.0.1")
 	check(err)
-	npmAccess := res.Access.(*NPMAccess)
+	npmAccess := &NPMAccess{}
+	check(accessTypeCodec.Decode(res.Access.Raw, npmAccess))
 	fmt.Println(npmAccess.NodeModule) // prints: my-module
 }
 
@@ -106,12 +111,17 @@ func (n *NPMAccess) SetData(bytes []byte) error {
 }
 
 var npmCodec = &v2.TypedObjectCodecWrapper{
-	TypedObjectDecoder: v2.TypedObjectDecoderFunc(func(data []byte) (v2.TypedObjectAccessor, error) {
+	TypedObjectDecoder: v2.TypedObjectDecoderFunc(func(data []byte, into v2.TypedObjectAccessor) error {
+		obj, ok := into.(*NPMAccess)
+		if !ok {
+			return errors.New("undecodable type")
+		}
 		var npm NPMAccess
 		if err := json.Unmarshal(data, &npm); err != nil {
-			return nil, err
+			return err
 		}
-		return &npm, nil
+		*obj = npm
+		return nil
 	}),
 	TypedObjectEncoder: v2.TypedObjectEncoderFunc(func(accessor v2.TypedObjectAccessor) ([]byte, error) {
 		npm, ok := accessor.(*NPMAccess)
