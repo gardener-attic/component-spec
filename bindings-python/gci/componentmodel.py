@@ -131,17 +131,98 @@ class Metadata:
     schemaVersion: SchemaVersion = SchemaVersion.V2
 
 
+class ArtifactIdentity:
+    def __init__(self, **kwargs):
+        self._id_attrs = tuple(sorted(kwargs.items(), key=lambda i: i[0]))
+
+    def __len__(self):
+        return len(self._id_attrs)
+
+    def __eq__(self, other):
+        if not type(self) == type(other):
+            return False
+        return self._id_attrs == other._id_attrs
+
+    def __hash__(self):
+        return hash((type(self), _id_attrs))
+
+
+class ComponentReferenceIdentity(ArtifactIdentity):
+    pass
+
+
+class ResourceIdentity(ArtifactIdentity):
+    pass
+
+
+class SourceIdentity(ArtifactIdentity):
+    pass
+
+
+class Artifact:
+    '''
+    base class for ComponentReference, Resource, Source
+    '''
+    def identity(self, peers: typing.Sequence['Artifact']):
+        '''
+        returns the identity-object for this artifact (component-ref, resource, or source).
+
+        Note that, in component-descriptor-v2, the `version` attribute is implicitly added iff
+        there would otherwise be a conflict, iff this artifact only uses its `name` as
+        identity-attr (which is the default).
+
+        In future versions of component-descriptor, this behaviour will be discontinued. It will
+        instead be regarded as an error if the IDs of a given sequence of artifacts (declared by
+        one component-descriptor) are not all pairwise different.
+        '''
+        own_type = type(self)
+        for p in peers:
+            if not type(p) == own_type:
+                raise ValueError(f'all peers must be of same type {type(self)=} {type(p)=}')
+
+        if own_type is ComponentReference:
+            IdCtor = ComponentReferenceIdentity
+        elif own_type is Resource:
+            IdCtor = ResourceIdentity
+        elif own_type is ComponentSource:
+            IdCtor = SourceIdentity
+        else:
+            raise NotImplementedError(own_type)
+
+        identity = IdCtor(
+            name=self.name,
+            **(self.extraIdentity or {})
+        )
+
+        if not peers:
+            return identity
+
+        if len(identity) > 1: # special-case-handling not required if there are additional-id-attrs
+            return identity
+
+        # check whether there are collissions
+        for peer in peers:
+            if peer.identity(peers=()) == identity:
+                # there is at least one collision (id est: another artifact w/ same name)
+                return ArtifactIdentity(
+                    name=self.name,
+                    version=self.version,
+                )
+        # there were no collisions
+        return identity
+
 
 @dc(frozen=True)
-class ComponentReference(FindLabelMixin):
+class ComponentReference(Artifact, FindLabelMixin):
     name: str
     componentName: str
     version: str
+    extraIdentity: typing.Dict[str, str] = dataclasses.field(default_factory=dict)
     labels: typing.List[Label] = dataclasses.field(default_factory=list)
 
 
 @dc(frozen=True)
-class Resource(FindLabelMixin):
+class Resource(Artifact, FindLabelMixin):
     name: str
     version: str
     type: ResourceType
@@ -152,6 +233,7 @@ class Resource(FindLabelMixin):
         ResourceAccess,
         None
     ]
+    extraIdentity: typing.Dict[str, str] = dataclasses.field(default_factory=dict)
     relation: ResourceRelation = ResourceRelation.LOCAL
     labels: typing.List[Label] = dataclasses.field(default_factory=list)
 
@@ -163,11 +245,12 @@ class RepositoryContext:
 
 
 @dc
-class ComponentSource(FindLabelMixin):
+class ComponentSource(Artifact, FindLabelMixin):
     name: str
     access: typing.Union[
         GithubAccess,
     ]
+    extraIdentity: typing.Dict[str, str] = dataclasses.field(default_factory=dict)
     type: SourceType = SourceType.GIT
     labels: typing.List[Label] = dataclasses.field(default_factory=list)
 
