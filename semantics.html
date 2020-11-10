@@ -86,8 +86,12 @@
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="format.html">Gardener Component Descriptor Format Specification</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Gardener Component Descriptor Semantics</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#repository-contexts-history">Repository Contexts History</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#provider">Provider</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#component">Component</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#component-descriptor">Component Descriptor</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#component-repository">Component Repository</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#component-repository-history">Component Repository History</a></li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="#identities-and-accessors">Identities and Accessors</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#component-sources">Component Sources</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#name-attribute">Name Attribute</a></li>
@@ -169,39 +173,66 @@
 <p><cite>Component Descriptors</cite> adhere to a schema defined in the JSON-schema contained in the
 <a class="reference external" href="https://github.com/gardener/component-spec">component-spec</a> repository.</p>
 <p>In this section, the semantics of those elements are defined.</p>
-<div class="section" id="repository-contexts-history">
-<h2>Repository Contexts History<a class="headerlink" href="#repository-contexts-history" title="Permalink to this headline">¶</a></h2>
-<p>Sets of Components are typically being developed in a common context. Such a context consists of
+<div class="section" id="component">
+<h2>Component<a class="headerlink" href="#component" title="Permalink to this headline">¶</a></h2>
+<p><cite>Components</cite> are semantical entities with a certain semantical focus, as part
+of a software product. They are typically built from <cite>sources</cite>, which are being
+conciously developed.</p>
+<p>Components have an identity that is defined through their name.
+Component versions have an identity that is defined through component identity and version.</p>
+<p><cite>Sources</cite> are typically maintained in source code managment systems, and are
+transformed into <cite>Resources</cite> (for example by a build), which are used at
+installation or runtime for the product.</p>
+<p><cite>Resources</cite> are “local” if they are derived from a <cite>source</cite> declared by the same component.
+<cite>Resources</cite> are “external” if they are not derived form a <cite>source</cite> declared by the same component.</p>
+<p>For each of those entities, sets of versions exist. Over time, new versions are created
+by changing sources.</p>
+<p>Each component version defines a certain version vector or sources, from which a version vector
+of resources can be derived.</p>
+<div class="section" id="component-descriptor">
+<h3>Component Descriptor<a class="headerlink" href="#component-descriptor" title="Permalink to this headline">¶</a></h3>
+<p>A <cite>Component Descriptor version</cite> is determined from a component version. It describes
+the full version vectors of comprised source versions, and corresponding resource versions.</p>
+<p>It <em>MAY</em> declare dependencies towards other component versions.</p>
+<p>In addition, it may contain additional metadata.</p>
+</div>
+<div class="section" id="component-repository">
+<h3>Component Repository<a class="headerlink" href="#component-repository" title="Permalink to this headline">¶</a></h3>
+<p><cite>Component Repositories</cite> store <cite>Component Descriptors versions</cite> and allow referencing them through
+the corresponding component version identities.</p>
+<p><cite>Component Descriptor versions</cite> stored in a component repository <em>SHOULD</em> be immutable.</p>
+<p><cite>Component Repositories</cite> <em>MAY</em> also be used to store sources or resources.</p>
+</div>
+<div class="section" id="component-repository-history">
+<h3>Component Repository History<a class="headerlink" href="#component-repository-history" title="Permalink to this headline">¶</a></h3>
+<p>Components are typically being developed in a common context. Such a context consists of
 organisational aspects (for example code ownership), and related infrastructure. Examples for
 related infrastructure contain source code repositories, build infrastructure, and resource
 repositories. An example for a source code repository being github.com, and an example for a
 resource repository being an OCI Registry, such as eu.gcr.io for OCI images.</p>
-<p>Such contexts are accompanied by <cite>Component Descriptor Context Repositories</cite>, which are used to
-manage the component metadata (in the form of <cite>Component Descriptors</cite>).</p>
-<p>Each component <em>MUST</em> have at least one such repository context, which is its initial context.</p>
-<p>For delivery scenarios, additional repository contexts <em>MAY</em> be defined. Such a repository context
-consists of the same set of technical repository types. In particular, it <em>MUST</em> contain a
-separate <cite>Component Descriptor</cite> repository.</p>
-<p>Component versions can be “transported” into such a context, by copying all referenced resources
-into the corresponding resource repositories of the target context. In addition to copying
-referenced resources, a new <cite>Component Descriptor</cite> <em>MUST</em> be created, containing references to
-the new resource locations.</p>
-<p>In order to retain the transport history, the original repository context history <em>MUST</em> be
-retained, and be appended to with the new (target) repository context.</p>
+<p><cite>Component Repositories</cite> span such contexts.</p>
+<p>Each component <em>MUST</em> have at least one such component repository, which is its
+initial repository.</p>
+<p>Additional component repositories <em>MAY</em> be defined, for example to model delivery
+scenarios.</p>
+<p>Component versions can be “transported” between component repositories by copying
+the corresponding component descriptors, retaining their identities. This <em>MUST</em>
+be done for the full transitive closure of referenced component versions.</p>
+<p>In addition, referenced sources or resources <em>MAY</em> also be copied. If done,
+the then-changed resource or source access information in the new (copied)
+component descriptor versions <em>MUST</em> be adjusted.</p>
+<p>In order to retain the transport history, the original repository history <em>MUST</em> be
+retained. The target component repository must be appended to the list of component
+repositories.</p>
+<p>The last component repository is the “current” component repository.</p>
 </div>
-<div class="section" id="provider">
-<h2>Provider<a class="headerlink" href="#provider" title="Permalink to this headline">¶</a></h2>
-<p>Each component has a provider, which is declared relative to the original repository context.
-In most cases, components are “internal”, which means that the entity maintaining the component
-is the same as the proprietor of the repository context.</p>
-<p>Opposed to that, components maintained by a third party are declared through the value <cite>external</cite>.</p>
 </div>
 <div class="section" id="identities-and-accessors">
 <h2>Identities and Accessors<a class="headerlink" href="#identities-and-accessors" title="Permalink to this headline">¶</a></h2>
-<p>Component versions are unambiguously identified by two-tuples of <cite>name</cite> and <cite>version</cite> in the
-context of a <cite>Component Descriptor Context Repository</cite>. Their identity never changes across
+<p>Component versions are unambiguously identified by 2-tuples of <cite>name</cite> and <cite>version</cite> in the
+context of a <cite>Component Repository</cite>. Their identity never changes across
 any replication between context repositories.</p>
-<p>Components declare dependencies towards <cite>Sources</cite>, <cite>Resources</cite> and other <cite>Components</cite>.</p>
+<p>Component descriptor versions reference <cite>Source Versions</cite>, <cite>Resources</cite> and other <cite>Components</cite>.</p>
 <p>Any of those dependency declarations have an umambiguous identity in the context of their
 declaring component version. Their identities always consist of their formal type
 (<cite>Source</cite>, <cite>Resource</cite>, <cite>Component Reference</cite>) and a <cite>name</cite>.</p>
