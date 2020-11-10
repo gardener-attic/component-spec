@@ -49,16 +49,17 @@ var _ = Describe("serializer", func() {
 		Expect(intDep.Version).To(Equal("v1.7.2"))
 		Expect(intDep.GetType()).To(Equal(v2.OCIImageType))
 		Expect(intDep.Relation).To(Equal(v2.LocalRelation))
-		Expect(intDep.Access).To(BeAssignableToTypeOf(&v2.OCIRegistryAccess{}))
+		Expect(intDep.Access.GetType()).To(Equal(v2.OCIRegistryType))
 
 		extDep := comp.Resources[1]
-		Expect(extDep.Name).To(Equal("grafana"))
-		Expect(extDep.Version).To(Equal("7.0.3"))
+		Expect(extDep.GetName()).To(Equal("grafana"))
+		Expect(extDep.GetVersion()).To(Equal("7.0.3"))
 		Expect(extDep.GetType()).To(Equal(v2.OCIImageType))
 		Expect(extDep.Relation).To(Equal(v2.ExternalRelation))
-		Expect(extDep.Access).To(BeAssignableToTypeOf(&v2.OCIRegistryAccess{}))
 
-		ociAccess := extDep.Access.(*v2.OCIRegistryAccess)
+		Expect(extDep.Access.GetType()).To(Equal(v2.OCIRegistryType))
+		ociAccess := &v2.OCIRegistryAccess{}
+		Expect(v2.NewCodec(nil, nil, nil).Decode(extDep.Access.Raw, ociAccess)).To(Succeed())
 		Expect(ociAccess.ImageReference).To(Equal("registry-1.docker.io/grafana/grafana/7.0.3"))
 	})
 

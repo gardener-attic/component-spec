@@ -48,14 +48,17 @@ var _ = Describe("Validation", func() {
 			},
 			ImageReference: "docker/image1:1.2.3",
 		}
+
+		unstrucOCIRegistry1, err := v2.ToUnstructuredTypedObject(v2.NewCodec(nil, nil, nil), ociRegistry1)
+		Expect(err).ToNot(HaveOccurred())
+
 		ociImage1 = &v2.Resource{
-			ObjectMeta: v2.ObjectMeta{
+			IdentityObjectMeta: v2.IdentityObjectMeta{
 				Name:    "image1",
 				Version: "1.2.3",
 			},
-			Relation:            v2.ExternalRelation,
-			TypedObjectAccessor: v2.NewTypeOnly(v2.OCIImageType),
-			Access:              ociRegistry1,
+			Relation: v2.ExternalRelation,
+			Access:   unstrucOCIRegistry1,
 		}
 		ociRegistry2 = &v2.OCIRegistryAccess{
 			ObjectType: v2.ObjectType{
@@ -63,14 +66,15 @@ var _ = Describe("Validation", func() {
 			},
 			ImageReference: "docker/image1:1.2.3",
 		}
+		unstrucOCIRegistry2, err := v2.ToUnstructuredTypedObject(v2.NewCodec(nil, nil, nil), ociRegistry2)
+		Expect(err).ToNot(HaveOccurred())
 		ociImage2 = &v2.Resource{
-			ObjectMeta: v2.ObjectMeta{
+			IdentityObjectMeta: v2.IdentityObjectMeta{
 				Name:    "image2",
 				Version: "1.2.3",
 			},
-			Relation:            v2.ExternalRelation,
-			TypedObjectAccessor: v2.NewTypeOnly(v2.OCIImageType),
-			Access:              ociRegistry2,
+			Relation: v2.ExternalRelation,
+			Access:   unstrucOCIRegistry2,
 		}
 
 		comp = &v2.ComponentDescriptor{
@@ -155,12 +159,16 @@ var _ = Describe("Validation", func() {
 		It("should forbid if a duplicated component's source is defined", func() {
 			comp.Sources = []v2.Source{
 				{
-					Name:                "a",
-					TypedObjectAccessor: v2.NewCustomType("custom", nil),
+					IdentityObjectMeta: v2.IdentityObjectMeta{
+						Name: "a",
+					},
+					Access: v2.NewEmptyUnstructured("custom"),
 				},
 				{
-					Name:                "a",
-					TypedObjectAccessor: v2.NewCustomType("custom", nil),
+					IdentityObjectMeta: v2.IdentityObjectMeta{
+						Name: "a",
+					},
+					Access: v2.NewEmptyUnstructured("custom"),
 				},
 			}
 			errList := validate(nil, comp)
@@ -254,12 +262,12 @@ var _ = Describe("Validation", func() {
 		It("should forbid if a local resource's version differs from the version of the parent", func() {
 			comp.Resources = []v2.Resource{
 				{
-					ObjectMeta: v2.ObjectMeta{
+					IdentityObjectMeta: v2.IdentityObjectMeta{
 						Name:    "locRes",
 						Version: "0.0.1",
 					},
-					Relation:            v2.LocalRelation,
-					TypedObjectAccessor: v2.NewTypeOnly(v2.OCIImageType),
+					Relation: v2.LocalRelation,
+					Access:   v2.NewEmptyUnstructured(v2.OCIImageType),
 				},
 			}
 			errList := validate(nil, comp)
@@ -269,15 +277,39 @@ var _ = Describe("Validation", func() {
 			}))))
 		})
 
+		It("should forbid if a resource name contains invalid characters", func() {
+			comp.Resources = []v2.Resource{
+				{
+					IdentityObjectMeta: v2.IdentityObjectMeta{
+						Name: "test$",
+					},
+				},
+				{
+					IdentityObjectMeta: v2.IdentityObjectMeta{
+						Name: "test🙅",
+					},
+				},
+			}
+			errList := validate(nil, comp)
+			Expect(errList).To(ContainElement(PointTo(MatchFields(IgnoreExtras, Fields{
+				"Type":  Equal(field.ErrorTypeInvalid),
+				"Field": Equal("component.resources[0].name"),
+			}))))
+			Expect(errList).To(ContainElement(PointTo(MatchFields(IgnoreExtras, Fields{
+				"Type":  Equal(field.ErrorTypeInvalid),
+				"Field": Equal("component.resources[1].name"),
+			}))))
+		})
+
 		It("should forbid if a duplicated local resource is defined", func() {
 			comp.Resources = []v2.Resource{
 				{
-					ObjectMeta: v2.ObjectMeta{
+					IdentityObjectMeta: v2.IdentityObjectMeta{
 						Name: "test",
 					},
 				},
 				{
-					ObjectMeta: v2.ObjectMeta{
+					IdentityObjectMeta: v2.IdentityObjectMeta{
 						Name: "test",
 					},
 				},
@@ -286,6 +318,59 @@ var _ = Describe("Validation", func() {
 			Expect(errList).To(ContainElement(PointTo(MatchFields(IgnoreExtras, Fields{
 				"Type":  Equal(field.ErrorTypeDuplicate),
 				"Field": Equal("component.resources[1]"),
+			}))))
+		})
+
+		It("should forbid if a duplicated resource with additional identity labels is defined", func() {
+			comp.Resources = []v2.Resource{
+				{
+					IdentityObjectMeta: v2.IdentityObjectMeta{
+						Name: "test",
+						ExtraIdentity: v2.Identity{
+							"my-id": "some-id",
+						},
+					},
+				},
+				{
+					IdentityObjectMeta: v2.IdentityObjectMeta{
+						Name: "test",
+						ExtraIdentity: v2.Identity{
+							"my-id": "some-id",
+						},
+					},
+				},
+			}
+			errList := validate(nil, comp)
+			Expect(errList).To(ContainElement(PointTo(MatchFields(IgnoreExtras, Fields{
+				"Type":  Equal(field.ErrorTypeDuplicate),
+				"Field": Equal("component.resources[1]"),
+			}))))
+		})
+
+		It("should pass if a duplicated resource has the same name but with different additional identity labels", func() {
+			comp.Resources = []v2.Resource{
+				{
+					IdentityObjectMeta: v2.IdentityObjectMeta{
+						Name: "test",
+						ExtraIdentity: v2.Identity{
+							"my-id": "some-id",
+						},
+					},
+				},
+				{
+					IdentityObjectMeta: v2.IdentityObjectMeta{
+						Name: "test",
+					},
+				},
+			}
+			errList := validate(nil, comp)
+			Expect(errList).ToNot(ContainElement(PointTo(MatchFields(IgnoreExtras, Fields{
+				"Type":  Equal(field.ErrorTypeDuplicate),
+				"Field": Equal("component.resources[1]"),
+			}))))
+			Expect(errList).ToNot(ContainElement(PointTo(MatchFields(IgnoreExtras, Fields{
+				"Type":  Equal(field.ErrorTypeDuplicate),
+				"Field": Equal("component.resources[0]"),
 			}))))
 		})
 	})
@@ -343,6 +428,38 @@ var _ = Describe("Validation", func() {
 				"Field": Equal("component.componentReferences[0].labels[1]"),
 			}))))
 		})
+	})
 
+	Context("#Identity", func() {
+		It("should pass valid identity labels", func() {
+			identity := v2.Identity{
+				"my-l1": "test",
+				"my-l2": "test",
+			}
+			errList := validateIdentity(field.NewPath("identity"), identity)
+			Expect(errList).To(HaveLen(0))
+		})
+
+		It("should forbid if a identity label define the name", func() {
+			identity := v2.Identity{
+				"name": "test",
+			}
+			errList := validateIdentity(field.NewPath("identity"), identity)
+			Expect(errList).To(ContainElement(PointTo(MatchFields(IgnoreExtras, Fields{
+				"Type":  Equal(field.ErrorTypeForbidden),
+				"Field": Equal("identity[name]"),
+			}))))
+		})
+
+		It("should forbid if a identity label defines a key with invalid characters", func() {
+			identity := v2.Identity{
+				"my-l1!": "test",
+			}
+			errList := validateIdentity(field.NewPath("identity"), identity)
+			Expect(errList).ToNot(ContainElement(PointTo(MatchFields(IgnoreExtras, Fields{
+				"Type":  Equal(field.ErrorTypeForbidden),
+				"Field": Equal("identity[my-l1!]"),
+			}))))
+		})
 	})
 })

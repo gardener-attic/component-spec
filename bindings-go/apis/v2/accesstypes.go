@@ -16,18 +16,16 @@ package v2
 
 import (
 	"encoding/json"
-	"errors"
-	"fmt"
 
 	"github.com/ghodss/yaml"
 )
 
 // KnownAccessTypes contains all known access serializer
 var KnownAccessTypes = KnownTypes{
-	OCIRegistryType:  ociRegistryCodec,
-	OCIBlobType:      ociBlobCodec,
-	GitHubAccessType: githubAccessCodec,
-	WebType:          webCodec,
+	OCIRegistryType:  DefaultJSONTypedObjectCodec,
+	OCIBlobType:      DefaultJSONTypedObjectCodec,
+	GitHubAccessType: DefaultJSONTypedObjectCodec,
+	WebType:          DefaultJSONTypedObjectCodec,
 }
 
 // OCIRegistryType is the access type of a oci registry.
@@ -56,23 +54,6 @@ func (O *OCIRegistryAccess) SetData(bytes []byte) error {
 
 	O.ImageReference = newOCIImage.ImageReference
 	return nil
-}
-
-var ociRegistryCodec = &TypedObjectCodecWrapper{
-	TypedObjectDecoder: TypedObjectDecoderFunc(func(data []byte) (TypedObjectAccessor, error) {
-		var ociImage OCIRegistryAccess
-		if err := json.Unmarshal(data, &ociImage); err != nil {
-			return nil, err
-		}
-		return &ociImage, nil
-	}),
-	TypedObjectEncoder: TypedObjectEncoderFunc(func(accessor TypedObjectAccessor) ([]byte, error) {
-		ociImage, ok := accessor.(*OCIRegistryAccess)
-		if !ok {
-			return nil, fmt.Errorf("accessor is not of type %s", OCIImageType)
-		}
-		return json.Marshal(ociImage)
-	}),
 }
 
 // OCIBlobType is the access type of a oci blob in a manifest.
@@ -114,23 +95,6 @@ func (a *OCIBlobAccess) SetData(bytes []byte) error {
 	return nil
 }
 
-var ociBlobCodec = &TypedObjectCodecWrapper{
-	TypedObjectDecoder: TypedObjectDecoderFunc(func(data []byte) (TypedObjectAccessor, error) {
-		var ociLayer OCIBlobAccess
-		if err := json.Unmarshal(data, &ociLayer); err != nil {
-			return nil, err
-		}
-		return &ociLayer, nil
-	}),
-	TypedObjectEncoder: TypedObjectEncoderFunc(func(accessor TypedObjectAccessor) ([]byte, error) {
-		ociLayer, ok := accessor.(*OCIBlobAccess)
-		if !ok {
-			return nil, fmt.Errorf("accessor is not of type %s", OCIImageType)
-		}
-		return json.Marshal(ociLayer)
-	}),
-}
-
 // WebType is the type of a web component
 const WebType = "web"
 
@@ -156,23 +120,6 @@ func (w *Web) SetData(bytes []byte) error {
 
 	w.URL = newWeb.URL
 	return nil
-}
-
-var webCodec = &TypedObjectCodecWrapper{
-	TypedObjectDecoder: TypedObjectDecoderFunc(func(data []byte) (TypedObjectAccessor, error) {
-		var web Web
-		if err := json.Unmarshal(data, &web); err != nil {
-			return nil, err
-		}
-		return &web, nil
-	}),
-	TypedObjectEncoder: TypedObjectEncoderFunc(func(accessor TypedObjectAccessor) ([]byte, error) {
-		web, ok := accessor.(*Web)
-		if !ok {
-			return nil, fmt.Errorf("accessor is not of type %s", OCIImageType)
-		}
-		return json.Marshal(web)
-	}),
 }
 
 // WebType is the type of a web component
@@ -203,78 +150,4 @@ func (w *GitHubAccess) SetData(bytes []byte) error {
 	w.RepoURL = newGitHubAccess.RepoURL
 	w.Ref = newGitHubAccess.Ref
 	return nil
-}
-
-var githubAccessCodec = &TypedObjectCodecWrapper{
-	TypedObjectDecoder: TypedObjectDecoderFunc(func(data []byte) (TypedObjectAccessor, error) {
-		var github GitHubAccess
-		if err := json.Unmarshal(data, &github); err != nil {
-			return nil, err
-		}
-		return &github, nil
-	}),
-	TypedObjectEncoder: TypedObjectEncoderFunc(func(accessor TypedObjectAccessor) ([]byte, error) {
-		github, ok := accessor.(*GitHubAccess)
-		if !ok {
-			return nil, fmt.Errorf("accessor is not of type %s", OCIImageType)
-		}
-		return json.Marshal(github)
-	}),
-}
-
-// CustomType describes a generic dependency of a resolvable component.
-type CustomType struct {
-	ObjectType `json:",inline"`
-	Data       map[string]interface{} `json:"-"`
-}
-
-// NewTypeOnly creates a new typed object without additional data.
-func NewTypeOnly(ttype string) TypedObjectAccessor {
-	return NewCustomType(ttype, nil)
-}
-
-// NewCustomType creates a new custom typed object.
-func NewCustomType(ttype string, data map[string]interface{}) TypedObjectAccessor {
-	ct := CustomType{}
-	ct.SetType(ttype)
-	ct.Data = data
-	return &ct
-}
-
-var _ TypedObjectAccessor = &CustomType{}
-
-func (c CustomType) GetData() ([]byte, error) {
-	return json.Marshal(c.Data)
-}
-
-func (c *CustomType) SetData(data []byte) error {
-	var values map[string]interface{}
-	if err := yaml.Unmarshal(data, &values); err != nil {
-		return err
-	}
-	c.Data = values
-	return nil
-}
-
-var customCodec = &TypedObjectCodecWrapper{
-	TypedObjectDecoder: TypedObjectDecoderFunc(func(data []byte) (TypedObjectAccessor, error) {
-		var acc CustomType
-		if err := yaml.Unmarshal(data, &acc); err != nil {
-			return nil, err
-		}
-
-		var values map[string]interface{}
-		if err := json.Unmarshal(data, &values); err != nil {
-			return nil, err
-		}
-		acc.Data = values
-		return &acc, nil
-	}),
-	TypedObjectEncoder: TypedObjectEncoderFunc(func(accessor TypedObjectAccessor) ([]byte, error) {
-		custom, ok := accessor.(*CustomType)
-		if !ok {
-			return nil, errors.New("accessor is not a custom type %s")
-		}
-		return json.Marshal(custom.Data)
-	}),
 }

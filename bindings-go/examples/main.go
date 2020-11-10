@@ -33,8 +33,9 @@ component:
 
   provider: internal
 
+  repositoryContexts: []
   sources: []
-  references: []
+  componentReferences: []
 
   resources:
   - name: 'apiserver'
@@ -61,17 +62,19 @@ component:
 	// get a specific local resource
 	res, err := component.GetLocalResource(v2.OCIImageType, "apiserver", "v1.7.2")
 	check(err)
-	fmt.Printf("%v\n", res)
+	fmt.Printf("%#v\n", res)
 
 	// get a specific external resource
 	res, err = component.GetExternalResource(v2.OCIImageType, "hyperkube", "v1.16.4")
 	check(err)
-	fmt.Printf("%v\n", res)
+	fmt.Printf("%#v\n", res)
 
 	// get the access for a resource
-	// known types implement the TypedObjectAccessor interface and can be cast to the specific type.
-	ociAccess := res.Access.(*v2.OCIRegistryAccess)
-	fmt.Println(ociAccess.ImageReference) // prints: eu.gcr.io/gardener-project/gardener/apiserver:v1.7.2
+	// specific access type can be decoded using the access type codec.
+	accessTypeCodec := v2.NewCodec(nil, nil, nil)
+	ociAccess := &v2.OCIRegistryAccess{}
+	check(accessTypeCodec.Decode(res.Access.Raw, ociAccess))
+	fmt.Println(ociAccess.ImageReference) // prints: k8s.gcr.io/hyperkube:v1.16.4
 }
 
 func check(err error) {
