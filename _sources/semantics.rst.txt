@@ -46,15 +46,55 @@ Opposed to that, components maintained by a third party are declared through the
 Identities and Accessors
 ------------------------
 
-Sources and Resources are unambiguously identified by two-tuples of name and version, in the
-context of their declaring component version.
+Component versions are unambiguously identified by two-tuples of `name` and `version` in the
+context of a `Component Descriptor Context Repository`. Their identity never changes across
+any replication between context repositories.
+
+Components declare dependencies towards `Sources`, `Resources` and other `Components`.
+
+Any of those dependency declarations have an umambiguous identity in the context of their
+declaring component version. Their identities always consist of their formal type
+(`Source`, `Resource`, `Component Reference`) and a `name`.
+
+Independent from the formal type, the following restrictions for valid names
+are defined. All `name` attributes *MUST* be printable ASCII-characters from
+any combination of the following character classes:
+
+- lower-cased alphanumeric (`[a-z0-9]`)
+- special characters (`[-_+]`)
+- any other characters are *NOT* acceptable
+- names *SHOULD* consist of at least two, and less than `64` characters
+
+Dependency declarations *MAY* declare additional identity attributes.
+
+Additional identity attribute names *MUST* adhere to the restrictions defined for `name` values
+(see above). Their values *MUST* be UTF-8-encoded strings. It is strongly recommended to apply
+the same restrictions, as defined for valid `names` (e.g. considering serialisation to
+file-systems). As they are, however, component-specific, their concrete values are not assumed
+to bear any concrete semantics, and are thus to be handled as opaque octet-sequences from any
+generic tooling working on the component-model. Thus, any valid UTF-8 character is allowed.
+
+Considering the tuple of `formal type`, `name`, and the optional additional identity attributes,
+all dependency declarations *MUST* be unique for any given component version starting with the next
+component descriptor version to be released after `v2`.
+
+In `v2`, for backwards-compatibility-reasons, the (mandatory) `version` attribute is implicitly
+added to the set of additional identity attributes iff it is not explicitly declared as such, and
+the uniqueness constraint would otherwise be violated.
 
 They also declare a format type (for example OCI Container Image).
 
-Finally, sources and resources also *MUST* declare through their `access` attribute a means to
+Sources and resources also *MUST* declare through their `access` attribute a means to
 access the underlying artifacts. This is done by declaring an access type (for example an OCI
 Image Registry), which defines the protocol through which access is done. Depending on the
 access type, additional attributes are required (e.g. an OCI Image Reference).
+
+Component references do not need to declare an `access`, as the access method is defined by
+the component descriptor specifiation.
+
+In addition to the aforementioned mandatory attributes, any dependency declaration, and the
+component itself may declare optional `labels`.
+
 
 Component Sources
 -----------------
@@ -62,6 +102,11 @@ Component Sources
 Components are expected to have at least one source (code) representation. For each component
 version, the corresponding source snapshot from which the component was built *MUST* be
 specified.
+
+Name Attribute
+~~~~~~~~~~~~~~
+
+
 
 Component References
 --------------------
@@ -74,16 +119,11 @@ context repository.
 A component descriptor registry *MUST* reject component descriptors with references to absent
 component versions.
 
-Local Resources
----------------
+Resources
+---------
 
-Local resources are technical artifacts of a certain format (or type) that are built from the
-declaring component's sources. Their versions *MUST* always match the version of their component.
+resources are technical artifacts of a certain format (or `type`).
 
-External Resources
-------------------
-
-External resources differ from local resources in that they are _required_ by the declaring
-component, but not built from it. Their versions *SHOULD* follow the versioning of their provided
-(upstream) artifacts. External resources are a means to express dependencies towards the technical
-artifacts of an external component that does not abide by the `Component Descriptor` contract.
+If built from the declaring component's sources, their `versions` *MUST* match the component's
+version. Whether or not a resource is built from the referencing component is expressed through
+the `relation` attribute.

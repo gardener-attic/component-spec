@@ -89,10 +89,12 @@
 <li class="toctree-l2"><a class="reference internal" href="#repository-contexts-history">Repository Contexts History</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#provider">Provider</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#identities-and-accessors">Identities and Accessors</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#component-sources">Component Sources</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#component-sources">Component Sources</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#name-attribute">Name Attribute</a></li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="#component-references">Component References</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#local-resources">Local Resources</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#external-resources">External Resources</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#resources">Resources</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="component_descriptor_registries.html">Component Descriptor Registries</a></li>
@@ -196,19 +198,53 @@ is the same as the proprietor of the repository context.</p>
 </div>
 <div class="section" id="identities-and-accessors">
 <h2>Identities and Accessors<a class="headerlink" href="#identities-and-accessors" title="Permalink to this headline">¶</a></h2>
-<p>Sources and Resources are unambiguously identified by two-tuples of name and version, in the
-context of their declaring component version.</p>
+<p>Component versions are unambiguously identified by two-tuples of <cite>name</cite> and <cite>version</cite> in the
+context of a <cite>Component Descriptor Context Repository</cite>. Their identity never changes across
+any replication between context repositories.</p>
+<p>Components declare dependencies towards <cite>Sources</cite>, <cite>Resources</cite> and other <cite>Components</cite>.</p>
+<p>Any of those dependency declarations have an umambiguous identity in the context of their
+declaring component version. Their identities always consist of their formal type
+(<cite>Source</cite>, <cite>Resource</cite>, <cite>Component Reference</cite>) and a <cite>name</cite>.</p>
+<p>Independent from the formal type, the following restrictions for valid names
+are defined. All <cite>name</cite> attributes <em>MUST</em> be printable ASCII-characters from
+any combination of the following character classes:</p>
+<ul class="simple">
+<li><p>lower-cased alphanumeric (<cite>[a-z0-9]</cite>)</p></li>
+<li><p>special characters (<cite>[-_+]</cite>)</p></li>
+<li><p>any other characters are <em>NOT</em> acceptable</p></li>
+<li><p>names <em>SHOULD</em> consist of at least two, and less than <cite>64</cite> characters</p></li>
+</ul>
+<p>Dependency declarations <em>MAY</em> declare additional identity attributes.</p>
+<p>Additional identity attribute names <em>MUST</em> adhere to the restrictions defined for <cite>name</cite> values
+(see above). Their values <em>MUST</em> be UTF-8-encoded strings. It is strongly recommended to apply
+the same restrictions, as defined for valid <cite>names</cite> (e.g. considering serialisation to
+file-systems). As they are, however, component-specific, their concrete values are not assumed
+to bear any concrete semantics, and are thus to be handled as opaque octet-sequences from any
+generic tooling working on the component-model. Thus, any valid UTF-8 character is allowed.</p>
+<p>Considering the tuple of <cite>formal type</cite>, <cite>name</cite>, and the optional additional identity attributes,
+all dependency declarations <em>MUST</em> be unique for any given component version starting with the next
+component descriptor version to be released after <cite>v2</cite>.</p>
+<p>In <cite>v2</cite>, for backwards-compatibility-reasons, the (mandatory) <cite>version</cite> attribute is implicitly
+added to the set of additional identity attributes iff it is not explicitly declared as such, and
+the uniqueness constraint would otherwise be violated.</p>
 <p>They also declare a format type (for example OCI Container Image).</p>
-<p>Finally, sources and resources also <em>MUST</em> declare through their <cite>access</cite> attribute a means to
+<p>Sources and resources also <em>MUST</em> declare through their <cite>access</cite> attribute a means to
 access the underlying artifacts. This is done by declaring an access type (for example an OCI
 Image Registry), which defines the protocol through which access is done. Depending on the
 access type, additional attributes are required (e.g. an OCI Image Reference).</p>
+<p>Component references do not need to declare an <cite>access</cite>, as the access method is defined by
+the component descriptor specifiation.</p>
+<p>In addition to the aforementioned mandatory attributes, any dependency declaration, and the
+component itself may declare optional <cite>labels</cite>.</p>
 </div>
 <div class="section" id="component-sources">
 <h2>Component Sources<a class="headerlink" href="#component-sources" title="Permalink to this headline">¶</a></h2>
 <p>Components are expected to have at least one source (code) representation. For each component
 version, the corresponding source snapshot from which the component was built <em>MUST</em> be
 specified.</p>
+<div class="section" id="name-attribute">
+<h3>Name Attribute<a class="headerlink" href="#name-attribute" title="Permalink to this headline">¶</a></h3>
+</div>
 </div>
 <div class="section" id="component-references">
 <h2>Component References<a class="headerlink" href="#component-references" title="Permalink to this headline">¶</a></h2>
@@ -219,17 +255,12 @@ context repository.</p>
 <p>A component descriptor registry <em>MUST</em> reject component descriptors with references to absent
 component versions.</p>
 </div>
-<div class="section" id="local-resources">
-<h2>Local Resources<a class="headerlink" href="#local-resources" title="Permalink to this headline">¶</a></h2>
-<p>Local resources are technical artifacts of a certain format (or type) that are built from the
-declaring component’s sources. Their versions <em>MUST</em> always match the version of their component.</p>
-</div>
-<div class="section" id="external-resources">
-<h2>External Resources<a class="headerlink" href="#external-resources" title="Permalink to this headline">¶</a></h2>
-<p>External resources differ from local resources in that they are _required_ by the declaring
-component, but not built from it. Their versions <em>SHOULD</em> follow the versioning of their provided
-(upstream) artifacts. External resources are a means to express dependencies towards the technical
-artifacts of an external component that does not abide by the <cite>Component Descriptor</cite> contract.</p>
+<div class="section" id="resources">
+<h2>Resources<a class="headerlink" href="#resources" title="Permalink to this headline">¶</a></h2>
+<p>resources are technical artifacts of a certain format (or <cite>type</cite>).</p>
+<p>If built from the declaring component’s sources, their <cite>versions</cite> <em>MUST</em> match the component’s
+version. Whether or not a resource is built from the referencing component is expressed through
+the <cite>relation</cite> attribute.</p>
 </div>
 </div>
 
