@@ -52,6 +52,7 @@ class GithubAccess(ResourceAccess):
     repoUrl: str
     ref: str
     type: AccessType
+    commit: str=None
 
     def __post_init__(self):
         parsed = self._normalise_and_parse_url()
