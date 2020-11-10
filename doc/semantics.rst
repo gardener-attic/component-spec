@@ -7,50 +7,90 @@ Gardener Component Descriptor Semantics
 In this section, the semantics of those elements are defined.
 
 
-Repository Contexts History
----------------------------
+Component
+---------
 
-Sets of Components are typically being developed in a common context. Such a context consists of
+`Components` are semantical entities with a certain semantical focus, as part
+of a software product. They are typically built from `sources`, which are being
+conciously developed.
+
+Components have an identity that is defined through their name.
+Component versions have an identity that is defined through component identity and version.
+
+`Sources` are typically maintained in source code managment systems, and are
+transformed into `Resources` (for example by a build), which are used at
+installation or runtime for the product.
+
+`Resources` are "local" if they are derived from a `source` declared by the same component.
+`Resources` are "external" if they are not derived form a `source` declared by the same component.
+
+For each of those entities, sets of versions exist. Over time, new versions are created
+by changing sources.
+
+Each component version defines a certain version vector or sources, from which a version vector
+of resources can be derived.
+
+Component Descriptor
+~~~~~~~~~~~~~~~~~~~~
+
+A `Component Descriptor version` is determined from a component version. It describes
+the full version vectors of comprised source versions, and corresponding resource versions.
+
+It *MAY* declare dependencies towards other component versions.
+
+In addition, it may contain additional metadata.
+
+
+Component Repository
+~~~~~~~~~~~~~~~~~~~~
+
+`Component Repositories` store `Component Descriptors versions` and allow referencing them through
+the corresponding component version identities.
+
+`Component Descriptor versions` stored in a component repository *SHOULD* be immutable.
+
+`Component Repositories` *MAY* also be used to store sources or resources.
+
+
+Component Repository History
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Components are typically being developed in a common context. Such a context consists of
 organisational aspects (for example code ownership), and related infrastructure. Examples for
 related infrastructure contain source code repositories, build infrastructure, and resource
 repositories. An example for a source code repository being github.com, and an example for a
 resource repository being an OCI Registry, such as eu.gcr.io for OCI images.
 
-Such contexts are accompanied by `Component Descriptor Context Repositories`, which are used to
-manage the component metadata (in the form of `Component Descriptors`).
+`Component Repositories` span such contexts.
 
-Each component *MUST* have at least one such repository context, which is its initial context.
+Each component *MUST* have at least one such component repository, which is its
+initial repository.
 
-For delivery scenarios, additional repository contexts *MAY* be defined. Such a repository context
-consists of the same set of technical repository types. In particular, it *MUST* contain a
-separate `Component Descriptor` repository.
+Additional component repositories *MAY* be defined, for example to model delivery
+scenarios.
 
-Component versions can be "transported" into such a context, by copying all referenced resources
-into the corresponding resource repositories of the target context. In addition to copying
-referenced resources, a new `Component Descriptor` *MUST* be created, containing references to
-the new resource locations.
+Component versions can be "transported" between component repositories by copying
+the corresponding component descriptors, retaining their identities. This *MUST*
+be done for the full transitive closure of referenced component versions.
 
-In order to retain the transport history, the original repository context history *MUST* be
-retained, and be appended to with the new (target) repository context.
+In addition, referenced sources or resources *MAY* also be copied. If done,
+the then-changed resource or source access information in the new (copied)
+component descriptor versions *MUST* be adjusted.
 
+In order to retain the transport history, the original repository history *MUST* be
+retained. The target component repository must be appended to the list of component
+repositories.
 
-Provider
---------
-
-Each component has a provider, which is declared relative to the original repository context.
-In most cases, components are "internal", which means that the entity maintaining the component
-is the same as the proprietor of the repository context.
-
-Opposed to that, components maintained by a third party are declared through the value `external`.
+The last component repository is the "current" component repository.
 
 Identities and Accessors
 ------------------------
 
-Component versions are unambiguously identified by two-tuples of `name` and `version` in the
-context of a `Component Descriptor Context Repository`. Their identity never changes across
+Component versions are unambiguously identified by 2-tuples of `name` and `version` in the
+context of a `Component Repository`. Their identity never changes across
 any replication between context repositories.
 
-Components declare dependencies towards `Sources`, `Resources` and other `Components`.
+Component descriptor versions reference `Source Versions`, `Resources` and other `Components`.
 
 Any of those dependency declarations have an umambiguous identity in the context of their
 declaring component version. Their identities always consist of their formal type
