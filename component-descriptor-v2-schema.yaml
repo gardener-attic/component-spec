@@ -24,7 +24,6 @@ definitions:
         type: 'string'
     additionalProperties: False
 
-
   repositoryContext:
     type: 'object'
     required:
@@ -91,6 +90,17 @@ definitions:
           - $ref: '#/definitions/githubAccess'
           - $ref: '#/definitions/httpAccess'
 
+  srcRef:
+    type: 'object'
+    description: 'a reference to a (component-local) source'
+    properties:
+      identitySelector:
+        $ref: '#/definitions/identityAttribute'
+      labels:
+        type: 'array'
+        items:
+          $ref: '#/definitions/label'
+
   componentReference:
     type: 'object'
     description: 'a reference to a component'
@@ -128,6 +138,10 @@ definitions:
         type: 'string'
       type:
         type: 'string'
+      srcRefs:
+        type: 'array'
+        items:
+          $ref: '#/definitions/srcRef'
       relation:
         type: 'string'
         enum: ['local', 'external']
