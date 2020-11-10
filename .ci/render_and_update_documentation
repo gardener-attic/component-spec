@@ -20,7 +20,7 @@ function schema_build {
   pip3 install json-schema-for-humans
 
   generate-schema-doc \
-    "${repo_root}/component-descriptor-v2-schema.yaml" \
+    "${repo_root}/language-independent/component-descriptor-v2-schema.yaml" \
     "${out_dir}/component-descriptor-v2.html"
 }
 

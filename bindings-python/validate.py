@@ -8,7 +8,7 @@ import yaml
 
 own_dir = os.path.abspath(os.path.dirname(__file__))
 repo_root = os.path.abspath(os.path.join(own_dir, os.path.pardir))
-schema_file = os.path.join(repo_root, 'component-descriptor-v2-schema.yaml')
+schema_file = os.path.join(repo_root, 'language-independent', 'component-descriptor-v2-schema.yaml')
 
 
 def parse_args():

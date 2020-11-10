@@ -1,6 +1,6 @@
 // Code generated for package jsonscheme by go-bindata DO NOT EDIT. (@generated)
 // sources:
-// ../../../../component-descriptor-v2-schema.yaml
+// ../../../../language-independent/component-descriptor-v2-schema.yaml
 package jsonscheme
 
 import (
@@ -82,7 +82,7 @@ var _ComponentDescriptorV2SchemaYaml = []byte("\x1f\x8b\x08\x00\x00\x00\x00\x00\
 func ComponentDescriptorV2SchemaYamlBytes() ([]byte, error) {
 	return bindataRead(
 		_ComponentDescriptorV2SchemaYaml,
-		"../../../../component-descriptor-v2-schema.yaml",
+		"../../../../language-independent/component-descriptor-v2-schema.yaml",
 	)
 }
 
@@ -92,7 +92,7 @@ func ComponentDescriptorV2SchemaYaml() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "../../../../component-descriptor-v2-schema.yaml", size: 5803, mode: os.FileMode(420), modTime: time.Unix(1604417413, 0)}
+	info := bindataFileInfo{name: "../../../../language-independent/component-descriptor-v2-schema.yaml", size: 5803, mode: os.FileMode(420), modTime: time.Unix(1604417413, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -149,7 +149,7 @@ func AssetNames() []string {
 
 // _bindata is a table, holding each asset generator, mapped to its name.
 var _bindata = map[string]func() (*asset, error){
-	"../../../../component-descriptor-v2-schema.yaml": ComponentDescriptorV2SchemaYaml,
+	"../../../../language-independent/component-descriptor-v2-schema.yaml": ComponentDescriptorV2SchemaYaml,
 }
 
 // AssetDir returns the file names below a certain
@@ -196,9 +196,11 @@ var _bintree = &bintree{nil, map[string]*bintree{
 	"..": &bintree{nil, map[string]*bintree{
 		"..": &bintree{nil, map[string]*bintree{
 			"..": &bintree{nil, map[string]*bintree{
-				"..": &bintree{nil, map[string]*bintree{
-					"component-descriptor-v2-schema.yaml": &bintree{ComponentDescriptorV2SchemaYaml, map[string]*bintree{}},
-				}},
+        "..": &bintree{nil, map[string]*bintree{
+          "language-independent": &bintree{nil, map[string]*bintree{
+            "component-descriptor-v2-schema.yaml": &bintree{ComponentDescriptorV2SchemaYaml, map[string]*bintree{}},
+          }},
+        }},
 			}},
 		}},
 	}},

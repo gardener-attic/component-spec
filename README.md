@@ -8,7 +8,7 @@ programming languages relevant to the Gardener ecosystem.
 
 - [generated documentation](https://gardener.github.io/component-spec/)
 - [schema browser](https://gardener.github.io/component-spec/component-descriptor-v2.html)
-- `component-descriptor-v2-schema.yaml` (JSON-schema)
+- `language-independent/component-descriptor-v2-schema.yaml` (JSON-schema)
 
 *Language-Bindings*
 
