@@ -64,6 +64,7 @@ any combination of the following character classes:
 - special characters (`[-_+]`)
 - any other characters are *NOT* acceptable
 - names *SHOULD* consist of at least two, and less than `64` characters
+- names *MUST* start with a lowercase character
 
 Dependency declarations *MAY* declare additional identity attributes.
 
