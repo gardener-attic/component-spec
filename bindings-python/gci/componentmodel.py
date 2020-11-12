@@ -135,6 +135,9 @@ class ArtifactIdentity:
     def __init__(self, **kwargs):
         self._id_attrs = tuple(sorted(kwargs.items(), key=lambda i: i[0]))
 
+    def __str__(self):
+        return '-'.join((a[1] for a in self._id_attrs))
+
     def __len__(self):
         return len(self._id_attrs)
 
