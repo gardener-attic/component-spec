@@ -253,6 +253,7 @@ class ComponentSource(Artifact, FindLabelMixin):
     access: typing.Union[
         GithubAccess,
     ]
+    version: typing.Optional[str] = None # introduce this backwards-compatible for now
     extraIdentity: typing.Dict[str, str] = dataclasses.field(default_factory=dict)
     type: SourceType = SourceType.GIT
     labels: typing.List[Label] = dataclasses.field(default_factory=list)

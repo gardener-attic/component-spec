@@ -72,6 +72,7 @@ definitions:
     type: 'object'
     required:
       - name
+      - version
       - type
       - access
     properties:
@@ -79,6 +80,8 @@ definitions:
         type: 'string'
       extraIdentity:
         $ref: '#/definitions/identityAttribute'
+      version:
+        type: 'string'
       type:
         type: 'string'
         enum: ['git']
