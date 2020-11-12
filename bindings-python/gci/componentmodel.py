@@ -205,6 +205,8 @@ class Artifact:
 
         # check whether there are collissions
         for peer in peers:
+            if peer is self:
+                continue
             if peer.identity(peers=()) == identity:
                 # there is at least one collision (id est: another artifact w/ same name)
                 return ArtifactIdentity(
