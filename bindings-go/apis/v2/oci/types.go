@@ -14,6 +14,8 @@
 
 package oci
 
+import ocispecv1 "github.com/opencontainers/image-spec/specs-go/v1"
+
 // OciBlobRef is a single OCI registry layer reference as used in OCI Image Manifests.
 type OciBlobRef struct {
 	// MediaType is the media type of the object this schema refers to.
@@ -24,6 +26,15 @@ type OciBlobRef struct {
 
 	// Size specifies the size in bytes of the blob.
 	Size int64 `json:"size"`
+}
+
+// ConvertDescriptorToOCIBlobRef converts a ocispec descriptor to a component descriptor oci blob ref.
+func ConvertDescriptorToOCIBlobRef(desc ocispecv1.Descriptor) OciBlobRef {
+	return OciBlobRef{
+		MediaType: desc.MediaType,
+		Digest:    desc.Digest.String(),
+		Size:      desc.Size,
+	}
 }
 
 // ComponentDescriptorConfig is a Component-Descriptor OCI configuration that is used to store the reference to the

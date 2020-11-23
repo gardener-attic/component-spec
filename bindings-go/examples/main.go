@@ -20,6 +20,7 @@ import (
 
 	v2 "github.com/gardener/component-spec/bindings-go/apis/v2"
 	"github.com/gardener/component-spec/bindings-go/codec"
+	"github.com/gardener/component-spec/bindings-go/utils/selector"
 )
 
 func main() {
@@ -49,6 +50,17 @@ component:
   - name: 'hyperkube'
     version: 'v1.16.4'
     type: 'ociImage'
+    extraIdentity:
+      myid: '1'
+    relation: external
+    access:
+      type: 'ociRegistry'
+      imageReference: 'k8s.gcr.io/hyperkube:v1.16.4'
+  - name: 'hyperkube'
+    version: 'v1.17.4'
+    type: 'ociImage'
+    extraIdentity:
+      myid: '2'
     relation: external
     access:
       type: 'ociRegistry'
@@ -75,6 +87,46 @@ component:
 	ociAccess := &v2.OCIRegistryAccess{}
 	check(accessTypeCodec.Decode(res.Access.Raw, ociAccess))
 	fmt.Println(ociAccess.ImageReference) // prints: k8s.gcr.io/hyperkube:v1.16.4
+
+	/////////////////////////////////
+	//  Identity
+	////////////////////////////////
+
+	// get a component by its identity via selectors
+	idSelector := selector.DefaultSelector{
+		"name": "hyperkube",
+	}
+	resources, err := component.GetResourceBySelector(idSelector)
+	check(err)
+	fmt.Printf("%d\n", len(resources)) // prints "2" as both hyperkube images match the identity
+
+	// get a component by additional identity information
+	idSelector = selector.DefaultSelector{
+		"name": "hyperkube",
+		"myid": "1",
+	}
+	resources, err = component.GetResourceBySelector(idSelector)
+	check(err)
+	fmt.Printf("%d\n", len(resources))                               // prints "1" as only one hyperkube image matches the name and myid attribute.
+	fmt.Printf("%s - %s\n", resources[0].Name, resources[0].Version) // prints "hyperkube - v1.16.4"
+
+	// select a resource by jsonschema
+	schemaSelector, err := selector.NewJSONSchemaSelectorFromString(`
+type: object
+properties:
+  name:
+    type: string
+    enum: ["hyperkube"]
+  myid:
+    type: string
+    enum: ["1"]
+`)
+	check(err)
+
+	resources, err = component.GetResourceBySelector(schemaSelector)
+	check(err)
+	fmt.Printf("%d\n", len(resources))                               // prints "1" as only one hyperkube image matches the name and myid attribute.
+	fmt.Printf("%s - %s\n", resources[0].Name, resources[0].Version) // prints "hyperkube - v1.16.4"
 }
 
 func check(err error) {
