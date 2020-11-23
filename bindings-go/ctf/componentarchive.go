@@ -48,7 +48,6 @@ func NewComponentArchive(cd *v2.ComponentDescriptor, fs vfs.FileSystem) *Compone
 		ComponentDescriptor: cd,
 		fs:                  fs,
 		BlobResolver: &ComponentArchiveBlobResolver{
-			cd: cd,
 			fs: fs,
 		},
 	}
@@ -118,7 +117,6 @@ func newComponentArchiveFromFilesystem(fs vfs.FileSystem) (*ComponentArchive, er
 		ComponentDescriptor: cd,
 		fs:                  fs,
 		BlobResolver: &ComponentArchiveBlobResolver{
-			cd: cd,
 			fs: fs,
 		},
 	}, nil
@@ -146,7 +144,7 @@ func (ca *ComponentArchive) AddResource(res *v2.Resource, info BlobInfo, reader 
 		}
 	}
 
-	localFsAccess := v2.NewLocalFilesystemBlobAccess(info.MediaType, info.Digest)
+	localFsAccess := v2.NewLocalFilesystemBlobAccess(info.Digest)
 	unstructuredType, err := v2.ToUnstructuredTypedObject(v2.NewCodec(nil, nil, nil), localFsAccess)
 	if err != nil {
 		return fmt.Errorf("unable to convert local filesystem type to untructured type: %w", err)
@@ -188,7 +186,7 @@ func (ca *ComponentArchive) AddResourceFromResolver(ctx context.Context, res *v2
 		}
 	}
 
-	localFsAccess := v2.NewLocalFilesystemBlobAccess(info.MediaType, info.Digest)
+	localFsAccess := v2.NewLocalFilesystemBlobAccess(info.Digest)
 	unstructuredType, err := v2.ToUnstructuredTypedObject(v2.NewCodec(nil, nil, nil), localFsAccess)
 	if err != nil {
 		return fmt.Errorf("unable to convert local filesystem type to untructured type: %w", err)
@@ -276,9 +274,23 @@ func (ca *ComponentArchive) WriteTar(writer io.Writer) error {
 	return nil
 }
 
+// ComponentArchiveBlobResolver implements the BlobResolver interface for
+// "LocalFilesystemBlob" access types.
 type ComponentArchiveBlobResolver struct {
-	cd *v2.ComponentDescriptor
 	fs vfs.FileSystem
+}
+
+// NewComponentArchiveBlobResolver creates new ComponentArchive blob that can resolve local filesystem references.
+// The filesystem is expected to have its root at the component archives root
+// so that artifacts can be resolve in "/blobs".
+func NewComponentArchiveBlobResolver(fs vfs.FileSystem) *ComponentArchiveBlobResolver {
+	return &ComponentArchiveBlobResolver{
+		fs: fs,
+	}
+}
+
+func (ca *ComponentArchiveBlobResolver) CanResolve(res v2.Resource) bool {
+	return res.Access != nil && res.Access.GetType() == v2.LocalFilesystemBlobType
 }
 
 func (ca *ComponentArchiveBlobResolver) Info(ctx context.Context, res v2.Resource) (*BlobInfo, error) {
@@ -303,7 +315,9 @@ func (ca *ComponentArchiveBlobResolver) Resolve(ctx context.Context, res v2.Reso
 	if _, err := io.Copy(writer, file); err != nil {
 		return nil, err
 	}
-
+	if err := file.Close(); err != nil {
+		return nil, err
+	}
 	return info, nil
 }
 
@@ -315,14 +329,14 @@ func (ca *ComponentArchiveBlobResolver) resolve(_ context.Context, res v2.Resour
 	if err := v2.NewCodec(nil, nil, nil).Decode(res.Access.Raw, localFSAccess); err != nil {
 		return nil, nil, fmt.Errorf("unable to decode access to type '%s': %w", res.Access.GetType(), err)
 	}
-	blobpath := BlobPath(localFSAccess.Name)
+	blobpath := BlobPath(localFSAccess.Filename)
 
 	info, err := ca.fs.Stat(blobpath)
 	if err != nil {
 		return nil, nil, fmt.Errorf("unable to get fileinfo for %s: %w", blobpath, err)
 	}
 	if info.IsDir() {
-		return nil, nil, fmt.Errorf("directories are not allowed as blobs %s: %w", blobpath, err)
+		return nil, nil, fmt.Errorf("directories are not allowed as blobs %s", blobpath)
 	}
 	file, err := ca.fs.Open(blobpath)
 	if err != nil {
@@ -331,13 +345,13 @@ func (ca *ComponentArchiveBlobResolver) resolve(_ context.Context, res v2.Resour
 
 	dig, err := digest.FromReader(file)
 	if err != nil {
-		return nil, nil, fmt.Errorf("unable to generate dig from %s: %w", localFSAccess.Name, err)
+		return nil, nil, fmt.Errorf("unable to generate dig from %s: %w", localFSAccess.Filename, err)
 	}
 	if _, err := file.Seek(0, io.SeekStart); err != nil {
 		return nil, nil, fmt.Errorf("unable to reset file reader: %w", err)
 	}
 	return &BlobInfo{
-		MediaType: localFSAccess.MediaType,
+		MediaType: res.GetType(),
 		Digest:    dig.String(),
 		Size:      info.Size(),
 	}, file, nil

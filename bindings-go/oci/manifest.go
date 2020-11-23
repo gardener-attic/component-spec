@@ -27,8 +27,8 @@ import (
 	ocispecv1 "github.com/opencontainers/image-spec/specs-go/v1"
 
 	v2 "github.com/gardener/component-spec/bindings-go/apis/v2"
-	"github.com/gardener/component-spec/bindings-go/apis/v2/ctf"
 	"github.com/gardener/component-spec/bindings-go/codec"
+	"github.com/gardener/component-spec/bindings-go/ctf"
 )
 
 // BlobStore defines a interface that is used to store oci descriptors.
@@ -41,13 +41,6 @@ type BlobStore interface {
 type ManifestBuilder struct {
 	store   BlobStore
 	archive *ctf.ComponentArchive
-
-	// path to a directory that contains the following structure
-	// - component-descriptor.yaml
-	// - blobs
-	//   - <blob1>
-	//   - <blob2>
-	componentDescriptorDirPath *string
 }
 
 // NewManifestBuilder creates a new oci manifest builder for a component descriptor

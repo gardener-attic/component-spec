@@ -116,7 +116,7 @@ func (a *OCIBlobAccess) SetData(bytes []byte) error {
 }
 
 // LocalOCIBlobType is the access type of a oci blob in the current component descriptor manifest.
-const LocalOCIBlobType = "LocalOCIBlob"
+const LocalOCIBlobType = "localOciBlob"
 
 // NewLocalOCIBlobAccess creates a new LocalOCIBlob accessor
 func NewLocalOCIBlobAccess(digest string) TypedObjectAccessor {
@@ -131,8 +131,6 @@ func NewLocalOCIBlobAccess(digest string) TypedObjectAccessor {
 // LocalOCIBlobAccess describes the access for a blob that is stored in the component descriptors oci manifest.
 type LocalOCIBlobAccess struct {
 	ObjectType `json:",inline"`
-	// MediaType is the media type of the object this schema refers to.
-	MediaType string `json:"mediaType,omitempty"`
 	// Digest is the digest of the targeted content.
 	Digest string `json:"digest"`
 }
@@ -147,7 +145,6 @@ func (a *LocalOCIBlobAccess) SetData(bytes []byte) error {
 		return err
 	}
 	a.Digest = newAccess.Digest
-	a.MediaType = newAccess.MediaType
 	return nil
 }
 
@@ -155,24 +152,21 @@ func (a *LocalOCIBlobAccess) SetData(bytes []byte) error {
 const LocalFilesystemBlobType = "localFilesystemBlob"
 
 // NewLocalFilesystemBlobAccess creates a new localFilesystemBlob accessor.
-func NewLocalFilesystemBlobAccess(mediaType, path string) TypedObjectAccessor {
+func NewLocalFilesystemBlobAccess(path string) TypedObjectAccessor {
 	return &LocalFilesystemBlobAccess{
 		ObjectType: ObjectType{
 			Type: LocalFilesystemBlobType,
 		},
-		Name:      path,
-		MediaType: mediaType,
+		Filename: path,
 	}
 }
 
 // LocalFilesystemBlobAccess describes the access for a blob on the filesystem.
 type LocalFilesystemBlobAccess struct {
 	ObjectType `json:",inline"`
-	// Name is the name of the blob in the local filesystem.
+	// Filename is the name of the blob in the local filesystem.
 	// The blob is expected to be at <fs-root>/blobs/<name>
-	Name string `json:"path"`
-	// MediaType defines the media type of the current read blob.
-	MediaType string `json:"mediaType"`
+	Filename string `json:"filename"`
 }
 
 func (a LocalFilesystemBlobAccess) GetData() ([]byte, error) {
@@ -184,8 +178,7 @@ func (a *LocalFilesystemBlobAccess) SetData(bytes []byte) error {
 	if err := json.Unmarshal(bytes, &newAccess); err != nil {
 		return err
 	}
-	a.Name = newAccess.Name
-	a.MediaType = newAccess.MediaType
+	a.Filename = newAccess.Filename
 	return nil
 }
 

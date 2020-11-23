@@ -18,9 +18,6 @@ package oci
 // that are stored as tar.
 const ComponentDescriptorTarMimeType = "application/vnd.gardener.cloud.cnudie.component-descriptor.v2+yaml+tar"
 
-// ComponentDescriptorTarFileName is the name of the component-descriptor file in the tar.
-const ComponentDescriptorTarFileName = "component-descriptor.yaml"
-
 // ComponentDescriptorJSONMimeType is the mimetype for component-descriptor-blobs
 // that are stored as JSON.
 const ComponentDescriptorJSONMimeType = "application/vnd.gardener.cloud.cnudie.component-descriptor.v2+json"

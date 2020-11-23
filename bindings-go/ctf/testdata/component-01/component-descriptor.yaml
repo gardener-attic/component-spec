@@ -21,6 +21,5 @@ component:
     type: 'json'
     relation: 'external'
     access:
-      type: 'localFilesystemBlob'
-      mediaType: 'json'
-      path: 'myblob'
+      type: 'localFilesystemBlob' # <-> localOCIBlob (media type vnd.cnudie+tar)
+      filename: 'myblob' # relative to blobs directory

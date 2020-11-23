@@ -30,7 +30,7 @@ import (
 	"github.com/opencontainers/go-digest"
 
 	v2 "github.com/gardener/component-spec/bindings-go/apis/v2"
-	"github.com/gardener/component-spec/bindings-go/apis/v2/ctf"
+	"github.com/gardener/component-spec/bindings-go/ctf"
 )
 
 func TestConfig(t *testing.T) {
@@ -114,6 +114,7 @@ var _ = Describe("ComponentArchive", func() {
 		res := v2.Resource{
 			IdentityObjectMeta: v2.IdentityObjectMeta{
 				Name: "res1",
+				Type: "txt",
 			},
 			Relation: v2.ExternalRelation,
 		}
@@ -146,6 +147,7 @@ var _ = Describe("ComponentArchive", func() {
 		res := v2.Resource{
 			IdentityObjectMeta: v2.IdentityObjectMeta{
 				Name: "res1",
+				Type: "txt",
 			},
 			Relation: v2.ExternalRelation,
 		}

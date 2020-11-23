@@ -166,13 +166,15 @@ var _ = Describe("Helper", func() {
 	})
 
 	It("should select 2 resources by a their type", func() {
-		res := comp.GetExternalResourcesByType(v2.OCIImageType)
+		res, err := comp.GetResourcesByType(v2.OCIImageType)
+		Expect(err).ToNot(HaveOccurred())
 		Expect(res).To(HaveLen(2))
 	})
 
 	It("should select no resources by a their type", func() {
-		res := comp.GetExternalResourcesByType(v2.GitType)
-		Expect(res).To(HaveLen(0))
+		_, err := comp.GetResourcesByType(v2.GitType)
+		Expect(err).To(HaveOccurred())
+		Expect(err).To(Equal(v2.NotFound))
 	})
 
 })
