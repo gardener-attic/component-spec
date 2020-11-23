@@ -222,8 +222,14 @@ class ComponentReference(Artifact, FindLabelMixin):
     name: str
     componentName: str
     version: str
-    extraIdentity: typing.Dict[str, str] = dataclasses.field(default_factory=dict)
-    labels: typing.List[Label] = dataclasses.field(default_factory=list)
+    extraIdentity: typing.Dict[str, str] = dataclasses.field(default_factory=tuple)
+    labels: typing.List[Label] = dataclasses.field(default_factory=tuple)
+
+
+@dc(frozen=True)
+class SourceReference(FindLabelMixin):
+    identitySelector: typing.Dict[str, str]
+    labels: typing.List[Label] = dataclasses.field(default_factory=tuple)
 
 
 @dc(frozen=True)
@@ -240,7 +246,8 @@ class Resource(Artifact, FindLabelMixin):
     ]
     extraIdentity: typing.Dict[str, str] = dataclasses.field(default_factory=dict)
     relation: ResourceRelation = ResourceRelation.LOCAL
-    labels: typing.List[Label] = dataclasses.field(default_factory=list)
+    labels: typing.List[Label] = dataclasses.field(default_factory=tuple)
+    srcRefs: typing.List[SourceReference] = dataclasses.field(default_factory=tuple)
 
 
 @dc
