@@ -24,15 +24,15 @@ import (
 	"io"
 	"net/url"
 	"path"
-	"path/filepath"
+	"strings"
 
 	"github.com/mandelsoft/vfs/pkg/memoryfs"
 	"github.com/opencontainers/go-digest"
 	ocispecv1 "github.com/opencontainers/image-spec/specs-go/v1"
 
 	v2 "github.com/gardener/component-spec/bindings-go/apis/v2"
-	"github.com/gardener/component-spec/bindings-go/apis/v2/ctf"
 	"github.com/gardener/component-spec/bindings-go/codec"
+	"github.com/gardener/component-spec/bindings-go/ctf"
 )
 
 type Client interface {
@@ -59,6 +59,11 @@ type Resolver struct {
 	client  Client
 }
 
+// NewResolver creates a new resolver.
+func NewResolver() *Resolver {
+	return &Resolver{}
+}
+
 // WithRepositoryContext sets the repository context of the resolver
 func (r *Resolver) WithRepositoryContext(ctx v2.RepositoryContext) *Resolver {
 	r.repoCtx = ctx
@@ -73,6 +78,9 @@ func (r *Resolver) WithOCIClient(client Client) *Resolver {
 
 // Resolve resolves a component descriptor by name and version within the configured context.
 func (r *Resolver) Resolve(ctx context.Context, name, version string) (*v2.ComponentDescriptor, ctf.BlobResolver, error) {
+	if r.repoCtx.Type != v2.OCIRegistryType {
+		return nil, nil, fmt.Errorf("unsupported type %s expected %s", r.repoCtx.Type, v2.OCIRegistryType)
+	}
 	ref, err := OCIRef(r.repoCtx, name, version)
 	if err != nil {
 		return nil, nil, fmt.Errorf("unable to generate oci reference: %w", err)
@@ -166,6 +174,10 @@ func newBlobResolver(client Client, ref string, manifest *ocispecv1.Manifest, cd
 	}
 }
 
+func (b *blobResolver) CanResolve(res v2.Resource) bool {
+	return res.Access != nil && res.Access.GetType() == v2.LocalOCIBlobType || res.Access.GetType() == v2.OCIBlobType
+}
+
 func (b *blobResolver) Info(ctx context.Context, res v2.Resource) (*ctf.BlobInfo, error) {
 	return b.resolve(ctx, res, nil)
 }
@@ -194,7 +206,7 @@ func (b *blobResolver) resolve(ctx context.Context, res v2.Resource, writer io.W
 		}
 
 		return &ctf.BlobInfo{
-			MediaType: localOCIAccess.MediaType,
+			MediaType: blobLayer.MediaType,
 			Digest:    localOCIAccess.Digest,
 			Size:      blobLayer.Size,
 		}, nil
@@ -247,7 +259,7 @@ func ReadComponentDescriptorFromTar(r io.Reader) ([]byte, error) {
 			return nil, fmt.Errorf("unable to read tar: %w", err)
 		}
 
-		if header.Name != filepath.Join("/", ComponentDescriptorTarFileName) {
+		if strings.TrimLeft(header.Name, "/") != ctf.ComponentDescriptorFileName {
 			continue
 		}
 

@@ -96,7 +96,7 @@ component:
 	idSelector := selector.DefaultSelector{
 		"name": "hyperkube",
 	}
-	resources, err := component.GetResourceBySelector(idSelector)
+	resources, err := component.GetResourcesBySelector(idSelector)
 	check(err)
 	fmt.Printf("%d\n", len(resources)) // prints "2" as both hyperkube images match the identity
 
@@ -105,7 +105,7 @@ component:
 		"name": "hyperkube",
 		"myid": "1",
 	}
-	resources, err = component.GetResourceBySelector(idSelector)
+	resources, err = component.GetResourcesBySelector(idSelector)
 	check(err)
 	fmt.Printf("%d\n", len(resources))                               // prints "1" as only one hyperkube image matches the name and myid attribute.
 	fmt.Printf("%s - %s\n", resources[0].Name, resources[0].Version) // prints "hyperkube - v1.16.4"
@@ -123,7 +123,7 @@ properties:
 `)
 	check(err)
 
-	resources, err = component.GetResourceBySelector(schemaSelector)
+	resources, err = component.GetResourcesBySelector(schemaSelector)
 	check(err)
 	fmt.Printf("%d\n", len(resources))                               // prints "1" as only one hyperkube image matches the name and myid attribute.
 	fmt.Printf("%s - %s\n", resources[0].Name, resources[0].Version) // prints "hyperkube - v1.16.4"
