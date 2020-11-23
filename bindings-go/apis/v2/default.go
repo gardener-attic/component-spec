@@ -51,7 +51,7 @@ func DefaultResources(component *ComponentDescriptor) {
 
 		id := string(res.GetIdentityDigest())
 		if _, ok := resourceIDs[id]; ok {
-			identity := res.GetIdentity()
+			identity := res.ExtraIdentity
 			identity[SystemIdentityVersion] = res.GetVersion()
 
 			if id != string(identity.Digest()) {

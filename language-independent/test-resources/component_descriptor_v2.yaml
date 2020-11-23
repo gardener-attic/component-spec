@@ -18,6 +18,7 @@ component:
   sources:
     - name: 'github.com/gardener/gardener'
       type: 'git'
+      version: 'v1.7.2'
       labels: []
       access:
         type: 'github'

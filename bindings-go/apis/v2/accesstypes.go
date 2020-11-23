@@ -22,10 +22,11 @@ import (
 
 // KnownAccessTypes contains all known access serializer
 var KnownAccessTypes = KnownTypes{
-	OCIRegistryType:  DefaultJSONTypedObjectCodec,
-	OCIBlobType:      DefaultJSONTypedObjectCodec,
-	GitHubAccessType: DefaultJSONTypedObjectCodec,
-	WebType:          DefaultJSONTypedObjectCodec,
+	OCIRegistryType:         DefaultJSONTypedObjectCodec,
+	OCIBlobType:             DefaultJSONTypedObjectCodec,
+	GitHubAccessType:        DefaultJSONTypedObjectCodec,
+	WebType:                 DefaultJSONTypedObjectCodec,
+	LocalFilesystemBlobType: DefaultJSONTypedObjectCodec,
 }
 
 // OCIRegistryType is the access type of a oci registry.
@@ -40,7 +41,15 @@ type OCIRegistryAccess struct {
 	ImageReference string `json:"imageReference"`
 }
 
-var _ TypedObjectAccessor = &OCIRegistryAccess{}
+// NewOCIRegistryAccess creates a new OCIRegistryAccess accessor
+func NewOCIRegistryAccess(ref string) TypedObjectAccessor {
+	return &OCIRegistryAccess{
+		ObjectType: ObjectType{
+			Type: OCIBlobType,
+		},
+		ImageReference: ref,
+	}
+}
 
 func (O OCIRegistryAccess) GetData() ([]byte, error) {
 	return json.Marshal(O)
@@ -76,7 +85,18 @@ type OCIBlobAccess struct {
 	Size int64 `json:"size"`
 }
 
-var _ TypedObjectAccessor = &OCIBlobAccess{}
+// NewOCIBlobAccess creates a new OCIBlob accessor
+func NewOCIBlobAccess(ref, mediaType, digest string, size int64) TypedObjectAccessor {
+	return &OCIBlobAccess{
+		ObjectType: ObjectType{
+			Type: OCIBlobType,
+		},
+		Reference: ref,
+		MediaType: mediaType,
+		Digest:    digest,
+		Size:      size,
+	}
+}
 
 func (a OCIBlobAccess) GetData() ([]byte, error) {
 	return json.Marshal(a)
@@ -95,6 +115,80 @@ func (a *OCIBlobAccess) SetData(bytes []byte) error {
 	return nil
 }
 
+// LocalOCIBlobType is the access type of a oci blob in the current component descriptor manifest.
+const LocalOCIBlobType = "LocalOCIBlob"
+
+// NewLocalOCIBlobAccess creates a new LocalOCIBlob accessor
+func NewLocalOCIBlobAccess(digest string) TypedObjectAccessor {
+	return &LocalOCIBlobAccess{
+		ObjectType: ObjectType{
+			Type: LocalOCIBlobType,
+		},
+		Digest: digest,
+	}
+}
+
+// LocalOCIBlobAccess describes the access for a blob that is stored in the component descriptors oci manifest.
+type LocalOCIBlobAccess struct {
+	ObjectType `json:",inline"`
+	// MediaType is the media type of the object this schema refers to.
+	MediaType string `json:"mediaType,omitempty"`
+	// Digest is the digest of the targeted content.
+	Digest string `json:"digest"`
+}
+
+func (a LocalOCIBlobAccess) GetData() ([]byte, error) {
+	return json.Marshal(a)
+}
+
+func (a *LocalOCIBlobAccess) SetData(bytes []byte) error {
+	var newAccess OCIBlobAccess
+	if err := json.Unmarshal(bytes, &newAccess); err != nil {
+		return err
+	}
+	a.Digest = newAccess.Digest
+	a.MediaType = newAccess.MediaType
+	return nil
+}
+
+// LocalBlobType is the access type of a oci blob in a manifest.
+const LocalFilesystemBlobType = "localFilesystemBlob"
+
+// NewLocalFilesystemBlobAccess creates a new localFilesystemBlob accessor.
+func NewLocalFilesystemBlobAccess(mediaType, path string) TypedObjectAccessor {
+	return &LocalFilesystemBlobAccess{
+		ObjectType: ObjectType{
+			Type: LocalFilesystemBlobType,
+		},
+		Name:      path,
+		MediaType: mediaType,
+	}
+}
+
+// LocalFilesystemBlobAccess describes the access for a blob on the filesystem.
+type LocalFilesystemBlobAccess struct {
+	ObjectType `json:",inline"`
+	// Name is the name of the blob in the local filesystem.
+	// The blob is expected to be at <fs-root>/blobs/<name>
+	Name string `json:"path"`
+	// MediaType defines the media type of the current read blob.
+	MediaType string `json:"mediaType"`
+}
+
+func (a LocalFilesystemBlobAccess) GetData() ([]byte, error) {
+	return json.Marshal(a)
+}
+
+func (a *LocalFilesystemBlobAccess) SetData(bytes []byte) error {
+	var newAccess LocalFilesystemBlobAccess
+	if err := json.Unmarshal(bytes, &newAccess); err != nil {
+		return err
+	}
+	a.Name = newAccess.Name
+	a.MediaType = newAccess.MediaType
+	return nil
+}
+
 // WebType is the type of a web component
 const WebType = "web"
 
@@ -106,7 +200,15 @@ type Web struct {
 	URL string `json:"url"`
 }
 
-var _ TypedObjectAccessor = &Web{}
+// NewWebAccess creates a new Web accessor
+func NewWebAccess(url string) TypedObjectAccessor {
+	return &Web{
+		ObjectType: ObjectType{
+			Type: OCIBlobType,
+		},
+		URL: url,
+	}
+}
 
 func (w Web) GetData() ([]byte, error) {
 	return yaml.Marshal(w)
@@ -133,9 +235,22 @@ type GitHubAccess struct {
 	RepoURL string `json:"repoUrl"`
 	// Ref describes the git reference.
 	Ref string `json:"ref"`
+	// Commit describes the git commit of the referenced repository.
+	// +optional
+	Commit string `json:"commit,omitempty"`
 }
 
-var _ TypedObjectAccessor = &GitHubAccess{}
+// NewGitHubAccess creates a new Web accessor
+func NewGitHubAccess(url, ref, commit string) TypedObjectAccessor {
+	return &GitHubAccess{
+		ObjectType: ObjectType{
+			Type: GitHubAccessType,
+		},
+		RepoURL: url,
+		Ref:     ref,
+		Commit:  commit,
+	}
+}
 
 func (w GitHubAccess) GetData() ([]byte, error) {
 	return yaml.Marshal(w)

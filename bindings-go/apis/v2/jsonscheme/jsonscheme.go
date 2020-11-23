@@ -27,7 +27,7 @@ import (
 var Schema *gojsonschema.Schema
 
 func init() {
-	dataBytes, err := ComponentDescriptorV2SchemaYamlBytes()
+	dataBytes, err := LanguageIndependentComponentDescriptorV2SchemaYamlBytes()
 	if err != nil {
 		panic(err)
 	}
