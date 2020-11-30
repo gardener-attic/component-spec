@@ -222,7 +222,7 @@ class ComponentReference(Artifact, FindLabelMixin):
     name: str
     componentName: str
     version: str
-    extraIdentity: typing.Dict[str, str] = dataclasses.field(default_factory=tuple)
+    extraIdentity: typing.Dict[str, str] = dataclasses.field(default_factory=dict)
     labels: typing.List[Label] = dataclasses.field(default_factory=tuple)
 
 
