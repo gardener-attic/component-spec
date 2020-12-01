@@ -23,6 +23,7 @@ import (
 	"k8s.io/apimachinery/pkg/util/validation/field"
 
 	v2 "github.com/gardener/component-spec/bindings-go/apis/v2"
+	"github.com/gardener/component-spec/bindings-go/apis/v2/cdutils"
 )
 
 func TestConfig(t *testing.T) {
@@ -49,7 +50,7 @@ var _ = Describe("Validation", func() {
 			ImageReference: "docker/image1:1.2.3",
 		}
 
-		unstrucOCIRegistry1, err := v2.ToUnstructuredTypedObject(v2.NewCodec(nil, nil, nil), ociRegistry1)
+		unstrucOCIRegistry1, err := cdutils.ToUnstructuredTypedObject(v2.NewCodec(nil, nil, nil), ociRegistry1)
 		Expect(err).ToNot(HaveOccurred())
 
 		ociImage1 = &v2.Resource{
@@ -66,7 +67,7 @@ var _ = Describe("Validation", func() {
 			},
 			ImageReference: "docker/image1:1.2.3",
 		}
-		unstrucOCIRegistry2, err := v2.ToUnstructuredTypedObject(v2.NewCodec(nil, nil, nil), ociRegistry2)
+		unstrucOCIRegistry2, err := cdutils.ToUnstructuredTypedObject(v2.NewCodec(nil, nil, nil), ociRegistry2)
 		Expect(err).ToNot(HaveOccurred())
 		ociImage2 = &v2.Resource{
 			IdentityObjectMeta: v2.IdentityObjectMeta{
@@ -436,7 +437,7 @@ var _ = Describe("Validation", func() {
 				"my-l1": "test",
 				"my-l2": "test",
 			}
-			errList := validateIdentity(field.NewPath("identity"), identity)
+			errList := ValidateIdentity(field.NewPath("identity"), identity)
 			Expect(errList).To(HaveLen(0))
 		})
 
@@ -444,7 +445,7 @@ var _ = Describe("Validation", func() {
 			identity := v2.Identity{
 				"name": "test",
 			}
-			errList := validateIdentity(field.NewPath("identity"), identity)
+			errList := ValidateIdentity(field.NewPath("identity"), identity)
 			Expect(errList).To(ContainElement(PointTo(MatchFields(IgnoreExtras, Fields{
 				"Type":  Equal(field.ErrorTypeForbidden),
 				"Field": Equal("identity[name]"),
@@ -455,7 +456,7 @@ var _ = Describe("Validation", func() {
 			identity := v2.Identity{
 				"my-l1!": "test",
 			}
-			errList := validateIdentity(field.NewPath("identity"), identity)
+			errList := ValidateIdentity(field.NewPath("identity"), identity)
 			Expect(errList).ToNot(ContainElement(PointTo(MatchFields(IgnoreExtras, Fields{
 				"Type":  Equal(field.ErrorTypeForbidden),
 				"Field": Equal("identity[my-l1!]"),
