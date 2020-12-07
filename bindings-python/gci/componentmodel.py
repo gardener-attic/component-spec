@@ -259,9 +259,7 @@ class RepositoryContext:
 @dc
 class ComponentSource(Artifact, FindLabelMixin):
     name: str
-    access: typing.Union[
-        GithubAccess,
-    ]
+    access: GithubAccess
     version: typing.Optional[str] = None # introduce this backwards-compatible for now
     extraIdentity: typing.Dict[str, str] = dataclasses.field(default_factory=dict)
     type: SourceType = SourceType.GIT
