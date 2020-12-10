@@ -162,6 +162,12 @@ class SourceIdentity(ArtifactIdentity):
     pass
 
 
+@dc(frozen=True)
+class ComponentIdentity:
+    name: str
+    version: str
+
+
 class Artifact:
     '''
     base class for ComponentReference, Resource, Source
@@ -200,7 +206,7 @@ class Artifact:
         if not peers:
             return identity
 
-        if len(identity) > 1: # special-case-handling not required if there are additional-id-attrs
+        if len(identity) > 1:  # special-case-handling not required if there are additional-id-attrs
             return identity
 
         # check whether there are collissions
@@ -284,6 +290,9 @@ class Component(FindLabelMixin):
         if not self.repositoryContexts:
             return None
         return self.repositoryContexts[-1]
+
+    def identity(self):
+        return ComponentIdentity(name=self.name, version=self.version)
 
 
 @dc
