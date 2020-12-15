@@ -10,7 +10,6 @@ package tools
 import (
 	_ "github.com/onsi/ginkgo/ginkgo"
 	_ "golang.org/x/lint/golint"
-	_ "github.com/golang/mock/mockgen"
 
 	_ "k8s.io/code-generator"
 )
