@@ -197,29 +197,29 @@ definitions:
 
   localFilesystemBlobAccess:
     type: 'object'
-      required:
+    required:
       - 'type'
       - 'filename'
-      properties:
-        type:
-          type: 'string'
-          enum: [ 'localFilesystemBlob' ]
-        filename:
-          description: 'filename of the blob that is located in the "blobs" directory'
-          type: 'string'
+    properties:
+      type:
+        type: 'string'
+        enum: [ 'localFilesystemBlob' ]
+      filename:
+        description: 'filename of the blob that is located in the "blobs" directory'
+        type: 'string'
 
   localOciBlobAccess:
     type: 'object'
-      required:
+    required:
       - 'type'
       - 'filename'
-      properties:
-        type:
-          type: 'string'
-          enum: [ 'localOciBlob' ]
-        digest:
-          description: 'digest of the layer within the current component descriptor'
-          type: 'string'
+    properties:
+      type:
+        type: 'string'
+        enum: [ 'localOciBlob' ]
+      digest:
+        description: 'digest of the layer within the current component descriptor'
+        type: 'string'
 
   ociImageResource:
     type: 'object'
