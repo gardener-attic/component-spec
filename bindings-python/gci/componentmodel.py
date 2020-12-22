@@ -147,7 +147,7 @@ class ArtifactIdentity:
         return self._id_attrs == other._id_attrs
 
     def __hash__(self):
-        return hash((type(self), _id_attrs))
+        return hash((type(self), self._id_attrs))
 
 
 class ComponentReferenceIdentity(ArtifactIdentity):
