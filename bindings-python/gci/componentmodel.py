@@ -20,7 +20,7 @@ class AccessType(enum.Enum):
     OCI_REGISTRY = 'ociRegistry'
     GITHUB = 'github'
     HTTP = 'http'
-    NONE = 'None' # the resource is only declared informally (e.g. generic)
+    NONE = 'None'  # the resource is only declared informally (e.g. generic)
 
 
 class SourceType(enum.Enum):
@@ -266,7 +266,7 @@ class RepositoryContext:
 class ComponentSource(Artifact, FindLabelMixin):
     name: str
     access: GithubAccess
-    version: typing.Optional[str] = None # introduce this backwards-compatible for now
+    version: typing.Optional[str] = None  # introduce this backwards-compatible for now
     extraIdentity: typing.Dict[str, str] = dataclasses.field(default_factory=dict)
     type: SourceType = SourceType.GIT
     labels: typing.List[Label] = dataclasses.field(default_factory=list)
@@ -274,8 +274,8 @@ class ComponentSource(Artifact, FindLabelMixin):
 
 @dc
 class Component(FindLabelMixin):
-    name: str    # must be valid URL w/o schema
-    version: str # relaxed semver
+    name: str     # must be valid URL w/o schema
+    version: str  # relaxed semver
 
     repositoryContexts: typing.List[RepositoryContext]
     provider: Provider
