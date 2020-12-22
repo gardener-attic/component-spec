@@ -41,7 +41,7 @@ with prepare_environment():
         description='Gardener Component Model',
         python_requires='>=3.8.*',
         packages=setuptools.find_packages(),
-        package_data={'gci': ['jsonspec/component-descriptor-v2-schema.yaml']},
+        package_data={'gci': ['jsonschema/component-descriptor-v2-schema.yaml']},
         install_requires=list(requirements()),
         entry_points={},
     )
