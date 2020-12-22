@@ -33,7 +33,6 @@ def main():
     with open(component_descriptor) as f:
         comp_dict = yaml.safe_load(f)
 
-
     jsonschema.validate(
         instance=comp_dict,
         schema=schema_dict,
