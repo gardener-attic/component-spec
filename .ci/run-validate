@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+
+set -e
+
+own_dir="$(readlink -f "$(dirname "${0}")")"
+repo_root="$(readlink -f "${own_dir}/..")"
+
+PYTHONPATH="${repo_root}/bindings-python" \
+  python3 "${repo_root}/bindings-python/validate.py" -f "${repo_root}/language-independent/test-resources/component_descriptor_v2.yaml"

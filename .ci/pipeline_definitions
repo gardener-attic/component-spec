@@ -10,11 +10,13 @@ component-spec:
     head-update:
       <<: *github_pages_repo
       steps:
-        render_and_update_documentation:
-          publish_to: ['github_pages']
         run-unittests: ~
+        run-validate: ~
         run-golang-check:
           image: golang:1.14
+        render_and_update_documentation:
+          depends: ['run-unittests', 'run-validate', 'run-golang-check']
+          publish_to: ['github_pages']
     release:
       traits:
         component_descriptor: ~
