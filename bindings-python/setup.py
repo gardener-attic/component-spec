@@ -1,3 +1,4 @@
+import contextlib
 import setuptools
 import os
 
@@ -22,13 +23,25 @@ def requirements():
             yield line
 
 
-setuptools.setup(
-    name='gardener-component-model',
-    version=version(),
-    description='Gardener Component Model',
-    python_requires='>=3.8.*',
-    packages=setuptools.find_packages(),
-    install_requires=list(requirements()),
-    entry_points={
-    },
-)
+@contextlib.contextmanager
+def prepare_environment():
+    json_schema_target_path = os.path.join(own_dir, 'gci', 'jsonschema')
+    os.symlink(
+        os.path.join(own_dir, os.pardir, 'language-independent'),
+        json_schema_target_path,
+    )
+    yield
+    os.unlink(json_schema_target_path)
+
+
+with prepare_environment():
+    setuptools.setup(
+        name='gardener-component-model',
+        version=version(),
+        description='Gardener Component Model',
+        python_requires='>=3.8.*',
+        packages=setuptools.find_packages(),
+        package_data={'gci': ['jsonspec/component-descriptor-v2-schema.yaml']},
+        install_requires=list(requirements()),
+        entry_points={},
+    )
