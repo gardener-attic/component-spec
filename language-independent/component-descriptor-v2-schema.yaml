@@ -159,7 +159,7 @@ definitions:
         - $ref: '#/definitions/access'
         - $ref: '#/definitions/ociBlobAccess'
         - $ref: '#/definitions/localFilesystemBlobAccess'
-        - $ref: '#/definitions/localOciBlobAccessAccess'
+        - $ref: '#/definitions/localOciBlobAccess'
 
   ociImageAccess:
     type: 'object'
