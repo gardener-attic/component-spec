@@ -2,13 +2,25 @@ import dataclasses
 import enum
 import functools
 import io
+import logging
 import typing
 import urllib.parse
 
 import dacite
+import jsonschema
 import yaml
 
+from . import path_to_json_schema
+
 dc = dataclasses.dataclass
+
+logger = logging.getLogger(__name__)
+
+
+class ValidationMode(enum.Enum):
+    FAIL = 'fail'
+    WARN = 'warn'
+    IGNORE = 'ignore'
 
 
 class SchemaVersion(enum.Enum):
@@ -301,7 +313,30 @@ class ComponentDescriptor:
     component: Component
 
     @staticmethod
-    def from_dict(component_descriptor_dict: dict):
+    def validate(component_descriptor_dict: dict, validation_mode: ValidationMode):
+        with open(path_to_json_schema()) as f:
+            schema_dict = yaml.safe_load(f)
+
+        try:
+            jsonschema.validate(
+                instance=component_descriptor_dict,
+                schema=schema_dict,
+            )
+        except jsonschema.ValidationError as e:
+            if validation_mode is ValidationMode.IGNORE:
+                pass
+            elif validation_mode is ValidationMode.WARN:
+                logger.warn(f'Error when validating Component Descriptor: {e}')
+            elif validation_mode is ValidationMode.Error:
+                raise
+            else:
+                raise NotImplementedError(validation_mode)
+
+    @staticmethod
+    def from_dict(
+        component_descriptor_dict: dict,
+        validation_mode: ValidationMode = ValidationMode.WARN,
+    ):
         component_descriptor = dacite.from_dict(
             data_class=ComponentDescriptor,
             data=component_descriptor_dict,
@@ -315,6 +350,10 @@ class ComponentDescriptor:
                     ResourceRelation,
                 ]
             )
+        )
+        ComponentDescriptor.validate(
+            component_descriptor_dict=component_descriptor_dict,
+            validation_mode=validation_mode,
         )
 
         return component_descriptor
