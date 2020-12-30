@@ -17,12 +17,37 @@ definitions:
       - 'name'
       - 'value'
 
+  componentName:
+    type: 'string'
+    maxLength: 255
+    pattern: '^[a-z0-9.\-]+[.][a-z]{2,4}/[-a-z0-9/_.]*$'
+
+  identityAttributeValue:
+    minLength: 2
+    # maxLength: 64
+    pattern: '^[a-z]{1}[a-z0-9-_+]+$'
+
+  relaxedSemver:
+    # taken from semver.org and adjusted to allow an optional leading 'v', major-only, and major.minor-only
+    # this means the following strings are all valid relaxedSemvers:
+    # 1.2.3
+    # 1.2.3-foo+bar
+    # v1.2.3
+    # v1.2.3-foo+bar
+    # 1.2
+    # 1
+    # v1
+    # v1.2
+    # v1-foo+bar
+    pattern: '^[v]?(0|[1-9]\d*)(?:\.(0|[1-9]\d*))?(?:\.(0|[1-9]\d*))?(?:-((?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\.(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\+([0-9a-zA-Z-]+(?:\.[0-9a-zA-Z-]+)*))?$'
+
   identityAttribute:
-    type: 'object'
-    patternProperties:
-      '.*':
-        type: 'string'
-    additionalProperties: False
+    oneOf:
+    - type: 'object'
+      patternProperties:
+        '^(?!(version)$).*$': {$ref: '#/definitions/identityAttributeValue'}
+        '^version$': {$ref: '#/definitions/relaxedSemver'}
+      additionalProperties: False
 
   repositoryContext:
     type: 'object'
@@ -78,10 +103,12 @@ definitions:
     properties:
       name:
         type: 'string'
+        $ref: '#/definitions/identityAttributeValue'
       extraIdentity:
         $ref: '#/definitions/identityAttribute'
       version:
         type: 'string'
+        $ref: '#/definitions/relaxedSemver'
       type:
         type: 'string'
         enum: ['git']
@@ -114,12 +141,16 @@ definitions:
       - 'componentName'
       - 'version'
     properties:
+      componentName:
+        $ref: '#/definitions/componentName'
       name:
         type: 'string' # actually: component-type w/ special restrictions
+        $ref: '#/definitions/identityAttributeValue'
       extraIdentity:
         $ref: '#/definitions/identityAttribute'
       version:
-        type: 'string' # actually: relaxed semver?
+        type: 'string'
+        $ref: '#/definitions/relaxedSemver'
       labels:
         type: 'array'
         items:
@@ -137,10 +168,11 @@ definitions:
     properties:
       name:
         type: 'string'
+        $ref: '#/definitions/identityAttributeValue'
       extraIdentity:
         $ref: '#/definitions/identityAttribute'
       version:
-        type: 'string'
+        $ref: '#/definitions/relaxedSemver'
       type:
         type: 'string'
       srcRefs:
@@ -231,8 +263,10 @@ definitions:
     properties:
       name:
         type: 'string'
+        $ref: '#/definitions/identityAttributeValue'
       version:
         type: 'string'
+        $ref: '#/definitions/relaxedSemver'
       type:
         type: 'string'
         enum: ['ociImage']
@@ -274,8 +308,10 @@ definitions:
     properties:
       name:
         type: 'string'
+        $ref: '#/definitions/identityAttributeValue'
       version:
         type: 'string'
+        $ref: '#/definitions/relaxedSemver'
       type:
         type: 'string'
         enum: ['generic']
@@ -299,9 +335,10 @@ definitions:
       - 'resources'
     properties:
       name:
-        type: 'string' # actually: component-type w/ special restrictions
+        $ref: '#/definitions/componentName'
       version:
-        type: 'string' # actually: relaxed semver?
+        type: 'string'
+        $ref: '#/definitions/relaxedSemver'
       repositoryContexts:
         type: 'array'
         items:

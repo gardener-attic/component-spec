@@ -26,8 +26,8 @@ component:
         ref: 'refs/tags/v1.7.2'
 
   componentReferences:
-    - name: 'my-etc-druid'
-      componentName: 'etc-druid'
+    - name: 'my-etcd-druid'
+      componentName: 'github.com/gardener/etcd-druid'
       version: 'v0.3.0'
       labels: []
 
