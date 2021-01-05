@@ -118,14 +118,16 @@ class FindLabelMixin:
         self,
         name: str,
         default=_no_default,
-
+        raise_if_absent: bool = False,
     ):
         for label in self.labels:
             if label.name == name:
                 return label
         else:
-            if default is _no_default:
+            if default is _no_default and raise_if_absent:
                 raise ValueError(f'no such label: {name=}')
+            if default is _no_default:
+                return None
             return default
 
 
