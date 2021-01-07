@@ -309,18 +309,28 @@ class Component(FindLabelMixin):
         return ComponentIdentity(name=self.name, version=self.version)
 
 
+@functools.lru_cache
+def _read_schema_file(schema_file_path: str):
+    with open(schema_file_path) as f:
+        return yaml.safe_load(f)
+
+
 @dc
 class ComponentDescriptor:
     meta: Metadata
     component: Component
 
     @staticmethod
-    def validate(component_descriptor_dict: dict, validation_mode: ValidationMode):
+    def validate(
+        component_descriptor_dict: dict,
+        validation_mode: ValidationMode,
+        json_schema_file_path: str = None,
+    ):
         if validation_mode is ValidationMode.NONE:
             return
 
-        with open(path_to_json_schema()) as f:
-            schema_dict = yaml.safe_load(f)
+        json_schema_file_path = json_schema_file_path or path_to_json_schema()
+        schema_dict = _read_schema_file(json_schema_file_path)
 
         try:
             jsonschema.validate(
