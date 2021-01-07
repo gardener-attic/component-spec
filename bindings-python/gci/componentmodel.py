@@ -20,7 +20,7 @@ logger = logging.getLogger(__name__)
 class ValidationMode(enum.Enum):
     FAIL = 'fail'
     WARN = 'warn'
-    IGNORE = 'ignore'
+    NONE = 'none'
 
 
 class SchemaVersion(enum.Enum):
@@ -316,6 +316,9 @@ class ComponentDescriptor:
 
     @staticmethod
     def validate(component_descriptor_dict: dict, validation_mode: ValidationMode):
+        if validation_mode is ValidationMode.NONE:
+            return
+
         with open(path_to_json_schema()) as f:
             schema_dict = yaml.safe_load(f)
 
@@ -325,11 +328,9 @@ class ComponentDescriptor:
                 schema=schema_dict,
             )
         except jsonschema.ValidationError as e:
-            if validation_mode is ValidationMode.IGNORE:
-                pass
-            elif validation_mode is ValidationMode.WARN:
+            if validation_mode is ValidationMode.WARN:
                 logger.warn(f'Error when validating Component Descriptor: {e}')
-            elif validation_mode is ValidationMode.Error:
+            elif validation_mode is ValidationMode.FAIL:
                 raise
             else:
                 raise NotImplementedError(validation_mode)
