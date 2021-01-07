@@ -354,10 +354,11 @@ class ComponentDescriptor:
                 ]
             )
         )
-        ComponentDescriptor.validate(
-            component_descriptor_dict=component_descriptor_dict,
-            validation_mode=validation_mode,
-        )
+        if not validation_mode is ValidationMode.NONE:
+            ComponentDescriptor.validate(
+                component_descriptor_dict=component_descriptor_dict,
+                validation_mode=validation_mode,
+            )
 
         return component_descriptor
 
