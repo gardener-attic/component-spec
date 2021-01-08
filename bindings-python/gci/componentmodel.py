@@ -146,7 +146,10 @@ class Metadata:
 
 
 class ArtifactIdentity:
-    def __init__(self, **kwargs):
+    def __init__(self, name, **kwargs):
+        self.name = name
+        kwargs['name'] = name
+        # ensure stable order to ensure stable sort order
         self._id_attrs = tuple(sorted(kwargs.items(), key=lambda i: i[0]))
 
     def __str__(self):
@@ -162,6 +165,31 @@ class ArtifactIdentity:
 
     def __hash__(self):
         return hash((type(self), self._id_attrs))
+
+    def __lt__(self, other):
+        if not type(self) == type(other):
+            return False
+        return self._id_attrs.__lt__(other._id_attrs)
+
+    def __le__(self, other):
+        if not type(self) == type(other):
+            return False
+        return self._id_attrs.__le__(other._id_attrs)
+
+    def __ne__(self, other):
+        if not type(self) == type(other):
+            return False
+        return self._id_attrs.__ne__(other._id_attrs)
+
+    def __gt__(self, other):
+        if not type(self) == type(other):
+            return False
+        return self._id_attrs.__gt__(other._id_attrs)
+
+    def __ge__(self, other):
+        if not type(self) == type(other):
+            return False
+        return self._id_attrs.__ge__(other._id_attrs)
 
 
 class ComponentReferenceIdentity(ArtifactIdentity):
