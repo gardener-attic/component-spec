@@ -16,7 +16,7 @@ component:
       value: 'a_value'
 
   sources:
-    - name: 'github.com/gardener/gardener'
+    - name: 'github_com_gardener_gardener'
       type: 'git'
       version: 'v1.7.2'
       labels: []
