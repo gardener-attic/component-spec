@@ -22,10 +22,9 @@ definitions:
     maxLength: 255
     pattern: '^[a-z0-9.\-]+[.][a-z]{2,4}/[-a-z0-9/_.]*$'
 
-  identityAttributeValue:
+  identityAttributeKey:
     minLength: 2
-    # maxLength: 64
-    pattern: '^[a-z]{1}[a-z0-9-_+]+$'
+    pattern: '^[a-z0-9]([-_+a-z0-9]*[a-z0-9])?$'
 
   relaxedSemver:
     # taken from semver.org and adjusted to allow an optional leading 'v', major-only, and major.minor-only
@@ -42,12 +41,8 @@ definitions:
     pattern: '^[v]?(0|[1-9]\d*)(?:\.(0|[1-9]\d*))?(?:\.(0|[1-9]\d*))?(?:-((?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\.(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\+([0-9a-zA-Z-]+(?:\.[0-9a-zA-Z-]+)*))?$'
 
   identityAttribute:
-    oneOf:
-    - type: 'object'
-      patternProperties:
-        '^(?!(version)$).*$': {$ref: '#/definitions/identityAttributeValue'}
-        '^version$': {$ref: '#/definitions/relaxedSemver'}
-      additionalProperties: False
+    type: 'object'
+    propertyNames: { $ref: '#/definitions/identityAttributeKey' }
 
   repositoryContext:
     type: 'object'
@@ -103,7 +98,7 @@ definitions:
     properties:
       name:
         type: 'string'
-        $ref: '#/definitions/identityAttributeValue'
+        $ref: '#/definitions/identityAttributeKey'
       extraIdentity:
         $ref: '#/definitions/identityAttribute'
       version:
@@ -145,7 +140,7 @@ definitions:
         $ref: '#/definitions/componentName'
       name:
         type: 'string' # actually: component-type w/ special restrictions
-        $ref: '#/definitions/identityAttributeValue'
+        $ref: '#/definitions/identityAttributeKey'
       extraIdentity:
         $ref: '#/definitions/identityAttribute'
       version:
@@ -168,7 +163,7 @@ definitions:
     properties:
       name:
         type: 'string'
-        $ref: '#/definitions/identityAttributeValue'
+        $ref: '#/definitions/identityAttributeKey'
       extraIdentity:
         $ref: '#/definitions/identityAttribute'
       version:
@@ -263,7 +258,9 @@ definitions:
     properties:
       name:
         type: 'string'
-        $ref: '#/definitions/identityAttributeValue'
+        $ref: '#/definitions/identityAttributeKey'
+      extraIdentity:
+        $ref: '#/definitions/identityAttribute'
       version:
         type: 'string'
         $ref: '#/definitions/relaxedSemver'
@@ -308,7 +305,9 @@ definitions:
     properties:
       name:
         type: 'string'
-        $ref: '#/definitions/identityAttributeValue'
+        $ref: '#/definitions/identityAttributeKey'
+      extraIdentity:
+        $ref: '#/definitions/identityAttribute'
       version:
         type: 'string'
         $ref: '#/definitions/relaxedSemver'
