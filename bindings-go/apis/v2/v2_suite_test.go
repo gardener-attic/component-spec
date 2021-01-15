@@ -124,7 +124,7 @@ var _ = Describe("Helper", func() {
 			})
 
 			It("should select a resource by a regex selector", func() {
-				res, err := comp.GetResourceByDefaultSelector(map[string]interface{}{
+				res, err := comp.GetResourceByRegexSelector(map[string]interface{}{
 					"name": ".*1",
 				})
 				Expect(err).ToNot(HaveOccurred())
@@ -133,7 +133,7 @@ var _ = Describe("Helper", func() {
 			})
 
 			It("should select multiple resource by a regex selector", func() {
-				res, err := comp.GetResourceByDefaultSelector(map[string]interface{}{
+				res, err := comp.GetResourceByRegexSelector(map[string]interface{}{
 					"name": "image.*",
 				})
 				Expect(err).ToNot(HaveOccurred())
