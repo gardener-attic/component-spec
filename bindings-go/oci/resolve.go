@@ -57,11 +57,14 @@ func OCIRef(repoCtx v2.RepositoryContext, name, version string) (string, error) 
 type Resolver struct {
 	repoCtx v2.RepositoryContext
 	client  Client
+	decodeOpts []codec.DecodeOption
 }
 
 // NewResolver creates a new resolver.
-func NewResolver() *Resolver {
-	return &Resolver{}
+func NewResolver(decodeOpts ...codec.DecodeOption) *Resolver {
+	return &Resolver{
+		decodeOpts: decodeOpts,
+	}
 }
 
 // WithRepositoryContext sets the repository context of the resolver
@@ -115,7 +118,7 @@ func (r *Resolver) Resolve(ctx context.Context, name, version string) (*v2.Compo
 	}
 
 	cd := &v2.ComponentDescriptor{}
-	if err := codec.Decode(componentDescriptorBytes, cd); err != nil {
+	if err := codec.Decode(componentDescriptorBytes, cd, r.decodeOpts...); err != nil {
 		return nil, nil, fmt.Errorf("unable to decode component descriptor: %w", err)
 	}
 	return cd, newBlobResolver(r.client, ref, manifest, cd), nil
