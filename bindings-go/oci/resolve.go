@@ -110,11 +110,15 @@ func (r *Resolver) Resolve(ctx context.Context, name, version string) (*v2.Compo
 	}
 
 	componentDescriptorBytes := componentDescriptorLayerBytes.Bytes()
-	if componentDescriptorLayer.MediaType == ComponentDescriptorTarMimeType {
+	switch componentDescriptorLayer.MediaType {
+	case ComponentDescriptorTarMimeType, LegacyComponentDescriptorTarMimeType:
 		componentDescriptorBytes, err = ReadComponentDescriptorFromTar(&componentDescriptorLayerBytes)
 		if err != nil {
 			return nil, nil, fmt.Errorf("unable to read component descriptor from tar: %w", err)
 		}
+	case ComponentDescriptorJSONMimeType:
+	default:
+		return nil, nil, fmt.Errorf("unsupported media type %q", componentDescriptorLayer.MediaType)
 	}
 
 	cd := &v2.ComponentDescriptor{}
@@ -142,7 +146,8 @@ func (r *Resolver) ToComponentArchive(ctx context.Context, name, version string,
 }
 
 func (r *Resolver) getComponentConfig(ctx context.Context, ref string, manifest *ocispecv1.Manifest) (*ComponentDescriptorConfig, error) {
-	if manifest.Config.MediaType != ComponentDescriptorConfigMimeType {
+	if manifest.Config.MediaType != ComponentDescriptorConfigMimeType &&
+		manifest.Config.MediaType != ComponentDescriptorLegacyConfigMimeType {
 		return nil, fmt.Errorf("unknown component config type '%s' expected '%s'", manifest.Config.MediaType, ComponentDescriptorConfigMimeType)
 	}
 
