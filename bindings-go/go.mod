@@ -16,4 +16,5 @@ require (
 	golang.org/x/sys v0.0.0-20200806060901-a37d78b92225 // indirect
 	k8s.io/apimachinery v0.18.6
 	k8s.io/code-generator v0.18.2
+	sigs.k8s.io/yaml v1.2.0
 )
