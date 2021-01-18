@@ -36,7 +36,7 @@ Component Names
 ~~~~~~~~~~~~~~~
 
 Component Names reside in a global namespace. To avoid name conflicts `Component Names` *MUST*
-start with a valid domain name (as specified by RFC-1034, RFC-1025) with an optional URL path
+start with a valid domain name (as specified by RFC-1034, RFC-1035) with an optional URL path
 suffix (as specified by RFC-1738).
 
 If no URL path suffix is specified, the domain *MUST* be possessed by the component proprietor.
