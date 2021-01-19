@@ -463,6 +463,10 @@ func (ca *ComponentArchiveBlobResolver) resolve(_ context.Context, res v2.Resour
 		return nil, nil, fmt.Errorf("unable to decode access to type '%s': %w", res.Access.GetType(), err)
 	}
 	blobpath := BlobPath(localFSAccess.Filename)
+	mediaType := res.GetType()
+	if len(localFSAccess.MediaType) != 0 {
+		mediaType = localFSAccess.MediaType
+	}
 
 	info, err := ca.fs.Stat(blobpath)
 	if err != nil {
@@ -484,7 +488,7 @@ func (ca *ComponentArchiveBlobResolver) resolve(_ context.Context, res v2.Resour
 		return nil, nil, fmt.Errorf("unable to reset file reader: %w", err)
 	}
 	return &BlobInfo{
-		MediaType: res.GetType(),
+		MediaType: mediaType,
 		Digest:    dig.String(),
 		Size:      info.Size(),
 	}, file, nil
