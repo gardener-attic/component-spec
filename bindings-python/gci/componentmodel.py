@@ -376,7 +376,7 @@ class ComponentDescriptor:
     @staticmethod
     def from_dict(
         component_descriptor_dict: dict,
-        validation_mode: ValidationMode = ValidationMode.WARN,
+        validation_mode: ValidationMode = ValidationMode.NONE,
     ):
         component_descriptor = dacite.from_dict(
             data_class=ComponentDescriptor,
