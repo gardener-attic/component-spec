@@ -26,3 +26,6 @@ component-spec:
         release:
           nextversion: 'bump_patch'
           release_callback: '.ci/release'
+          git_tags:
+          - ref_template: 'refs/tags/{VERSION}'
+          - ref_template: 'refs/tags/bindings-go/{VERSION}' # needed for go module support
