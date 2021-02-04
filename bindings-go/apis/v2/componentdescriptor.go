@@ -64,7 +64,6 @@ const (
 	ExternalRelation ResourceRelation = "external"
 )
 
-
 // Spec defines a versioned virtual component with a source and dependencies.
 // +k8s:deepcopy-gen=true
 // +k8s:openapi-gen=true
