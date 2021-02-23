@@ -6,6 +6,7 @@ package cdutils
 
 import (
 	"fmt"
+	"strings"
 
 	cdv2 "github.com/gardener/component-spec/bindings-go/apis/v2"
 )
@@ -41,4 +42,29 @@ func GetImageReferenceByName(cd *cdv2.ComponentDescriptor, name string) (string,
 		return "", err
 	}
 	return ociImageAccess.ImageReference, nil
+}
+
+// GetRepositoryAndTagFromReference takes an image reference
+// e.g eu.gcr.io/gardener-project/gardener/gardenlet:v1.11.3
+// and returns the image repository as a first, and the tag as a second argument
+func GetRepositoryAndTagFromReference(imageReference string) (string, string, error) {
+	if strings.Contains(imageReference, "@") {
+		split := strings.Split(imageReference, "@")
+		if len(split) != 2 {
+			return "", "", fmt.Errorf("failed to parse image respository and tag from image reference %q", imageReference)
+		}
+		return split[0], split[1], nil
+	}
+
+	split := strings.Split(imageReference, ":")
+	if len(split) == 2 {
+		return split[0], split[1], nil
+	}
+
+	// split version from reference if image reference contains a port
+	// e.g eu.gcr.io:5000/gardener-project/gardener/gardenlet
+	if len(split) == 3 {
+		return fmt.Sprintf("%s:%s", split[0], split[1]), split[2], nil
+	}
+	return "", "", fmt.Errorf("failed to parse image respository and tag from image reference %q", imageReference)
 }
