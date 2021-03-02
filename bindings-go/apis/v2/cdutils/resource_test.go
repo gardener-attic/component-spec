@@ -68,41 +68,45 @@ var _ = Describe("resource utils", func() {
 		})
 	})
 
-	Context("#GetRepositoryAndTagFromReference", func() {
+	Context("#ParseImageReference", func() {
 		It("should return the repository and tag", func() {
-			repo, tag, err := cdutils.GetRepositoryAndTagFromReference("eu.gcr.io/gardener-project/gardener/apiserver:v1.7.4")
+			repo, tag, seperator, err := cdutils.ParseImageReference("eu.gcr.io/gardener-project/gardener/apiserver:v1.7.4")
 			Expect(err).ToNot(HaveOccurred())
 
 			Expect(repo).To(Equal("eu.gcr.io/gardener-project/gardener/apiserver"))
 			Expect(tag).To(Equal("v1.7.4"))
+			Expect(seperator).To(Equal(":"))
 		})
 
 		It("should return the repository and tag - image reference contains port", func() {
-			repo, tag, err := cdutils.GetRepositoryAndTagFromReference("eu.gcr.io:5000/gardener-project/gardener/apiserver:v1.7.4")
+			repo, tag, seperator, err := cdutils.ParseImageReference("eu.gcr.io:5000/gardener-project/gardener/apiserver:v1.7.4")
 			Expect(err).ToNot(HaveOccurred())
 
 			Expect(repo).To(Equal("eu.gcr.io:5000/gardener-project/gardener/apiserver"))
 			Expect(tag).To(Equal("v1.7.4"))
+			Expect(seperator).To(Equal(":"))
 		})
 
 		It("should return the repository and tag - image reference contains a SHA256", func() {
-			repo, tag, err := cdutils.GetRepositoryAndTagFromReference("eu.gcr.io/gardener-project/apiserver@sha256:12345")
+			repo, sha, seperator, err := cdutils.ParseImageReference("eu.gcr.io/gardener-project/apiserver@sha256:12345")
 			Expect(err).ToNot(HaveOccurred())
 
 			Expect(repo).To(Equal("eu.gcr.io/gardener-project/apiserver"))
-			Expect(tag).To(Equal("sha256:12345"))
+			Expect(sha).To(Equal("sha256:12345"))
+			Expect(seperator).To(Equal("@"))
 		})
 
 		It("should return the repository and tag - image reference contains a SHA256 and port", func() {
-			repo, tag, err := cdutils.GetRepositoryAndTagFromReference("eu.gcr.io:5000/gardener-project/apiserver@sha256:12345")
+			repo, sha, seperator, err := cdutils.ParseImageReference("eu.gcr.io:5000/gardener-project/apiserver@sha256:12345")
 			Expect(err).ToNot(HaveOccurred())
 
 			Expect(repo).To(Equal("eu.gcr.io:5000/gardener-project/apiserver"))
-			Expect(tag).To(Equal("sha256:12345"))
+			Expect(sha).To(Equal("sha256:12345"))
+			Expect(seperator).To(Equal("@"))
 		})
 
 		It("should return an error - the image reference is invalid", func() {
-			_, _, err := cdutils.GetRepositoryAndTagFromReference("eu.gcr.io/gardener-project/gardenerapiserver--v1.7.4")
+			_, _, _, err := cdutils.ParseImageReference("eu.gcr.io/gardener-project/gardenerapiserver--v1.7.4")
 			Expect(err).To(HaveOccurred())
 		})
 	})
