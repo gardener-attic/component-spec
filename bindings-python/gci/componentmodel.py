@@ -42,6 +42,7 @@ class SourceType(enum.Enum):
 class ResourceType(enum.Enum):
     OCI_IMAGE = 'ociImage'
     GENERIC = 'generic'
+    BLUEPRINT = 'blueprint'
 
 
 class ResourceRelation(enum.Enum):
@@ -284,7 +285,7 @@ class SourceReference(FindLabelMixin):
 class Resource(Artifact, FindLabelMixin):
     name: str
     version: str
-    type: ResourceType
+    type: typing.Union[ResourceType, str]
     access: typing.Union[
         OciAccess,
         GithubAccess,
