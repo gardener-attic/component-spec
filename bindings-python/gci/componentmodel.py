@@ -34,7 +34,6 @@ class AccessType(enum.Enum):
     HTTP = 'http'
     NONE = 'None'  # the resource is only declared informally (e.g. generic)
 
-
 class SourceType(enum.Enum):
     GIT = 'git'
 
@@ -52,7 +51,7 @@ class ResourceRelation(enum.Enum):
 
 @dc(frozen=True)
 class ResourceAccess:
-    type: AccessType
+    type: typing.Union[AccessType, str]
 
 
 @dc(frozen=True)
@@ -64,7 +63,6 @@ class OciAccess(ResourceAccess):
 class GithubAccess(ResourceAccess):
     repoUrl: str
     ref: str
-    type: AccessType
     commit: typing.Optional[str] = None
 
     def __post_init__(self):
@@ -290,8 +288,8 @@ class Resource(Artifact, FindLabelMixin):
         OciAccess,
         GithubAccess,
         HttpAccess,
-        ResourceAccess,
-        None
+        dict,
+        None,
     ]
     extraIdentity: typing.Dict[str, str] = dataclasses.field(default_factory=dict)
     relation: ResourceRelation = ResourceRelation.LOCAL
@@ -344,6 +342,13 @@ def _read_schema_file(schema_file_path: str):
         return yaml.safe_load(f)
 
 
+def enum_or_string(v, enum_type: enum.Enum):
+  try:
+    return enum_type(v)
+  except ValueError:
+    return str(v)
+
+
 @dc
 class ComponentDescriptor:
     meta: Metadata
@@ -390,7 +395,11 @@ class ComponentDescriptor:
                     SchemaVersion,
                     SourceType,
                     ResourceRelation,
-                ]
+                ],
+                type_hooks={
+                    typing.Union[AccessType, str]: functools.partial(enum_or_string, enum_type=AccessType),
+                    typing.Union[ResourceType, str]: functools.partial(enum_or_string, enum_type=ResourceType),
+                },
             )
         )
         if not validation_mode is ValidationMode.NONE:
