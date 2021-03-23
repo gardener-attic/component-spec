@@ -32,6 +32,8 @@ class AccessType(enum.Enum):
     OCI_REGISTRY = 'ociRegistry'
     GITHUB = 'github'
     HTTP = 'http'
+    LOCAL_OCI_BLOB = 'localOciBlob'
+    LOCAL_FILESYSTEM_BLOB = 'localFilesystemBlob'
     NONE = 'None'  # the resource is only declared informally (e.g. generic)
 
 class SourceType(enum.Enum):
@@ -101,6 +103,15 @@ class GithubAccess(ResourceAccess):
 @dc(frozen=True)
 class HttpAccess(ResourceAccess):
     url: str
+
+@dc(frozen=True)
+class LocalOCIBlobAccess(ResourceAccess):
+    digest: str
+
+@dc(frozen=True)
+class LocalFilesystemBlobAccess(ResourceAccess):
+    filename: str
+    mediaType: typing.Optional[str] = None
 
 
 @dc(frozen=True)
@@ -288,6 +299,8 @@ class Resource(Artifact, FindLabelMixin):
         OciAccess,
         GithubAccess,
         HttpAccess,
+        LocalOCIBlobAccess,
+        LocalFilesystemBlobAccess,
         dict,
         None,
     ]
