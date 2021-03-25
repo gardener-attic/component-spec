@@ -46,3 +46,11 @@ component:
       relation: 'local'
       labels: []
       access: ~
+    - name: 'my-blueprint'
+      version: 'v1.7.2' # version is implied by component, i.e. v1.7.2 in this case
+      type: 'landscaper.gardener.cloud/blueprint'
+      relation: 'local'
+      labels: []
+      access:
+        type: 'myCustomType'
+        someAttr: abc
