@@ -44,7 +44,7 @@ class ResourceType(enum.Enum):
     OCI_IMAGE = 'ociImage'
     GENERIC = 'generic'
     BLUEPRINT = 'blueprint'
-
+    HELM = 'helm'
 
 class ResourceRelation(enum.Enum):
     LOCAL = 'local'
