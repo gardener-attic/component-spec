@@ -301,7 +301,7 @@ class Resource(Artifact, FindLabelMixin):
         HttpAccess,
         LocalOCIBlobAccess,
         LocalFilesystemBlobAccess,
-        dict,
+        ResourceAccess,
         None,
     ]
     extraIdentity: typing.Dict[str, str] = dataclasses.field(default_factory=dict)

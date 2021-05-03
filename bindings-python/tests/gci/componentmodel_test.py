@@ -30,7 +30,7 @@ def test_deserialisation_of_custom_resources():
     )
     assert isinstance(component_descriptor.component.resources[0].access, cm.LocalFilesystemBlobAccess)
     assert component_descriptor.component.resources[1].access is None
-    assert isinstance(component_descriptor.component.resources[2].access, dict)
+    assert isinstance(component_descriptor.component.resources[2].access, cm.ResourceAccess)
 
 
 def test_github_access():
