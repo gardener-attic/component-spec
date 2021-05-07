@@ -123,7 +123,7 @@ class Label:
 _no_default = object()
 
 
-class FindLabelMixin:
+class LabelMixin:
     def find_label(
         self,
         name: str,
@@ -139,6 +139,24 @@ class FindLabelMixin:
             if default is _no_default:
                 return None
             return default
+
+    def set_label(
+        self,
+        label: Label,
+        raise_if_absent: bool = False,
+    ) -> typing.List[Label]:
+        self.find_label(
+            name=label.name,
+            raise_if_absent=raise_if_absent,
+        )
+
+        patched_labels = [l for l in self.labels if l.name != label.name]
+        patched_labels.append(label)
+
+        return dataclasses.replace(
+            self,
+            labels=patched_labels
+        )
 
 
 class Provider(enum.Enum):
@@ -276,7 +294,7 @@ class Artifact:
 
 
 @dc(frozen=True)
-class ComponentReference(Artifact, FindLabelMixin):
+class ComponentReference(Artifact, LabelMixin):
     name: str
     componentName: str
     version: str
@@ -285,13 +303,13 @@ class ComponentReference(Artifact, FindLabelMixin):
 
 
 @dc(frozen=True)
-class SourceReference(FindLabelMixin):
+class SourceReference(LabelMixin):
     identitySelector: typing.Dict[str, str]
     labels: typing.List[Label] = dataclasses.field(default_factory=tuple)
 
 
 @dc(frozen=True)
-class Resource(Artifact, FindLabelMixin):
+class Resource(Artifact, LabelMixin):
     name: str
     version: str
     type: typing.Union[ResourceType, str]
@@ -317,7 +335,7 @@ class RepositoryContext:
 
 
 @dc
-class ComponentSource(Artifact, FindLabelMixin):
+class ComponentSource(Artifact, LabelMixin):
     name: str
     access: GithubAccess
     version: typing.Optional[str] = None  # introduce this backwards-compatible for now
@@ -327,7 +345,7 @@ class ComponentSource(Artifact, FindLabelMixin):
 
 
 @dc
-class Component(FindLabelMixin):
+class Component(LabelMixin):
     name: str     # must be valid URL w/o schema
     version: str  # relaxed semver
 
