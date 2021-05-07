@@ -123,7 +123,7 @@ class Label:
 _no_default = object()
 
 
-class LabelMixin:
+class LabelMethodsMixin:
     def find_label(
         self,
         name: str,
@@ -155,7 +155,7 @@ class LabelMixin:
 
         return dataclasses.replace(
             self,
-            labels=patched_labels
+            labels=patched_labels,
         )
 
 
@@ -294,7 +294,7 @@ class Artifact:
 
 
 @dc(frozen=True)
-class ComponentReference(Artifact, LabelMixin):
+class ComponentReference(Artifact, LabelMethodsMixin):
     name: str
     componentName: str
     version: str
@@ -303,13 +303,13 @@ class ComponentReference(Artifact, LabelMixin):
 
 
 @dc(frozen=True)
-class SourceReference(LabelMixin):
+class SourceReference(LabelMethodsMixin):
     identitySelector: typing.Dict[str, str]
     labels: typing.List[Label] = dataclasses.field(default_factory=tuple)
 
 
 @dc(frozen=True)
-class Resource(Artifact, LabelMixin):
+class Resource(Artifact, LabelMethodsMixin):
     name: str
     version: str
     type: typing.Union[ResourceType, str]
@@ -335,7 +335,7 @@ class RepositoryContext:
 
 
 @dc
-class ComponentSource(Artifact, LabelMixin):
+class ComponentSource(Artifact, LabelMethodsMixin):
     name: str
     access: GithubAccess
     version: typing.Optional[str] = None  # introduce this backwards-compatible for now
@@ -345,7 +345,7 @@ class ComponentSource(Artifact, LabelMixin):
 
 
 @dc
-class Component(LabelMixin):
+class Component(LabelMethodsMixin):
     name: str     # must be valid URL w/o schema
     version: str  # relaxed semver
 

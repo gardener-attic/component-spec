@@ -203,7 +203,7 @@ def test_patch_label():
             type=cm.ResourceType.OCI_IMAGE,
             access=cm.OciAccess(
                 cm.AccessType.OCI_REGISTRY,
-                imageReference='test-repo.com/test-resource:v0.1.0'
+                imageReference='test-repo.com/test-resource:v0.1.0',
             ),
             labels=testcase.input_labels,
         )
@@ -214,7 +214,7 @@ def test_patch_label():
                     label=testcase.label_to_patch,
                     raise_if_absent=testcase.raise_if_absent,
                 )
-            assert testcase.expected_err_msg == str(ctx.exception)
+            assert str(ctx.exception) == testcase.expected_err_msg
         else:
             patched_resource = test_resource.set_label(
                 label=testcase.label_to_patch,
