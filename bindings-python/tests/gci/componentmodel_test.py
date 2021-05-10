@@ -66,7 +66,7 @@ def test_component():
     assert component.current_repository_ctx().baseUrl == 'current-ctx-url'
 
 
-def test_patch_label():
+def test_set_label():
     lssd_label_name = 'cloud.gardener.cnudie/sdo/lssd'
     processing_rule_name = 'test-processing-rule'
 
@@ -74,7 +74,7 @@ def test_patch_label():
     class TestCase(unittest.TestCase):
         name: str
         input_labels: typing.List[cm.Label]
-        label_to_patch: cm.Label
+        label_to_set: cm.Label
         raise_if_absent: bool
         expected_labels: typing.List[cm.Label]
         expected_err_msg: str
@@ -83,7 +83,7 @@ def test_patch_label():
         TestCase(
             name='appends label to empty input_labels list',
             input_labels=[],
-            label_to_patch=cm.Label(
+            label_to_set=cm.Label(
                 name=lssd_label_name,
                 value={
                     'processingRules': [
@@ -107,7 +107,7 @@ def test_patch_label():
         TestCase(
             name='throws exception if len(input_labels) == 0 and raise_if_absent == True',
             input_labels=[],
-            label_to_patch=cm.Label(
+            label_to_set=cm.Label(
                 name=lssd_label_name,
                 value={
                     'processingRules': [
@@ -131,7 +131,7 @@ def test_patch_label():
                     },
                 ),
             ],
-            label_to_patch=cm.Label(
+            label_to_set=cm.Label(
                 name=lssd_label_name,
                 value={
                     'processingRules': [
@@ -169,7 +169,7 @@ def test_patch_label():
                     },
                 ),
             ],
-            label_to_patch=cm.Label(
+            label_to_set=cm.Label(
                 name=lssd_label_name,
                 value={
                     'processingRules': [
@@ -211,13 +211,13 @@ def test_patch_label():
         if testcase.expected_err_msg != '':
             with testcase.assertRaises(ValueError) as ctx:
                 patched_resource = test_resource.set_label(
-                    label=testcase.label_to_patch,
+                    label=testcase.label_to_set,
                     raise_if_absent=testcase.raise_if_absent,
                 )
             assert str(ctx.exception) == testcase.expected_err_msg
         else:
             patched_resource = test_resource.set_label(
-                label=testcase.label_to_patch,
+                label=testcase.label_to_set,
                 raise_if_absent=testcase.raise_if_absent,
             )
             testcase.assertListEqual(
