@@ -75,13 +75,13 @@ def test_set_label():
         name: str
         input_labels: typing.List[cm.Label]
         label_to_set: cm.Label
-        raise_if_absent: bool
+        raise_if_present: bool
         expected_labels: typing.List[cm.Label]
         expected_err_msg: str
 
     testcases = [
         TestCase(
-            name='appends label to empty input_labels list',
+            name='appends label to empty input_labels list with raise_if_present == True',
             input_labels=[],
             label_to_set=cm.Label(
                 name=lssd_label_name,
@@ -91,7 +91,7 @@ def test_set_label():
                     ],
                 },
             ),
-            raise_if_absent=False,
+            raise_if_present=True,
             expected_labels=[
                 cm.Label(
                     name=lssd_label_name,
@@ -105,7 +105,7 @@ def test_set_label():
             expected_err_msg=''
         ),
         TestCase(
-            name='throws exception if len(input_labels) == 0 and raise_if_absent == True',
+            name='appends label to empty input_labels list with raise_if_present == False',
             input_labels=[],
             label_to_set=cm.Label(
                 name=lssd_label_name,
@@ -115,12 +115,21 @@ def test_set_label():
                     ],
                 },
             ),
-            expected_labels=None,
-            raise_if_absent=True,
-            expected_err_msg=f'no such label: name=\'{lssd_label_name}\'',
+            raise_if_present=False,
+            expected_labels=[
+                cm.Label(
+                    name=lssd_label_name,
+                    value={
+                        'processingRules': [
+                            processing_rule_name,
+                        ],
+                    },
+                ),
+            ],
+            expected_err_msg=''
         ),
         TestCase(
-            name='throws no exception if label exists and raise_if_absent == True',
+            name='throws exception if label exists and raise_if_present == True',
             input_labels=[
                 cm.Label(
                     name=lssd_label_name,
@@ -139,21 +148,12 @@ def test_set_label():
                     ],
                 },
             ),
-            raise_if_absent=True,
-            expected_labels=[
-                cm.Label(
-                    name=lssd_label_name,
-                    value={
-                        'processingRules': [
-                            processing_rule_name,
-                        ],
-                    },
-                ),
-            ],
-            expected_err_msg=''
+            raise_if_present=True,
+            expected_labels=None,
+            expected_err_msg=f'label {lssd_label_name} is already present'
         ),
         TestCase(
-            name='overwrites preexisting label',
+            name='throws no exception if label exists and raise_if_present == False',
             input_labels=[
                 cm.Label(
                     name='test-label',
@@ -177,7 +177,7 @@ def test_set_label():
                     ],
                 },
             ),
-            raise_if_absent=False,
+            raise_if_present=False,
             expected_labels=[
                 cm.Label(
                     name='test-label',
@@ -212,13 +212,13 @@ def test_set_label():
             with testcase.assertRaises(ValueError) as ctx:
                 patched_resource = test_resource.set_label(
                     label=testcase.label_to_set,
-                    raise_if_absent=testcase.raise_if_absent,
+                    raise_if_present=testcase.raise_if_present,
                 )
             assert str(ctx.exception) == testcase.expected_err_msg
         else:
             patched_resource = test_resource.set_label(
                 label=testcase.label_to_set,
-                raise_if_absent=testcase.raise_if_absent,
+                raise_if_present=testcase.raise_if_present,
             )
             testcase.assertListEqual(
                 list1=patched_resource.labels,

@@ -143,12 +143,10 @@ class LabelMethodsMixin:
     def set_label(
         self,
         label: Label,
-        raise_if_absent: bool = False,
+        raise_if_present: bool = False,
     ) -> typing.List[Label]:
-        self.find_label(
-            name=label.name,
-            raise_if_absent=raise_if_absent,
-        )
+        if self.find_label(name=label.name) and raise_if_present:
+            raise ValueError(f'label {label.name} is already present')
 
         patched_labels = [l for l in self.labels if l.name != label.name]
         patched_labels.append(label)
