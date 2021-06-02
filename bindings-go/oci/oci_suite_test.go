@@ -5,10 +5,13 @@
 package oci_test
 
 import (
+	"context"
+	"io"
 	"testing"
 
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
+	ocispecv1 "github.com/opencontainers/image-spec/specs-go/v1"
 
 	cdv2 "github.com/gardener/component-spec/bindings-go/apis/v2"
 	"github.com/gardener/component-spec/bindings-go/oci"
@@ -20,7 +23,6 @@ func TestConfig(t *testing.T) {
 }
 
 var _ = Describe("helper", func(){
-
 
 	Context("OCIRef", func() {
 
@@ -52,7 +54,39 @@ var _ = Describe("helper", func(){
 			Expect(ref).To(Equal("example.com:443/component-descriptors/somecomp:v0.0.0"))
 		})
 
-
 	})
 
 })
+
+// testClient describes a test oci client.
+type testClient struct {
+	getManifest func(ctx context.Context, ref string) (*ocispecv1.Manifest, error)
+	fetch func(ctx context.Context, ref string, desc ocispecv1.Descriptor, writer io.Writer) error
+}
+
+var _ oci.Client = &testClient{}
+
+func (t testClient) GetManifest(ctx context.Context, ref string) (*ocispecv1.Manifest, error) {
+	return t.getManifest(ctx, ref)
+}
+
+func (t testClient) Fetch(ctx context.Context, ref string, desc ocispecv1.Descriptor, writer io.Writer) error {
+	return t.fetch(ctx, ref, desc, writer)
+}
+
+// testCache describes a test resolve cache.
+type testCache struct {
+	get func (ctx context.Context, repoCtx cdv2.RepositoryContext, name, version string) (*cdv2.ComponentDescriptor, error)
+	store func(ctx context.Context, descriptor *cdv2.ComponentDescriptor) error
+}
+
+var _ oci.Cache = &testCache{}
+
+func (t testCache) Get(ctx context.Context, repoCtx cdv2.RepositoryContext, name, version string) (*cdv2.ComponentDescriptor, error) {
+	return t.get(ctx, repoCtx, name, version)
+}
+
+func (t testCache) Store(ctx context.Context, descriptor *cdv2.ComponentDescriptor) error {
+	return t.store(ctx, descriptor)
+}
+
