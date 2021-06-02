@@ -36,6 +36,7 @@ class AccessType(enum.Enum):
     LOCAL_FILESYSTEM_BLOB = 'localFilesystemBlob'
     NONE = 'None'  # the resource is only declared informally (e.g. generic)
 
+
 class SourceType(enum.Enum):
     GIT = 'git'
 
@@ -43,6 +44,7 @@ class SourceType(enum.Enum):
 class ResourceType(enum.Enum):
     OCI_IMAGE = 'ociImage'
     GENERIC = 'generic'
+
 
 class ResourceRelation(enum.Enum):
     LOCAL = 'local'
@@ -370,10 +372,10 @@ def _read_schema_file(schema_file_path: str):
 
 
 def enum_or_string(v, enum_type: enum.Enum):
-  try:
-    return enum_type(v)
-  except ValueError:
-    return str(v)
+    try:
+        return enum_type(v)
+    except ValueError:
+        return str(v)
 
 
 @dc
