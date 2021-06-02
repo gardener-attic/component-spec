@@ -37,7 +37,6 @@ type OCIRegistryAccess struct {
 	ObjectType `json:",inline"`
 
 	// ImageReference is the actual reference to the oci image repository and tag.
-	// The format is expected to be "repository:tag".
 	ImageReference string `json:"imageReference"`
 }
 
@@ -77,7 +76,6 @@ type RelativeOciAccess struct {
 	ObjectType `json:",inline"`
 
 	// Reference is the relative reference to the oci image repository and tag.
-	// The format is expected to be "repository:tag".
 	Reference string `json:"reference"`
 }
 
