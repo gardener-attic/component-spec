@@ -69,6 +69,46 @@ func (O *OCIRegistryAccess) SetData(bytes []byte) error {
 	return nil
 }
 
+// RelativeOciReferenceType is the access type of a relative oci reference.
+const RelativeOciReferenceType = "relativeOciReference"
+
+// RelativeOciAccess describes the access for a relative oci reference.
+type RelativeOciAccess struct {
+	ObjectType `json:",inline"`
+
+	// Reference is the relative reference to the oci image repository and tag.
+	// The format is expected to be "repository:tag".
+	Reference string `json:"reference"`
+}
+
+// NewRelativeOciAccess creates a new RelativeOciAccess accessor
+func NewRelativeOciAccess(ref string) TypedObjectAccessor {
+	return &RelativeOciAccess{
+		ObjectType: ObjectType{
+			Type: RelativeOciReferenceType,
+		},
+		Reference: ref,
+	}
+}
+
+func (_ *RelativeOciAccess) GetType() string {
+	return RelativeOciReferenceType
+}
+
+func (O RelativeOciAccess) GetData() ([]byte, error) {
+	return json.Marshal(O)
+}
+
+func (O *RelativeOciAccess) SetData(bytes []byte) error {
+	var newRelativeOCIImage RelativeOciAccess
+	if err := json.Unmarshal(bytes, &newRelativeOCIImage); err != nil {
+		return err
+	}
+
+	O.Reference = newRelativeOCIImage.Reference
+	return nil
+}
+
 // OCIBlobType is the access type of a oci blob in a manifest.
 const OCIBlobType = "ociBlob"
 

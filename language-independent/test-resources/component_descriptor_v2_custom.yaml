@@ -54,3 +54,11 @@ component:
       access:
         type: 'myCustomType'
         someAttr: abc
+    - name: 'my-relative-image'
+      version: 'v1.7.2' # version is implied by component, i.e. v1.7.2 in this case
+      type: 'ociImage'
+      relation: 'local'
+      labels: []
+      access:
+        type: 'relativeOciReference'
+        reference: 'abcd:latest'
