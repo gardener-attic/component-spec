@@ -30,6 +30,7 @@ class SchemaVersion(enum.Enum):
 
 class AccessType(enum.Enum):
     OCI_REGISTRY = 'ociRegistry'
+    RELATIVE_OCI_REFERENCE = 'relativeOciReference'
     GITHUB = 'github'
     HTTP = 'http'
     LOCAL_OCI_BLOB = 'localOciBlob'
@@ -59,6 +60,11 @@ class ResourceAccess:
 @dc(frozen=True)
 class OciAccess(ResourceAccess):
     imageReference: str
+
+
+@dc(frozen=True)
+class RelativeOciAccess(ResourceAccess):
+    reference: str
 
 
 @dc(frozen=True)
@@ -313,6 +319,7 @@ class Resource(Artifact, LabelMethodsMixin):
     type: typing.Union[ResourceType, str]
     access: typing.Union[
         OciAccess,
+        RelativeOciAccess,
         GithubAccess,
         HttpAccess,
         LocalOCIBlobAccess,
