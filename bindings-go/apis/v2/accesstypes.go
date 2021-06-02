@@ -72,7 +72,7 @@ func (O *OCIRegistryAccess) SetData(bytes []byte) error {
 // OCIBlobType is the access type of a oci blob in a manifest.
 const OCIBlobType = "ociBlob"
 
-// OCIRegistryAccess describes the access for a oci registry.
+// OCIBlobAccess describes the access for a oci registry.
 type OCIBlobAccess struct {
 	ObjectType `json:",inline"`
 

@@ -4,6 +4,7 @@ go 1.14
 
 require (
 	github.com/ghodss/yaml v1.0.0
+	github.com/go-logr/logr v0.4.0
 	github.com/mandelsoft/vfs v0.0.0-20201002134249-3c471f64a4d1
 	github.com/onsi/ginkgo v1.14.0
 	github.com/onsi/gomega v1.10.1
