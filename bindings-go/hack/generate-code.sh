@@ -19,4 +19,7 @@ echo "> Installing deepcopy-gen"
 go install "${PROJECT_ROOT}"/vendor/k8s.io/code-generator/cmd/deepcopy-gen
 
 echo "> Generating deepcopy functions for Component Descriptor"
-"${GOPATH}"/bin/deepcopy-gen -i "${PROJECT_ROOT}"/apis/v2 -O zz_generated_deepcopy --go-header-file "${PROJECT_ROOT}"/hack/boilerplate.go.txt
+
+pushd ${PROJECT_ROOT}
+"${GOPATH}"/bin/deepcopy-gen -i ./apis/v2 -O zz_generated_deepcopy --go-header-file ./hack/boilerplate.go.txt
+popd

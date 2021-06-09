@@ -66,18 +66,17 @@ var _ = Describe("resolve", func(){
 					}
 				},
 			}
-			cd, err := oci.NewResolver(ociClient).Resolve(ctx, cdv2.RepositoryContext{
-				Type: cdv2.OCIRegistryType,
-				BaseURL: "example.com",
-			}, "example.com/my-comp", "0.0.0")
+			cd, err := oci.NewResolver(ociClient).Resolve(ctx, cdv2.NewOCIRegistryRepository("example.com", ""), "example.com/my-comp", "0.0.0")
 			Expect(err).ToNot(HaveOccurred())
-			Expect(cd.GetEffectiveRepositoryContext().BaseURL).To(Equal("example.com"), "the repository context should be injected")
+			repoCtx := &cdv2.OCIRegistryRepository{}
+			Expect(cd.GetEffectiveRepositoryContext().DecodeInto(repoCtx)).To(Succeed())
+			Expect(repoCtx.BaseURL).To(Equal("example.com"), "the repository context should be injected")
 		})
 
 		It("should not fetch from the client of a cache is provided", func() {
 			ctx := context.Background()
 			ociCache := &testCache{
-				get: func(ctx context.Context, repoCtx cdv2.RepositoryContext, name, version string) (*cdv2.ComponentDescriptor, error) {
+				get: func(ctx context.Context, repoCtx cdv2.OCIRegistryRepository, name, version string) (*cdv2.ComponentDescriptor, error) {
 					return defaultComponentDescriptor("example.com/my-comp", "0.0.0"), nil
 				},
 				store: func(ctx context.Context, descriptor *cdv2.ComponentDescriptor) error {
@@ -95,10 +94,7 @@ var _ = Describe("resolve", func(){
 					return nil
 				},
 			}
-			cd, err := oci.NewResolver(ociClient).WithCache(ociCache).Resolve(ctx, cdv2.RepositoryContext{
-				Type: cdv2.OCIRegistryType,
-				BaseURL: "example.com",
-			}, "example.com/my-comp", "0.0.0")
+			cd, err := oci.NewResolver(ociClient).WithCache(ociCache).Resolve(ctx, cdv2.NewOCIRegistryRepository("example.com", ""), "example.com/my-comp", "0.0.0")
 			Expect(err).ToNot(HaveOccurred())
 			Expect(cd.Name).To(Equal("example.com/my-comp"))
 		})
@@ -107,7 +103,7 @@ var _ = Describe("resolve", func(){
 			ctx := context.Background()
 			storeCalled := false
 			ociCache := &testCache{
-				get: func(ctx context.Context, repoCtx cdv2.RepositoryContext, name, version string) (*cdv2.ComponentDescriptor, error) {
+				get: func(ctx context.Context, repoCtx cdv2.OCIRegistryRepository, name, version string) (*cdv2.ComponentDescriptor, error) {
 					return nil, errors.New("not found")
 				},
 				store: func(ctx context.Context, descriptor *cdv2.ComponentDescriptor) error {
@@ -154,12 +150,12 @@ var _ = Describe("resolve", func(){
 					}
 				},
 			}
-			cd, err := oci.NewResolver(ociClient).WithCache(ociCache).Resolve(ctx, cdv2.RepositoryContext{
-				Type: cdv2.OCIRegistryType,
-				BaseURL: "example.com",
-			}, "example.com/my-comp", "0.0.0")
+			cd, err := oci.NewResolver(ociClient).WithCache(ociCache).Resolve(ctx, cdv2.NewOCIRegistryRepository("example.com", ""), "example.com/my-comp", "0.0.0")
 			Expect(err).ToNot(HaveOccurred())
-			Expect(cd.GetEffectiveRepositoryContext().BaseURL).To(Equal("example.com"), "the repository context should be injected")
+
+			repoCtx := &cdv2.OCIRegistryRepository{}
+			Expect(cd.GetEffectiveRepositoryContext().DecodeInto(repoCtx)).To(Succeed())
+			Expect(repoCtx.BaseURL).To(Equal("example.com"), "the repository context should be injected")
 			Expect(storeCalled).To(BeTrue(), "the cache store function should be called")
 		})
 

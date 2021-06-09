@@ -23,7 +23,6 @@ import (
 	"k8s.io/apimachinery/pkg/util/validation/field"
 
 	v2 "github.com/gardener/component-spec/bindings-go/apis/v2"
-	"github.com/gardener/component-spec/bindings-go/apis/v2/cdutils"
 )
 
 func TestConfig(t *testing.T) {
@@ -50,7 +49,7 @@ var _ = Describe("Validation", func() {
 			ImageReference: "docker/image1:1.2.3",
 		}
 
-		unstrucOCIRegistry1, err := cdutils.ToUnstructuredTypedObject(v2.NewCodec(nil, nil, nil), ociRegistry1)
+		unstrucOCIRegistry1, err := v2.NewUnstructured(ociRegistry1)
 		Expect(err).ToNot(HaveOccurred())
 
 		ociImage1 = &v2.Resource{
@@ -59,7 +58,7 @@ var _ = Describe("Validation", func() {
 				Version: "1.2.3",
 			},
 			Relation: v2.ExternalRelation,
-			Access:   unstrucOCIRegistry1,
+			Access:   &unstrucOCIRegistry1,
 		}
 		ociRegistry2 = &v2.OCIRegistryAccess{
 			ObjectType: v2.ObjectType{
@@ -67,7 +66,7 @@ var _ = Describe("Validation", func() {
 			},
 			ImageReference: "docker/image1:1.2.3",
 		}
-		unstrucOCIRegistry2, err := cdutils.ToUnstructuredTypedObject(v2.NewCodec(nil, nil, nil), ociRegistry2)
+		unstrucOCIRegistry2, err := v2.NewUnstructured(ociRegistry2)
 		Expect(err).ToNot(HaveOccurred())
 		ociImage2 = &v2.Resource{
 			IdentityObjectMeta: v2.IdentityObjectMeta{
@@ -75,7 +74,7 @@ var _ = Describe("Validation", func() {
 				Version: "1.2.3",
 			},
 			Relation: v2.ExternalRelation,
-			Access:   unstrucOCIRegistry2,
+			Access:   &unstrucOCIRegistry2,
 		}
 
 		comp = &v2.ComponentDescriptor{

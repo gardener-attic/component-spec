@@ -34,7 +34,9 @@ component:
 
   provider: internal
 
-  repositoryContexts: []
+  repositoryContexts:
+  - type: ociRegistry
+    baseUrl: example.com
   sources: []
   componentReferences: []
 
@@ -71,6 +73,23 @@ component:
 	err := codec.Decode(data, component)
 	check(err)
 
+	/////////////////////////////////
+	//  Repository Context
+	////////////////////////////////
+
+	// get the latest repository context.
+	// the context is returned as unstructured object (similar to the access types) as differnt repository types
+	// with different attributes are possible.
+	unstructuredRepoCtx := component.GetEffectiveRepositoryContext()
+	// decode the unstructured type into a specific type
+	ociRepo := &v2.OCIRegistryRepository{}
+	check(unstructuredRepoCtx.DecodeInto(ociRepo))
+	fmt.Printf("%s\n", ociRepo.BaseURL) // prints "example.com"
+
+	/////////////////////////////////
+	//  Resourcess
+	////////////////////////////////
+
 	// get a specific local resource
 	res, err := component.GetLocalResource(v2.OCIImageType, "apiserver", "v1.7.2")
 	check(err)
@@ -83,9 +102,8 @@ component:
 
 	// get the access for a resource
 	// specific access type can be decoded using the access type codec.
-	accessTypeCodec := v2.NewCodec(nil, nil, nil)
 	ociAccess := &v2.OCIRegistryAccess{}
-	check(accessTypeCodec.Decode(res.Access.Raw, ociAccess))
+	check(res.Access.DecodeInto(ociAccess))
 	fmt.Println(ociAccess.ImageReference) // prints: k8s.gcr.io/hyperkube:v1.16.4
 
 	/////////////////////////////////
