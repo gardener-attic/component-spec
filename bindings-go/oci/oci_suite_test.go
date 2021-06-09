@@ -27,31 +27,41 @@ var _ = Describe("helper", func(){
 	Context("OCIRef", func() {
 
 		It("should correctly parse a repository url without a protocol and a component", func() {
-			repoCtx := cdv2.RepositoryContext{BaseURL: "example.com"}
+			repoCtx := cdv2.OCIRegistryRepository{BaseURL: "example.com"}
 			ref, err := oci.OCIRef(repoCtx, "somecomp", "v0.0.0")
 			Expect(err).ToNot(HaveOccurred())
 			Expect(ref).To(Equal("example.com/component-descriptors/somecomp:v0.0.0"))
 		})
 
 		It("should correctly parse a repository url with a protocol and a component", func() {
-			repoCtx := cdv2.RepositoryContext{BaseURL: "http://example.com"}
+			repoCtx := cdv2.OCIRegistryRepository{BaseURL: "http://example.com"}
 			ref, err := oci.OCIRef(repoCtx, "somecomp", "v0.0.0")
 			Expect(err).ToNot(HaveOccurred())
 			Expect(ref).To(Equal("example.com/component-descriptors/somecomp:v0.0.0"))
 		})
 
 		It("should correctly parse a repository url without a protocol and a port and a component", func() {
-			repoCtx := cdv2.RepositoryContext{BaseURL: "example.com:443"}
+			repoCtx := cdv2.OCIRegistryRepository{BaseURL: "example.com:443"}
 			ref, err := oci.OCIRef(repoCtx, "somecomp", "v0.0.0")
 			Expect(err).ToNot(HaveOccurred())
 			Expect(ref).To(Equal("example.com:443/component-descriptors/somecomp:v0.0.0"))
 		})
 
 		It("should correctly parse a repository url with a protocol and a port and a component", func() {
-			repoCtx := cdv2.RepositoryContext{BaseURL: "http://example.com:443"}
+			repoCtx := cdv2.OCIRegistryRepository{BaseURL: "http://example.com:443"}
 			ref, err := oci.OCIRef(repoCtx, "somecomp", "v0.0.0")
 			Expect(err).ToNot(HaveOccurred())
 			Expect(ref).To(Equal("example.com:443/component-descriptors/somecomp:v0.0.0"))
+		})
+
+		It("should correctly parse a repository url with a sha256-digest name mapping", func() {
+			repoCtx := cdv2.OCIRegistryRepository{
+				BaseURL: "example.com:443",
+				ComponentNameMapping: cdv2.OCIRegistryDigestMapping,
+			}
+			ref, err := oci.OCIRef(repoCtx, "somecomp", "v0.0.0")
+			Expect(err).ToNot(HaveOccurred())
+			Expect(ref).To(Equal("example.com:443/e9332cb39f32d0cea12252c5512f17e54fd850cf71faa5f5f0ef09056af01add:v0.0.0"))
 		})
 
 	})
@@ -76,13 +86,13 @@ func (t testClient) Fetch(ctx context.Context, ref string, desc ocispecv1.Descri
 
 // testCache describes a test resolve cache.
 type testCache struct {
-	get func (ctx context.Context, repoCtx cdv2.RepositoryContext, name, version string) (*cdv2.ComponentDescriptor, error)
+	get func (ctx context.Context, repoCtx cdv2.OCIRegistryRepository, name, version string) (*cdv2.ComponentDescriptor, error)
 	store func(ctx context.Context, descriptor *cdv2.ComponentDescriptor) error
 }
 
 var _ oci.Cache = &testCache{}
 
-func (t testCache) Get(ctx context.Context, repoCtx cdv2.RepositoryContext, name, version string) (*cdv2.ComponentDescriptor, error) {
+func (t testCache) Get(ctx context.Context, repoCtx cdv2.OCIRegistryRepository, name, version string) (*cdv2.ComponentDescriptor, error) {
 	return t.get(ctx, repoCtx, name, version)
 }
 
