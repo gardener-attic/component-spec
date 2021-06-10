@@ -89,7 +89,14 @@
 <li class="toctree-l1"><a class="reference internal" href="format.html">Gardener Component Descriptor Format Specification</a></li>
 <li class="toctree-l1"><a class="reference internal" href="semantics.html">Gardener Component Descriptor Semantics</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Component Descriptor Registries</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#component-descriptor-registries-backed-by-oci-image-registry">Component Descriptor Registries backed by OCI Image Registry</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#component-descriptor-registries-backed-by-oci-image-registry">Component Descriptor Registries backed by OCI Image Registry</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#component-name-mapping">Component Name Mapping</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#component-name-mapping-urlpath">Component Name Mapping <cite>urlPath</cite></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#component-name-mapping-sha256-digest">Component Name Mapping <cite>sha256-digest</cite></a></li>
+</ul>
+</li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="oci.html">Component Content in an OCI Registry</a></li>
@@ -173,6 +180,22 @@ there is only one, using an OCI Image Registry.</p>
 <p>Component Descriptor Registries backed by an OCI Image Registry <em>MUST</em> specify a <cite>baseUrl</cite>. Said
 URL <em>MUST</em> refer to an OCI Image Registry (for example <cite>eu.gcr.io/gardener-project</cite>).</p>
 <p>The base URL <em>MAY</em> refer to sub-path on a OCI Image Registry.</p>
+<p>The thus-referenced <cite>Component Descriptor</cite> is stored as an OCI Container Image would be. The
+Image Manifest <em>MUST</em> contain exactly one layer. The layer <em>MUST</em> be a POSIX.1-2001-compliant
+pax archive (commonly also known as “tarball”), containing as first entry a regular file named
+<cite>component-descriptor.yaml</cite>, whose <cite>utf-8</cite>-encoded content is a valid <cite>Component Descriptor</cite> (v2),
+serialised as either YAML or JSON.</p>
+<div class="section" id="component-name-mapping">
+<h3>Component Name Mapping<a class="headerlink" href="#component-name-mapping" title="Permalink to this headline">¶</a></h3>
+<p>Any OCI Image Registry used as a Component Descriptor registry <em>MUST</em> define an unambiguous
+mapping of <cite>Component Name</cite>, <cite>Component Version</cite>-tuples to OCI Image References.</p>
+<p>The following Component Name mappings are known:</p>
+<ul class="simple">
+<li><p>urlPath</p></li>
+<li><p>sha256-digest</p></li>
+</ul>
+<div class="section" id="component-name-mapping-urlpath">
+<h4>Component Name Mapping <cite>urlPath</cite><a class="headerlink" href="#component-name-mapping-urlpath" title="Permalink to this headline">¶</a></h4>
 <p>Component Descriptor OCI Names are constructed like so:</p>
 <p><cite>&lt;baseUrl&gt;/componentDescriptors/&lt;componentName&gt;:&lt;versionTag&gt;</cite></p>
 <p>Where:</p>
@@ -181,11 +204,19 @@ URL <em>MUST</em> refer to an OCI Image Registry (for example <cite>eu.gcr.io/ga
 <li><p>componentName is a valid <cite>Component Name</cite> (i.e. a domain name with an optional URL path suffix)</p></li>
 <li><p>versionTag is a valid <cite>Component Version</cite> (i.e. relaxed semver version)</p></li>
 </ul>
-<p>The thus-referenced <cite>Component Descriptor</cite> is stored as an OCI Container Image would be. The
-Image Manifest <em>MUST</em> contain exactly one layer. The layer <em>MUST</em> be a POSIX.1-2001-compliant
-pax archive (commonly also known as “tarball”), containing as first entry a regular file named
-<cite>component-descriptor.yaml</cite>, whose <cite>utf-8</cite>-encoded content is a valid <cite>Component Descriptor</cite> (v2),
-serialised as either YAML or JSON.</p>
+</div>
+<div class="section" id="component-name-mapping-sha256-digest">
+<h4>Component Name Mapping <cite>sha256-digest</cite><a class="headerlink" href="#component-name-mapping-sha256-digest" title="Permalink to this headline">¶</a></h4>
+<p>Component Descriptor OCI Names are constructed like so:</p>
+<p><cite>&lt;baseUrl&gt;/&lt;componentNameDigest&gt;:&lt;versionTag&gt;</cite></p>
+<p>Where:</p>
+<ul class="simple">
+<li><p>baseUrl is the already-discussed registry URL</p></li>
+<li><p>ComponentName is the lowercased hexadecimal sha256-digest of the utf-8-encoded <cite>Component Name</cite></p></li>
+<li><p>versionTag is a valid <cite>Component Version</cite> (i.e. relaxed semver version)</p></li>
+</ul>
+</div>
+</div>
 </div>
 </div>
 
