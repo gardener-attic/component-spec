@@ -1,6 +1,6 @@
-# Gardener Component-Descriptor Contract and Specification
+# CNUDIE Component-Descriptor Contract and Specification
 
-This repository contains the contract and schema definition for Gardener's CICD Component
+This repository contains the contract and schema definition for Gardener's CNUDIE Component
 model. In addition to those language-independent specifications, it also features bindings for
 programming languages relevant to the Gardener ecosystem.
 
