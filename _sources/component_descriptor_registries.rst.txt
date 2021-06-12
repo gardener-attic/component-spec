@@ -18,11 +18,21 @@ URL *MUST* refer to an OCI Image Registry (for example `eu.gcr.io/gardener-proje
 
 The base URL *MAY* refer to sub-path on a OCI Image Registry.
 
-The thus-referenced `Component Descriptor` is stored as an OCI Container Image would be. The
-Image Manifest *MUST* contain exactly one layer. The layer *MUST* be a POSIX.1-2001-compliant
-pax archive (commonly also known as "tarball"), containing as first entry a regular file named
-`component-descriptor.yaml`, whose `utf-8`-encoded content is a valid `Component Descriptor` (v2),
-serialised as either YAML or JSON.
+The thus-referenced `Component Descriptor` is stored as an OCI Artifact. The
+Image Manifest *MUST* at least blobs (one config-blob, and one layer-blob).
+
+The config-blob *MUST* be a valid JSON-document and *MUST* reference the layer-blob containing
+the serialised `Component Descriptor` by defining a toplevel-attribute `componentDescriptorLayer`,
+which *MUST* contain the same attributes and values as the same blob-reference in the
+OCI-Manifest.
+
+The blob containing the `Component Descriptor` must be JSON- or YAML-serialised. It must be
+`utf-8`-encoded. It *MUST* either contain:
+
+- a POSIX.1-2001-compliant pax archive (commonly also known as "tarball"),
+  containing as first entry a regular file named `component-descriptor.yaml`, containing
+  the `Component Descriptor`
+- the octet-sequence of the serialised `Component Descriptor`
 
 Component Name Mapping
 ~~~~~~~~~~~~~~~~~~~~~~

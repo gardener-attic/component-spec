@@ -180,11 +180,20 @@ there is only one, using an OCI Image Registry.</p>
 <p>Component Descriptor Registries backed by an OCI Image Registry <em>MUST</em> specify a <cite>baseUrl</cite>. Said
 URL <em>MUST</em> refer to an OCI Image Registry (for example <cite>eu.gcr.io/gardener-project</cite>).</p>
 <p>The base URL <em>MAY</em> refer to sub-path on a OCI Image Registry.</p>
-<p>The thus-referenced <cite>Component Descriptor</cite> is stored as an OCI Container Image would be. The
-Image Manifest <em>MUST</em> contain exactly one layer. The layer <em>MUST</em> be a POSIX.1-2001-compliant
-pax archive (commonly also known as “tarball”), containing as first entry a regular file named
-<cite>component-descriptor.yaml</cite>, whose <cite>utf-8</cite>-encoded content is a valid <cite>Component Descriptor</cite> (v2),
-serialised as either YAML or JSON.</p>
+<p>The thus-referenced <cite>Component Descriptor</cite> is stored as an OCI Artifact. The
+Image Manifest <em>MUST</em> at least blobs (one config-blob, and one layer-blob).</p>
+<p>The config-blob <em>MUST</em> be a valid JSON-document and <em>MUST</em> reference the layer-blob containing
+the serialised <cite>Component Descriptor</cite> by defining a toplevel-attribute <cite>componentDescriptorLayer</cite>,
+which <em>MUST</em> contain the same attributes and values as the same blob-reference in the
+OCI-Manifest.</p>
+<p>The blob containing the <cite>Component Descriptor</cite> must be JSON- or YAML-serialised. It must be
+<cite>utf-8</cite>-encoded. It <em>MUST</em> either contain:</p>
+<ul class="simple">
+<li><p>a POSIX.1-2001-compliant pax archive (commonly also known as “tarball”),
+containing as first entry a regular file named <cite>component-descriptor.yaml</cite>, containing
+the <cite>Component Descriptor</cite></p></li>
+<li><p>the octet-sequence of the serialised <cite>Component Descriptor</cite></p></li>
+</ul>
 <div class="section" id="component-name-mapping">
 <h3>Component Name Mapping<a class="headerlink" href="#component-name-mapping" title="Permalink to this headline">¶</a></h3>
 <p>Any OCI Image Registry used as a Component Descriptor registry <em>MUST</em> define an unambiguous
