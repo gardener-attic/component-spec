@@ -335,7 +335,18 @@ class Resource(Artifact, LabelMethodsMixin):
 
 @dc
 class RepositoryContext:
+    pass # actually, must have attr `type`
+
+
+class OciComponentNameMapping(enum.Enum):
+    URL_PATH = 'urlPath'
+    SHA256_DIGEST= 'sha256-digest'
+
+
+@dc
+class OciRepositoryContext(RepositoryContext):
     baseUrl: str
+    componentNameNammping: OciComponentNameMapping = OciComponentNameMapping.URL_PATH
     type: AccessType = AccessType.OCI_REGISTRY
 
 

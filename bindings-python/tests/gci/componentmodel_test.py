@@ -54,8 +54,8 @@ def test_component():
         name='component-name',
         version='1.2.3',
         repositoryContexts=[
-            cm.RepositoryContext(baseUrl='old-ctx-url'),
-            cm.RepositoryContext(baseUrl='current-ctx-url'),
+            cm.OciRepositoryContext(baseUrl='old-ctx-url'),
+            cm.OciRepositoryContext(baseUrl='current-ctx-url'),
         ],
         provider=None,
         sources=(),
