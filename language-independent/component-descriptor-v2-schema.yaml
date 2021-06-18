@@ -39,6 +39,7 @@ definitions:
     # v1.2
     # v1-foo+bar
     pattern: '^[v]?(0|[1-9]\d*)(?:\.(0|[1-9]\d*))?(?:\.(0|[1-9]\d*))?(?:-((?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\.(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\+([0-9a-zA-Z-]+(?:\.[0-9a-zA-Z-]+)*))?$'
+    type: 'string'
 
   identityAttribute:
     type: 'object'
@@ -113,7 +114,6 @@ definitions:
       extraIdentity:
         $ref: '#/definitions/identityAttribute'
       version:
-        type: 'string'
         $ref: '#/definitions/relaxedSemver'
       type:
         type: 'string'
@@ -155,7 +155,6 @@ definitions:
       extraIdentity:
         $ref: '#/definitions/identityAttribute'
       version:
-        type: 'string'
         $ref: '#/definitions/relaxedSemver'
       labels:
         type: 'array'
@@ -273,7 +272,6 @@ definitions:
       extraIdentity:
         $ref: '#/definitions/identityAttribute'
       version:
-        type: 'string'
         $ref: '#/definitions/relaxedSemver'
       type:
         type: 'string'
@@ -320,7 +318,6 @@ definitions:
       extraIdentity:
         $ref: '#/definitions/identityAttribute'
       version:
-        type: 'string'
         $ref: '#/definitions/relaxedSemver'
       type:
         type: 'string'
@@ -347,7 +344,6 @@ definitions:
       name:
         $ref: '#/definitions/componentName'
       version:
-        type: 'string'
         $ref: '#/definitions/relaxedSemver'
       repositoryContexts:
         type: 'array'
