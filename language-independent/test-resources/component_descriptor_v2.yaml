@@ -8,6 +8,7 @@ component:
   repositoryContexts:
     - type: 'ociRegistry'
       baseUrl: 'eu.gcr.io/gardener-project/components/dev'
+      componentNameMapping: 'urlPath'
 
   provider: 'internal'
 

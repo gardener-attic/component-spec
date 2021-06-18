@@ -436,6 +436,7 @@ class ComponentDescriptor:
             data=component_descriptor_dict,
             config=dacite.Config(
                 cast=[
+                    OciComponentNameMapping,
                     AccessType,
                     Provider,
                     ResourceType,
