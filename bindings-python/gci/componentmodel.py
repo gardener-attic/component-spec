@@ -346,7 +346,7 @@ class OciComponentNameMapping(enum.Enum):
 @dc
 class OciRepositoryContext(RepositoryContext):
     baseUrl: str
-    componentNameNammping: OciComponentNameMapping = OciComponentNameMapping.URL_PATH
+    componentNameMapping: OciComponentNameMapping = OciComponentNameMapping.URL_PATH
     type: AccessType = AccessType.OCI_REGISTRY
 
 
@@ -446,6 +446,7 @@ class ComponentDescriptor:
                 type_hooks={
                     typing.Union[AccessType, str]: functools.partial(enum_or_string, enum_type=AccessType),
                     typing.Union[ResourceType, str]: functools.partial(enum_or_string, enum_type=ResourceType),
+                    typing.Union[OciComponentNameMapping, str]: functools.partial(enum_or_string, enum_type=OciComponentNameMapping),
                 },
             )
         )
