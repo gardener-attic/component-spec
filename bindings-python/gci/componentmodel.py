@@ -365,7 +365,7 @@ class Component(LabelMethodsMixin):
     name: str     # must be valid URL w/o schema
     version: str  # relaxed semver
 
-    repositoryContexts: typing.List[RepositoryContext]
+    repositoryContexts: typing.List[OciRepositoryContext]
     provider: Provider
 
     sources: typing.List[ComponentSource]
