@@ -15,6 +15,9 @@ component:
   labels:
     - name: 'a_label'
       value: 'a_value'
+    - name: 'another_label/with/path'
+      value:
+        another_value: 'with_nested_dict'
 
   sources:
     - name: 'github_com_gardener_gardener'
@@ -29,12 +32,14 @@ component:
   componentReferences:
     - name: 'my-etcd-druid'
       componentName: 'github.com/gardener/etcd-druid'
+      extraIdentity: {}
       version: 'v0.3.0'
       labels: []
 
   resources:
     - name: 'apiserver'
       version: 'v1.7.2' # version is implied by component, i.e. v1.7.2 in this case
+      extraIdentity: {}
       type: 'ociImage'
       relation: 'local'
       labels: []
@@ -43,6 +48,7 @@ component:
         imageReference: 'eu.gcr.io/gardener-project/gardener/apiserver:v1.7.4'
     - name: 'grafana'
       version: '7.0.3'
+      extraIdentity: {}
       type: 'ociImage'
       relation: 'external'
       labels: []
