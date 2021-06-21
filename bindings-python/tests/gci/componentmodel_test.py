@@ -3,7 +3,7 @@ import os
 import typing
 import unittest
 
-import dacite
+import jsonschema.exceptions
 import yaml
 
 import gci.componentmodel as cm
@@ -65,6 +65,95 @@ def test_component():
     )
 
     assert component.current_repository_ctx().baseUrl == 'current-ctx-url'
+
+
+class TestVersionValidation(unittest.TestCase):
+
+    def _create_test_component_dict(
+        self,
+        component_version: str,
+        resource_version: str,
+        source_version: str,
+    ):
+        return {
+            'component': {
+                'componentReferences': [],
+                'labels': [],
+                'name': 'github.test/foo/bar',
+                'provider': 'internal',
+                'repositoryContexts': [{
+                    'baseUrl': 'eu.gcr.io/test/context',
+                    'type': 'ociRegistry',
+                }],
+                'resources': [{
+                    'access': {
+                        'type': 'None',
+                    },
+                    'extraIdentity': {},
+                    'labels': [],
+                    'name': 'test_resource',
+                    'relation': 'local',
+                    'srcRefs': [],
+                    'type': 'ociImage',
+                    'version': resource_version,
+                }],
+                'sources': [{
+                    'access': {
+                        'ref': 'refs/tags/test',
+                        'repoUrl': 'github.test/foo/bar',
+                        'type': 'github',
+                    },
+                    'extraIdentity': {},
+                    'labels': [],
+                    'name': 'test_source',
+                    'type': 'git',
+                    'version': source_version,
+                }],
+                'version': component_version,
+            },
+            'meta': {
+                'schemaVersion': 'v2',
+            },
+        }
+
+    def test_valid_versions_should_validate_successful(self):
+        valid_version_matrix = [
+            ['1.2.3',       '2.4.6',    '3.6.9'         ],
+            ['1.2.3-foo',   '2.4',      'v3.6.9'        ],
+            ['1.2.3+foo',   '2',        'v3.6.9-foo'    ],
+            ['v1.2.3+foo',  'v2',       'v3.6.9-foo+bar'],
+            ['v1.2.3+foo',  'v2-foo',   'v3.6.9-foo+bar'],
+        ]
+        for versions in valid_version_matrix:
+            test_cd_dict = self._create_test_component_dict(*versions)
+            cm.ComponentDescriptor.validate(test_cd_dict, validation_mode=cm.ValidationMode.FAIL)
+
+    def test_validation_fails_on_absent_component_version(self):
+        test_cd_dict = self._create_test_component_dict(
+            component_version=None,
+            resource_version='2.4.6',
+            source_version='3.6.9',
+        )
+        with self.assertRaises(jsonschema.exceptions.ValidationError):
+            cm.ComponentDescriptor.validate(test_cd_dict, validation_mode=cm.ValidationMode.FAIL)
+
+    def test_validation_fails_on_absent_resource_version(self):
+        test_cd_dict = self._create_test_component_dict(
+            component_version='1.2.3',
+            resource_version=None,
+            source_version='3.6.9',
+        )
+        with self.assertRaises(jsonschema.exceptions.ValidationError):
+            cm.ComponentDescriptor.validate(test_cd_dict, validation_mode=cm.ValidationMode.FAIL)
+
+    def test_validation_fails_on_absent_source_version(self):
+        test_cd_dict = self._create_test_component_dict(
+            component_version='1.2.3',
+            resource_version='2.4.6',
+            source_version=None,
+        )
+        with self.assertRaises(jsonschema.exceptions.ValidationError):
+            cm.ComponentDescriptor.validate(test_cd_dict, validation_mode=cm.ValidationMode.FAIL)
 
 
 def test_set_label():
