@@ -333,7 +333,7 @@ class Resource(Artifact, LabelMethodsMixin):
     srcRefs: typing.List[SourceReference] = dataclasses.field(default_factory=tuple)
 
 
-@dc
+@dc(frozen=True)
 class RepositoryContext:
     pass # actually, must have attr `type`
 
@@ -343,7 +343,7 @@ class OciComponentNameMapping(enum.Enum):
     SHA256_DIGEST= 'sha256-digest'
 
 
-@dc
+@dc(frozen=True)
 class OciRepositoryContext(RepositoryContext):
     baseUrl: str
     componentNameMapping: OciComponentNameMapping = OciComponentNameMapping.URL_PATH
