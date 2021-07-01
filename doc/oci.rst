@@ -3,7 +3,7 @@ Component Content in an OCI Registry
 
 Component descriptors and local content delivered with a component are stored
 in an OCI registry as OCI artefact. The component descriptor may describe
-refernces to to other artefacts in any repository what type is supported
+references to to other artefacts in any repository what type is supported
 by an access type, regardless of the type of the artefact. There are dedicated
 access types to refer to artefacts stored in an OCI registry.
 
@@ -119,7 +119,7 @@ OCI related Access Types
 
 To be able to describe access to artefacts stored in an OCU repository the
 component descriptor supports several dedicated access types.
-There are two ways to refernce OCI stored artefacts:
+There are two ways to reference OCI stored artefacts:
 - using the fully qualified access url to address artefacts stored in
   repositories different from the one hosting the using component descriptor.
 - using repository local names used to refer artefacts in the same repository.
