@@ -35,6 +35,7 @@ class AccessType(enum.Enum):
     LOCAL_OCI_BLOB = 'localOciBlob'
     OCI_REGISTRY = 'ociRegistry'
     RELATIVE_OCI_REFERENCE = 'relativeOciReference'
+    S3 = 's3'
     NONE = 'None'  # the resource is only declared informally (e.g. generic)
 
 
@@ -109,6 +110,12 @@ class GithubAccess(ResourceAccess):
 @dc(frozen=True)
 class HttpAccess(ResourceAccess):
     url: str
+
+
+@dc(frozen=True)
+class S3Access(ResourceAccess):
+    bucketName: str
+    objectKey: str
 
 
 @dc(frozen=True)
