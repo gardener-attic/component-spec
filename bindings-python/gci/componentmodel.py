@@ -29,12 +29,12 @@ class SchemaVersion(enum.Enum):
 
 
 class AccessType(enum.Enum):
-    OCI_REGISTRY = 'ociRegistry'
-    RELATIVE_OCI_REFERENCE = 'relativeOciReference'
     GITHUB = 'github'
     HTTP = 'http'
-    LOCAL_OCI_BLOB = 'localOciBlob'
     LOCAL_FILESYSTEM_BLOB = 'localFilesystemBlob'
+    LOCAL_OCI_BLOB = 'localOciBlob'
+    OCI_REGISTRY = 'ociRegistry'
+    RELATIVE_OCI_REFERENCE = 'relativeOciReference'
     NONE = 'None'  # the resource is only declared informally (e.g. generic)
 
 
@@ -110,9 +110,11 @@ class GithubAccess(ResourceAccess):
 class HttpAccess(ResourceAccess):
     url: str
 
+
 @dc(frozen=True)
 class LocalOCIBlobAccess(ResourceAccess):
     digest: str
+
 
 @dc(frozen=True)
 class LocalFilesystemBlobAccess(ResourceAccess):
@@ -335,12 +337,12 @@ class Resource(Artifact, LabelMethodsMixin):
 
 @dc(frozen=True)
 class RepositoryContext:
-    pass # actually, must have attr `type`
+    pass  # actually, must have attr `type`
 
 
 class OciComponentNameMapping(enum.Enum):
     URL_PATH = 'urlPath'
-    SHA256_DIGEST= 'sha256-digest'
+    SHA256_DIGEST = 'sha256-digest'
 
 
 @dc(frozen=True)
