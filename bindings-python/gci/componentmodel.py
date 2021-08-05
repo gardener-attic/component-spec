@@ -132,7 +132,7 @@ class LocalFilesystemBlobAccess(ResourceAccess):
 @dc(frozen=True)
 class Label:
     name: str
-    value: typing.Union[str, int, float, bool, dict]
+    value: typing.Union[str, int, float, bool, dict, list]
 
 
 _no_default = object()
