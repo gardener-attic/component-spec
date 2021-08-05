@@ -327,13 +327,14 @@ class Resource(Artifact, LabelMethodsMixin):
     version: str
     type: typing.Union[ResourceType, str]
     access: typing.Union[
-        OciAccess,
-        RelativeOciAccess,
         GithubAccess,
         HttpAccess,
-        LocalOCIBlobAccess,
         LocalFilesystemBlobAccess,
+        LocalOCIBlobAccess,
+        OciAccess,
+        RelativeOciAccess,
         ResourceAccess,
+        S3Access,
         None,
     ]
     extraIdentity: typing.Dict[str, str] = dataclasses.field(default_factory=dict)
