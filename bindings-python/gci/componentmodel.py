@@ -327,14 +327,16 @@ class Resource(Artifact, LabelMethodsMixin):
     version: str
     type: typing.Union[ResourceType, str]
     access: typing.Union[
+        # Order of types is important for deserialization. The first matching type will be taken,
+        # i.e. keep generic accesses at the bottom of the list
         GithubAccess,
         HttpAccess,
         LocalFilesystemBlobAccess,
         LocalOCIBlobAccess,
         OciAccess,
         RelativeOciAccess,
-        ResourceAccess,
         S3Access,
+        ResourceAccess,
         None,
     ]
     extraIdentity: typing.Dict[str, str] = dataclasses.field(default_factory=dict)
