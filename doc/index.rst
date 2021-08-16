@@ -24,6 +24,7 @@ This contract encompasses:
   semantics
   component_descriptor_registries
   oci
+  normalization
 
 
 Indices and tables
