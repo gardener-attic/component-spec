@@ -71,6 +71,9 @@ type ComponentDescriptor struct {
 	Metadata Metadata `json:"meta"`
 	// Spec contains the specification of the component.
 	ComponentSpec `json:"component"`
+
+	// Signatures contains a list of signatures for the ComponentDescriptor
+	Signatures []Signature `json:"signatures"`
 }
 
 // ComponentSpec defines a virtual component with
@@ -351,6 +354,10 @@ type SourceRef struct {
 type Resource struct {
 	IdentityObjectMeta `json:",inline"`
 
+	// Digest is the optional digest of the referenced component.
+	// +optional
+	Digest DigestSpec `json:"digest,omitempty"`
+
 	// Relation describes the relation of the resource to the component.
 	// Can be a local or external resource
 	Relation ResourceRelation `json:"relation,omitempty"`
@@ -377,6 +384,9 @@ type ComponentReference struct {
 	// ExtraIdentity is the identity of an object.
 	// An additional label with key "name" ist not allowed
 	ExtraIdentity Identity `json:"extraIdentity,omitempty"`
+	// Digest is the optional digest of the referenced component.
+	// +optional
+	Digest DigestSpec `json:"digest,omitempty"`
 	// Labels defines an optional set of additional labels
 	// describing the object.
 	// +optional
@@ -426,4 +436,32 @@ func (o *ComponentReference) GetIdentity() Identity {
 // GetIdentityDigest returns the digest of the object's identity.
 func (o *ComponentReference) GetIdentityDigest() []byte {
 	return o.GetIdentity().Digest()
+}
+
+// DigestSpec defines the digest and algorithm.
+// +k8s:deepcopy-gen=true
+// +k8s:openapi-gen=true
+type DigestSpec struct {
+	Algorithm string `json:"algorithm"`
+	Value     string `json:"value"`
+}
+
+// SignatureSpec defines the signature and algorithm.
+// +k8s:deepcopy-gen=true
+// +k8s:openapi-gen=true
+type SignatureSpec struct {
+	Algorithm string `json:"algorithm"`
+	Data      string `json:"data"`
+}
+
+type NormalisationType string
+
+const (
+	NormalisationTypeV1 NormalisationType = "v1"
+)
+
+type Signature struct {
+	NormalisationType NormalisationType `json:"normalisationType"`
+	Digest            DigestSpec        `json:"digest"`
+	Signature         SignatureSpec     `json:"signature"`
 }
