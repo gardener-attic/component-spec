@@ -35,7 +35,7 @@ func CreateRsaSignerFromKeyFile(pathToPrivateKey string) (*RsaSigner, error) {
 	}, nil
 }
 
-func (s RsaSigner) Sign(data []byte) (*v2.SignatureSpec, error) {
+func (s RsaSigner) Sign(componentDescriptor v2.ComponentDescriptor, data []byte) (*v2.SignatureSpec, error) {
 	signature, err := rsa.SignPKCS1v15(nil, &s.privateKey, crypto.SHA256, data)
 	if err != nil {
 		return nil, fmt.Errorf("failed signing hash, %w", err)
@@ -69,7 +69,7 @@ func CreateRsaVerifierFromKeyFile(pathToPublicKey string) (*RsaVerifier, error) 
 	}, nil
 }
 
-func (v RsaVerifier) Verify(signature v2.Signature) error {
+func (v RsaVerifier) Verify(componentDescriptor v2.ComponentDescriptor, signature v2.Signature) error {
 	decodedHash, err := hex.DecodeString(signature.Digest.Value)
 	if err != nil {
 		return fmt.Errorf("failed decoding hash %s: %w", signature.Digest.Value, err)

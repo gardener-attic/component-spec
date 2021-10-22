@@ -4,7 +4,6 @@ import (
 	"fmt"
 
 	v2 "github.com/gardener/component-spec/bindings-go/apis/v2"
-	"github.com/gardener/component-spec/bindings-go/apis/v2/cdutils"
 	"github.com/gardener/component-spec/bindings-go/apis/v2/signatures"
 )
 
@@ -80,7 +79,7 @@ func main() {
 		},
 	}
 
-	cdutils.AddDigestsToComponentDescriptor(&cd, func(cd v2.ComponentDescriptor, cr v2.ComponentReference) v2.DigestSpec {
+	signatures.AddDigestsToComponentDescriptor(&cd, func(cd v2.ComponentDescriptor, cr v2.ComponentReference) v2.DigestSpec {
 		return v2.DigestSpec{
 			Algorithm: "testing",
 			Value:     string(cr.GetIdentityDigest()),
@@ -92,7 +91,7 @@ func main() {
 		}
 	})
 
-	norm, err := cdutils.HashForComponentDescriptor(cd)
+	norm, err := signatures.HashForComponentDescriptor(cd)
 	if err != nil {
 		fmt.Printf("ERROR: %s", err)
 		return
@@ -105,7 +104,7 @@ func main() {
 		return
 	}
 
-	err = cdutils.SignComponentDescriptor(&cd, signer)
+	err = signatures.SignComponentDescriptor(&cd, signer)
 	if err != nil {
 		fmt.Printf("ERROR sign: %s", err)
 		return
@@ -117,7 +116,7 @@ func main() {
 		fmt.Printf("ERROR create verifier: %s", err)
 		return
 	}
-	err = cdutils.VerifySignedComponentDescriptor(&cd, verifier)
+	err = signatures.VerifySignedComponentDescriptor(&cd, verifier)
 	if err != nil {
 		fmt.Printf("ERROR verify signature: %s", err)
 		return

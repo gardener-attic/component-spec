@@ -460,7 +460,11 @@ const (
 	NormalisationTypeV1 NormalisationType = "v1"
 )
 
+// Signature defines a digest and corresponding signature, identifyable by name.
+// +k8s:deepcopy-gen=true
+// +k8s:openapi-gen=true
 type Signature struct {
+	Name              string            `json:"name"`
 	NormalisationType NormalisationType `json:"normalisationType"`
 	Digest            DigestSpec        `json:"digest"`
 	Signature         SignatureSpec     `json:"signature"`

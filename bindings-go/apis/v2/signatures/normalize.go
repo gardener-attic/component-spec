@@ -1,4 +1,4 @@
-package cdutils
+package signatures
 
 import (
 	"crypto/sha256"
@@ -8,11 +8,12 @@ import (
 	"sort"
 
 	v2 "github.com/gardener/component-spec/bindings-go/apis/v2"
-	"github.com/gardener/component-spec/bindings-go/apis/v2/signatures"
 )
 
+// Entry is used for normalisation and has to contain one key
 type Entry map[string]interface{}
 
+// AddDigestsToComponentDescriptor adds digest to componentReferences and resources as returned in the resolver functions
 func AddDigestsToComponentDescriptor(cd *v2.ComponentDescriptor, compRefResolver func(v2.ComponentDescriptor, v2.ComponentReference) v2.DigestSpec,
 	resResolver func(v2.ComponentDescriptor, v2.Resource) v2.DigestSpec) {
 
@@ -39,50 +40,6 @@ func HashForComponentDescriptor(cd v2.ComponentDescriptor) (string, error) {
 	hash := sha256.Sum256(normalisedComponentDescriptor)
 
 	return hex.EncodeToString(hash[:]), nil
-}
-
-func SignComponentDescriptor(cd *v2.ComponentDescriptor, signer signatures.Signer) error {
-	hashCd, err := HashForComponentDescriptor(*cd)
-	if err != nil {
-		return fmt.Errorf("failed getting hash for cd: %w", err)
-	}
-	decodedHash, err := hex.DecodeString(hashCd)
-	if err != nil {
-		return fmt.Errorf("failed decoding hash to bytes")
-	}
-
-	signature, err := signer.Sign(decodedHash)
-	if err != nil {
-		return fmt.Errorf("failed signing hash of normalised component descriptor, %w", err)
-	}
-	cd.Signatures = append(cd.Signatures, v2.Signature{NormalisationType: v2.NormalisationTypeV1, Digest: v2.DigestSpec{
-		Algorithm: "sha256",
-		Value:     hashCd,
-	},
-		Signature: *signature,
-	})
-	return nil
-}
-
-// VerifySignedComponentDescriptor verifies the signature and hash of the component-descriptor.
-// Returns error if verification fails.
-func VerifySignedComponentDescriptor(cd *v2.ComponentDescriptor, verifier signatures.Verifier) error {
-	//Verify hash with signature
-	err := verifier.Verify(cd.Signatures[0])
-	if err != nil {
-		return fmt.Errorf("failed verifying: %w", err)
-	}
-
-	//Verify normalised cd to given (and verified) hash
-	hashCd, err := HashForComponentDescriptor(*cd)
-	if err != nil {
-		return fmt.Errorf("failed getting hash for cd: %w", err)
-	}
-	if hashCd != cd.Signatures[0].Digest.Value {
-		return fmt.Errorf("normalised component-descriptor does not match signed hash")
-	}
-
-	return nil
 }
 
 func normalizeComponentDescriptor(cd v2.ComponentDescriptor) ([]byte, error) {
@@ -133,24 +90,11 @@ func normalizeComponentDescriptor(cd v2.ComponentDescriptor) ([]byte, error) {
 		resources = append(resources, resource)
 	}
 
-	sources := [][]Entry{}
-	for _, src := range cd.ComponentSpec.Sources {
-		extraIdentity := buildExtraIdentity(src.ExtraIdentity)
-
-		source := []Entry{
-			{"name": src.Name},
-			{"version": src.Version},
-			{"extraIdentity": extraIdentity},
-		}
-		sources = append(sources, source)
-	}
-
 	var componentSpec []Entry
 	componentSpec = append(componentSpec, Entry{"name": cd.ComponentSpec.Name})
 	componentSpec = append(componentSpec, Entry{"version": cd.ComponentSpec.Version})
 	componentSpec = append(componentSpec, Entry{"componentReferences": componentReferences})
 	componentSpec = append(componentSpec, Entry{"resources": resources})
-	componentSpec = append(componentSpec, Entry{"sources": sources})
 
 	normalizedComponentDescriptor = append(normalizedComponentDescriptor, Entry{"component": componentSpec})
 	deepSort(normalizedComponentDescriptor)
@@ -212,8 +156,8 @@ func deepSort(in interface{}) {
 	}
 }
 
-// isNormaliseable checks if componentReferences and resources contain digest.
-// Does NOT verify the digest is correct
+// isNormaliseable checks if componentReferences and resources contain digest
+// Does NOT verify if the digest are correct
 func isNormaliseable(cd v2.ComponentDescriptor) error {
 	// check for digests on component references
 	for _, reference := range cd.ComponentReferences {
