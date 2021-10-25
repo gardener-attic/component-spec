@@ -47,12 +47,9 @@ func normalizeComponentDescriptor(cd v2.ComponentDescriptor) ([]byte, error) {
 		return nil, fmt.Errorf("can not normalise component-descriptor %s:%s: %w", cd.Name, cd.Version, err)
 	}
 
-	var normalizedComponentDescriptor []Entry
-
 	meta := []Entry{
 		{"schemaVersion": cd.Metadata.Version},
 	}
-	normalizedComponentDescriptor = append(normalizedComponentDescriptor, Entry{"meta": meta})
 
 	componentReferences := [][]Entry{}
 	for _, ref := range cd.ComponentSpec.ComponentReferences {
@@ -90,20 +87,27 @@ func normalizeComponentDescriptor(cd v2.ComponentDescriptor) ([]byte, error) {
 		resources = append(resources, resource)
 	}
 
-	var componentSpec []Entry
-	componentSpec = append(componentSpec, Entry{"name": cd.ComponentSpec.Name})
-	componentSpec = append(componentSpec, Entry{"version": cd.ComponentSpec.Version})
-	componentSpec = append(componentSpec, Entry{"componentReferences": componentReferences})
-	componentSpec = append(componentSpec, Entry{"resources": resources})
+	componentSpec := []Entry{
+		{"name": cd.ComponentSpec.Name},
+		{"version": cd.ComponentSpec.Version},
+		{"componentReferences": componentReferences},
+		{"resources": resources},
+	}
 
-	normalizedComponentDescriptor = append(normalizedComponentDescriptor, Entry{"component": componentSpec})
+	normalizedComponentDescriptor := []Entry{
+		{"meta": meta},
+		{"component": componentSpec},
+	}
+
 	deepSort(normalizedComponentDescriptor)
-	normalizedString, err := json.Marshal(normalizedComponentDescriptor)
+
+	normalizedJson, err := json.Marshal(normalizedComponentDescriptor)
+
 	if err != nil {
 		return nil, err
 	}
 
-	return normalizedString, nil
+	return normalizedJson, nil
 }
 
 func buildExtraIdentity(identity v2.Identity) []Entry {
@@ -118,32 +122,17 @@ func buildExtraIdentity(identity v2.Identity) []Entry {
 func deepSort(in interface{}) {
 	switch castIn := in.(type) {
 	case []Entry:
+		// sort the values recursively for every entry
 		for _, entry := range castIn {
-			var val interface{}
-			for _, v := range entry {
-				val = v
-			}
+			val := getOnlyValueInEntry(entry)
 			deepSort(val)
-
 		}
+		// sort the entries based on the key
 		sort.SliceStable(castIn, func(i, j int) bool {
-			var keyI string
-			for k := range castIn[i] {
-				keyI = k
-			}
-
-			var keyJ string
-			for k := range castIn[j] {
-				keyJ = k
-			}
-
-			return keyI < keyJ
+			return getOnlyKeyInEntry(castIn[i]) < getOnlyKeyInEntry(castIn[j])
 		})
 	case Entry:
-		var val interface{}
-		for _, v := range castIn {
-			val = v
-		}
+		val := getOnlyValueInEntry(castIn)
 		deepSort(val)
 	case [][]Entry:
 		for _, v := range castIn {
@@ -154,6 +143,22 @@ func deepSort(in interface{}) {
 	default:
 		fmt.Println("unknow type")
 	}
+}
+
+func getOnlyKeyInEntry(entry Entry) string {
+	var key string
+	for k := range entry {
+		key = k
+	}
+	return key
+}
+
+func getOnlyValueInEntry(entry Entry) interface{} {
+	var value interface{}
+	for _, v := range entry {
+		value = v
+	}
+	return value
 }
 
 // isNormaliseable checks if componentReferences and resources contain digest

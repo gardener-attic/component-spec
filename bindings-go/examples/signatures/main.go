@@ -69,7 +69,7 @@ func main() {
 			v2.Signature{NormalisationType: v2.NormalisationTypeV1,
 				Digest: v2.DigestSpec{
 					Algorithm: "sha256",
-					Value:     "4827a3a57c4eefd68c0921b2946de8017a082cd51c1ebc0957297f2fb794557e",
+					Value:     "d782bbae5f6df38c1b7df79319ee6a9625dafcce5df3d730b25aee55db63fcfa",
 				},
 				Signature: v2.SignatureSpec{
 					Algorithm: "RSASSA-PKCS1-V1_5-SIGN",
