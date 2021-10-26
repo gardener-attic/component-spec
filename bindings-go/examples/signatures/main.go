@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"encoding/hex"
 	"fmt"
 
@@ -79,13 +80,13 @@ func main() {
 			},
 		},
 	}
-
-	signatures.AddDigestsToComponentDescriptor(&cd, func(cd v2.ComponentDescriptor, cr v2.ComponentReference) v2.DigestSpec {
+	ctx := context.TODO()
+	signatures.AddDigestsToComponentDescriptor(ctx, &cd, func(ctx context.Context, cd v2.ComponentDescriptor, cr v2.ComponentReference) v2.DigestSpec {
 		return v2.DigestSpec{
 			Algorithm: "testing",
 			Value:     string(cr.GetIdentityDigest()),
 		}
-	}, func(cd v2.ComponentDescriptor, r v2.Resource) v2.DigestSpec {
+	}, func(ctx context.Context, cd v2.ComponentDescriptor, r v2.Resource) v2.DigestSpec {
 		return v2.DigestSpec{
 			Algorithm: "testing",
 			Value:     string(r.GetIdentityDigest()),

@@ -1,6 +1,7 @@
 package signatures
 
 import (
+	"context"
 	"encoding/json"
 	"fmt"
 	"hash"
@@ -13,18 +14,19 @@ import (
 type Entry map[string]interface{}
 
 // AddDigestsToComponentDescriptor adds digest to componentReferences and resources as returned in the resolver functions
-func AddDigestsToComponentDescriptor(cd *v2.ComponentDescriptor, compRefResolver func(v2.ComponentDescriptor, v2.ComponentReference) v2.DigestSpec,
-	resResolver func(v2.ComponentDescriptor, v2.Resource) v2.DigestSpec) {
+func AddDigestsToComponentDescriptor(ctx context.Context, cd *v2.ComponentDescriptor,
+	compRefResolver func(context.Context, v2.ComponentDescriptor, v2.ComponentReference) v2.DigestSpec,
+	resResolver func(context.Context, v2.ComponentDescriptor, v2.Resource) v2.DigestSpec) {
 
 	for i, reference := range cd.ComponentReferences {
 		if reference.Digest.Algorithm == "" || reference.Digest.Value == "" {
-			cd.ComponentReferences[i].Digest = compRefResolver(*cd, reference)
+			cd.ComponentReferences[i].Digest = compRefResolver(ctx, *cd, reference)
 		}
 	}
 
 	for i, res := range cd.Resources {
 		if res.Digest.Algorithm == "" || res.Digest.Value == "" {
-			cd.Resources[i].Digest = resResolver(*cd, res)
+			cd.Resources[i].Digest = resResolver(ctx, *cd, res)
 		}
 	}
 }
