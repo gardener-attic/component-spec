@@ -15,20 +15,29 @@ type Entry map[string]interface{}
 
 // AddDigestsToComponentDescriptor adds digest to componentReferences and resources as returned in the resolver functions
 func AddDigestsToComponentDescriptor(ctx context.Context, cd *v2.ComponentDescriptor,
-	compRefResolver func(context.Context, v2.ComponentDescriptor, v2.ComponentReference) v2.DigestSpec,
-	resResolver func(context.Context, v2.ComponentDescriptor, v2.Resource) v2.DigestSpec) {
+	compRefResolver func(context.Context, v2.ComponentDescriptor, v2.ComponentReference) (*v2.DigestSpec, error),
+	resResolver func(context.Context, v2.ComponentDescriptor, v2.Resource) (*v2.DigestSpec, error)) error {
 
 	for i, reference := range cd.ComponentReferences {
 		if reference.Digest.Algorithm == "" || reference.Digest.Value == "" {
-			cd.ComponentReferences[i].Digest = compRefResolver(ctx, *cd, reference)
+			digest, err := compRefResolver(ctx, *cd, reference)
+			if err != nil {
+				return fmt.Errorf("failed resolving componentReference for %s:%s: %w", reference.Name, reference.Version, err)
+			}
+			cd.ComponentReferences[i].Digest = *digest
 		}
 	}
 
 	for i, res := range cd.Resources {
 		if res.Digest.Algorithm == "" || res.Digest.Value == "" {
-			cd.Resources[i].Digest = resResolver(ctx, *cd, res)
+			digest, err := resResolver(ctx, *cd, res)
+			if err != nil {
+				return fmt.Errorf("failed resolving resource for %s:%s: %w", res.Name, res.Version, err)
+			}
+			cd.Resources[i].Digest = *digest
 		}
 	}
+	return nil
 }
 
 // HashForComponentDescriptor return the hash for the component-descriptor, if it is normaliseable

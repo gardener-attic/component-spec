@@ -81,17 +81,20 @@ func main() {
 		},
 	}
 	ctx := context.TODO()
-	signatures.AddDigestsToComponentDescriptor(ctx, &cd, func(ctx context.Context, cd v2.ComponentDescriptor, cr v2.ComponentReference) v2.DigestSpec {
-		return v2.DigestSpec{
+	err := signatures.AddDigestsToComponentDescriptor(ctx, &cd, func(ctx context.Context, cd v2.ComponentDescriptor, cr v2.ComponentReference) (*v2.DigestSpec, error) {
+		return &v2.DigestSpec{
 			Algorithm: "testing",
 			Value:     string(cr.GetIdentityDigest()),
-		}
-	}, func(ctx context.Context, cd v2.ComponentDescriptor, r v2.Resource) v2.DigestSpec {
-		return v2.DigestSpec{
+		}, nil
+	}, func(ctx context.Context, cd v2.ComponentDescriptor, r v2.Resource) (*v2.DigestSpec, error) {
+		return &v2.DigestSpec{
 			Algorithm: "testing",
 			Value:     string(r.GetIdentityDigest()),
-		}
+		}, nil
 	})
+	if err != nil {
+		fmt.Printf("ERROR addingDigestsToComponentDescriptor %s", err)
+	}
 
 	hasher, err := signatures.HasherForName("SHA256")
 	if err != nil {
