@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/hex"
 	"fmt"
 
 	v2 "github.com/gardener/component-spec/bindings-go/apis/v2"
@@ -91,12 +92,17 @@ func main() {
 		}
 	})
 
-	norm, err := signatures.HashForComponentDescriptor(cd)
+	hasher, err := signatures.HasherForName("SHA256")
+	if err != nil {
+		fmt.Printf("ERROR: %s", err)
+	}
+
+	norm, err := signatures.HashForComponentDescriptor(cd, hasher.HashFunction)
 	if err != nil {
 		fmt.Printf("ERROR: %s", err)
 		return
 	}
-	fmt.Println(norm)
+	fmt.Println(hex.EncodeToString(norm))
 
 	signer, err := signatures.CreateRsaSignerFromKeyFile("private")
 	if err != nil {
@@ -104,7 +110,7 @@ func main() {
 		return
 	}
 
-	err = signatures.SignComponentDescriptor(&cd, signer)
+	err = signatures.SignComponentDescriptor(&cd, signer, *hasher, "mySignatureName")
 	if err != nil {
 		fmt.Printf("ERROR sign: %s", err)
 		return
@@ -116,7 +122,7 @@ func main() {
 		fmt.Printf("ERROR create verifier: %s", err)
 		return
 	}
-	err = signatures.VerifySignedComponentDescriptor(&cd, verifier)
+	err = signatures.VerifySignedComponentDescriptor(&cd, verifier, "mySignatureName")
 	if err != nil {
 		fmt.Printf("ERROR verify signature: %s", err)
 		return

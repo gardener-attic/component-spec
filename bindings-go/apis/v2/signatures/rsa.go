@@ -8,6 +8,7 @@ import (
 	"encoding/pem"
 	"fmt"
 	"io/ioutil"
+	"strings"
 
 	v2 "github.com/gardener/component-spec/bindings-go/apis/v2"
 )
@@ -35,8 +36,16 @@ func CreateRsaSignerFromKeyFile(pathToPrivateKey string) (*RsaSigner, error) {
 	}, nil
 }
 
-func (s RsaSigner) Sign(componentDescriptor v2.ComponentDescriptor, data []byte) (*v2.SignatureSpec, error) {
-	signature, err := rsa.SignPKCS1v15(nil, &s.privateKey, crypto.SHA256, data)
+func (s RsaSigner) Sign(componentDescriptor v2.ComponentDescriptor, digest v2.DigestSpec) (*v2.SignatureSpec, error) {
+	decodedHash, err := hex.DecodeString(digest.Value)
+	if err != nil {
+		return nil, fmt.Errorf("failed decoding hash to bytes")
+	}
+	hashType, err := hashAlgorithmLookup(digest.Algorithm)
+	if err != nil {
+		return nil, fmt.Errorf("failed looking up hash algorithm")
+	}
+	signature, err := rsa.SignPKCS1v15(nil, &s.privateKey, hashType, decodedHash)
 	if err != nil {
 		return nil, fmt.Errorf("failed signing hash, %w", err)
 	}
@@ -44,6 +53,21 @@ func (s RsaSigner) Sign(componentDescriptor v2.ComponentDescriptor, data []byte)
 		Algorithm: "RSASSA-PKCS1-V1_5-SIGN", //TODO: check
 		Data:      hex.EncodeToString(signature),
 	}, nil
+}
+
+// maps a hashing algorithm string to crypto.Hash
+func hashAlgorithmLookup(algorithm string) (crypto.Hash, error) {
+	switch strings.ToUpper(algorithm) {
+	case "SHA256":
+		return crypto.SHA256, nil
+	case "SHA512":
+		return crypto.SHA512, nil //TODO: test
+	case "SHA3_256":
+		return crypto.SHA3_256, nil // TODO: test
+	case "SHA3_512":
+		return crypto.SHA3_512, nil // TODO: test
+	}
+	return 0, fmt.Errorf("hash Algorithm %s not found", algorithm)
 }
 
 type RsaVerifier struct {
@@ -78,7 +102,11 @@ func (v RsaVerifier) Verify(componentDescriptor v2.ComponentDescriptor, signatur
 	if err != nil {
 		return fmt.Errorf("failed decoding hash %s: %w", signature.Digest.Value, err)
 	}
-	err = rsa.VerifyPKCS1v15(&v.publicKey, crypto.SHA256, decodedHash, decodedSignature)
+	algorithm, err := hashAlgorithmLookup(signature.Digest.Algorithm)
+	if err != nil {
+		return fmt.Errorf("failed looking up hash algorithm for %s: %w", signature.Digest.Algorithm, err)
+	}
+	err = rsa.VerifyPKCS1v15(&v.publicKey, algorithm, decodedHash, decodedSignature)
 	if err != nil {
 		return fmt.Errorf("signature verification failed, %w", err)
 	}

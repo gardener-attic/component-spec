@@ -1,10 +1,9 @@
 package signatures
 
 import (
-	"crypto/sha256"
-	"encoding/hex"
 	"encoding/json"
 	"fmt"
+	"hash"
 	"sort"
 
 	v2 "github.com/gardener/component-spec/bindings-go/apis/v2"
@@ -32,14 +31,18 @@ func AddDigestsToComponentDescriptor(cd *v2.ComponentDescriptor, compRefResolver
 
 // HashForComponentDescriptor return the hash for the component-descriptor, if it is normaliseable
 // (= componentReferences and resources contain digest field)
-func HashForComponentDescriptor(cd v2.ComponentDescriptor) (string, error) {
+func HashForComponentDescriptor(cd v2.ComponentDescriptor, hashFunction hash.Hash) ([]byte, error) {
 	normalisedComponentDescriptor, err := normalizeComponentDescriptor(cd)
 	if err != nil {
-		return "", fmt.Errorf("failed normalising component descriptor %w", err)
+		return nil, fmt.Errorf("failed normalising component descriptor %w", err)
 	}
-	hash := sha256.Sum256(normalisedComponentDescriptor)
-
-	return hex.EncodeToString(hash[:]), nil
+	hashFunction.Reset()
+	_, err = hashFunction.Write(normalisedComponentDescriptor)
+	if err != nil {
+		return nil, fmt.Errorf("failed hashing the normalisedComponentDescirptorJson: %w", err)
+	}
+	hash := hashFunction.Sum(nil)
+	return hash, nil
 }
 
 func normalizeComponentDescriptor(cd v2.ComponentDescriptor) ([]byte, error) {
