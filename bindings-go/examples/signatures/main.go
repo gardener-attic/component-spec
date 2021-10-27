@@ -68,7 +68,7 @@ func main() {
 			},
 		},
 		Signatures: []v2.Signature{
-			v2.Signature{NormalisationType: v2.NormalisationTypeV1,
+			v2.Signature{NormalisationVersion: v2.NormalisationVersionV1,
 				Digest: v2.DigestSpec{
 					Algorithm: "sha256",
 					Value:     "d782bbae5f6df38c1b7df79319ee6a9625dafcce5df3d730b25aee55db63fcfa",
