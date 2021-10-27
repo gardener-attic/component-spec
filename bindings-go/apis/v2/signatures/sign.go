@@ -25,10 +25,10 @@ func SignComponentDescriptor(cd *v2.ComponentDescriptor, signer Signer, hasher H
 		return fmt.Errorf("failed signing hash of normalised component descriptor, %w", err)
 	}
 	cd.Signatures = append(cd.Signatures, v2.Signature{
-		Name:              signatureName,
-		NormalisationType: v2.NormalisationTypeV1,
-		Digest:            digest,
-		Signature:         *signature,
+		Name:                 signatureName,
+		NormalisationVersion: v2.NormalisationVersionV1,
+		Digest:               digest,
+		Signature:            *signature,
 	})
 	return nil
 }
