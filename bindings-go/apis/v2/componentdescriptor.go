@@ -73,7 +73,7 @@ type ComponentDescriptor struct {
 	ComponentSpec `json:"component"`
 
 	// Signatures contains a list of signatures for the ComponentDescriptor
-	Signatures []Signature `json:"signatures"`
+	Signatures []Signature `json:"signatures,omitempty"`
 }
 
 // ComponentSpec defines a virtual component with
