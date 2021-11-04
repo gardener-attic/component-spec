@@ -87,10 +87,14 @@ func CreateRsaVerifierFromKeyFile(pathToPublicKey string) (*RsaVerifier, error) 
 	if err != nil {
 		return nil, fmt.Errorf("failed parsing key %w", err)
 	}
-	key := untypedKey.(*rsa.PublicKey)
-	return &RsaVerifier{
-		publicKey: *key,
-	}, nil
+	switch key := untypedKey.(type) {
+	case *rsa.PublicKey:
+		return &RsaVerifier{
+			publicKey: *key,
+		}, nil
+	default:
+		return nil, fmt.Errorf("public key format is not supported. Only rsa.PublicKey is supported")
+	}
 }
 
 func (v RsaVerifier) Verify(componentDescriptor v2.ComponentDescriptor, signature v2.Signature) error {
