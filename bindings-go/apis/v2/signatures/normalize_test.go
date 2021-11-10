@@ -4,10 +4,11 @@ import (
 	"crypto/sha256"
 	"encoding/hex"
 
-	v2 "github.com/gardener/component-spec/bindings-go/apis/v2"
-	"github.com/gardener/component-spec/bindings-go/apis/v2/signatures"
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
+
+	v2 "github.com/gardener/component-spec/bindings-go/apis/v2"
+	"github.com/gardener/component-spec/bindings-go/apis/v2/signatures"
 )
 
 var _ = Describe("Normalise/Hash component-descriptor", func() {
