@@ -111,7 +111,9 @@ func normalizeComponentDescriptor(cd v2.ComponentDescriptor) ([]byte, error) {
 		{"component": componentSpec},
 	}
 
-	deepSort(normalizedComponentDescriptor)
+	if err := deepSort(normalizedComponentDescriptor); err != nil {
+		return nil, fmt.Errorf("failed sorting during normalisation: %w", err)
+	}
 
 	normalizedJson, err := json.Marshal(normalizedComponentDescriptor)
 
@@ -131,13 +133,15 @@ func buildExtraIdentity(identity v2.Identity) []Entry {
 }
 
 // deepSort sorts Entry, []Enry and [][]Entry interfaces recursively, lexicographicly by key(Entry).
-func deepSort(in interface{}) {
+func deepSort(in interface{}) error {
 	switch castIn := in.(type) {
 	case []Entry:
 		// sort the values recursively for every entry
 		for _, entry := range castIn {
 			val := getOnlyValueInEntry(entry)
-			deepSort(val)
+			if err := deepSort(val); err != nil {
+				return err
+			}
 		}
 		// sort the entries based on the key
 		sort.SliceStable(castIn, func(i, j int) bool {
@@ -145,16 +149,21 @@ func deepSort(in interface{}) {
 		})
 	case Entry:
 		val := getOnlyValueInEntry(castIn)
-		deepSort(val)
+		if err := deepSort(val); err != nil {
+			return err
+		}
 	case [][]Entry:
 		for _, v := range castIn {
-			deepSort(v)
+			if err := deepSort(v); err != nil {
+				return err
+			}
 		}
 	case string:
 		break
 	default:
-		fmt.Println("unknow type")
+		return fmt.Errorf("unknown type in sorting. This should not happen")
 	}
+	return nil
 }
 
 func getOnlyKeyInEntry(entry Entry) string {
