@@ -56,7 +56,7 @@ var _ = Describe("RSA Sign/Verify", func() {
 			})
 			Expect(err).To(BeNil())
 			Expect(signature.Algorithm).To(BeIdenticalTo("RSASSA-PKCS1-V1_5-SIGN"))
-			Expect(signature.Data).NotTo(BeNil())
+			Expect(signature.Value).NotTo(BeNil())
 		})
 		It("should should fail on unknown Digest algorithm", func() {
 			hashOfString := sha256.Sum256([]byte(stringToHashAndSign))
@@ -85,7 +85,7 @@ var _ = Describe("RSA Sign/Verify", func() {
 			signature, err := signer.Sign(v2.ComponentDescriptor{}, digest)
 			Expect(err).To(BeNil())
 			Expect(signature.Algorithm).To(BeIdenticalTo("RSASSA-PKCS1-V1_5-SIGN"))
-			Expect(signature.Data).NotTo(BeNil())
+			Expect(signature.Value).NotTo(BeNil())
 
 			verifier, err := signatures.CreateRsaVerifierFromKeyFile(pathPublicKey)
 			Expect(err).To(BeNil())
@@ -113,7 +113,7 @@ var _ = Describe("RSA Sign/Verify", func() {
 			signature, err := signer.Sign(v2.ComponentDescriptor{}, digest)
 			Expect(err).To(BeNil())
 			Expect(signature.Algorithm).To(BeIdenticalTo("RSASSA-PKCS1-V1_5-SIGN"))
-			Expect(signature.Data).NotTo(BeNil())
+			Expect(signature.Value).NotTo(BeNil())
 
 			verifier, err := signatures.CreateRsaVerifierFromKeyFile(pathPublicKey)
 			Expect(err).To(BeNil())

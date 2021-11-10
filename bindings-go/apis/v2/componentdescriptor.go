@@ -354,7 +354,7 @@ type SourceRef struct {
 type Resource struct {
 	IdentityObjectMeta `json:",inline"`
 
-	// Digest is the optional digest of the referenced component.
+	// Digest is the optional digest of the referenced resource.
 	// +optional
 	Digest DigestSpec `json:"digest,omitempty"`
 
@@ -451,9 +451,10 @@ type DigestSpec struct {
 // +k8s:openapi-gen=true
 type SignatureSpec struct {
 	Algorithm string `json:"algorithm"`
-	Data      string `json:"data"`
+	Value     string `json:"value"`
 }
 
+// NormalisationVersion versions the algorithm used for normalising the component-descriptor.
 type NormalisationVersion string
 
 const (

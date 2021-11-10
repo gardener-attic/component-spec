@@ -48,12 +48,10 @@ func HashForComponentDescriptor(cd v2.ComponentDescriptor, hashFunction hash.Has
 		return nil, fmt.Errorf("failed normalising component descriptor %w", err)
 	}
 	hashFunction.Reset()
-	_, err = hashFunction.Write(normalisedComponentDescriptor)
-	if err != nil {
-		return nil, fmt.Errorf("failed hashing the normalisedComponentDescirptorJson: %w", err)
+	if _, err = hashFunction.Write(normalisedComponentDescriptor); err != nil {
+		return nil, fmt.Errorf("failed hashing the normalisedComponentDescriptorJson: %w", err)
 	}
-	hash := hashFunction.Sum(nil)
-	return hash, nil
+	return hashFunction.Sum(nil), nil
 }
 
 func normalizeComponentDescriptor(cd v2.ComponentDescriptor) ([]byte, error) {
@@ -176,7 +174,7 @@ func getOnlyValueInEntry(entry Entry) interface{} {
 }
 
 // isNormaliseable checks if componentReferences and resources contain digest
-// Does NOT verify if the digest are correct
+// Does NOT verify if the digests are correct
 func isNormaliseable(cd v2.ComponentDescriptor) error {
 	// check for digests on component references
 	for _, reference := range cd.ComponentReferences {

@@ -92,7 +92,7 @@ var _ = Describe("Normalise/Hash component-descriptor", func() {
 				},
 				Signature: v2.SignatureSpec{
 					Algorithm: "test",
-					Data:      "0000",
+					Value:     "0000",
 				},
 			})
 			hash, err := signatures.HashForComponentDescriptor(baseCd, sha256.New())

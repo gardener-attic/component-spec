@@ -13,10 +13,13 @@ import (
 	v2 "github.com/gardener/component-spec/bindings-go/apis/v2"
 )
 
+// RsaSigner is a signatures.Signer compatible struct to sign with RSASSA-PKCS1-V1_5-SIGN.
 type RsaSigner struct {
 	privateKey rsa.PrivateKey
 }
 
+// CreateRsaSignerFromKeyFile creates an Instance of RsaSigner with the given private key.
+// The private key has to be in the PKCS #1, ASN.1 DER form, see x509.ParsePKCS1PrivateKey.
 func CreateRsaSignerFromKeyFile(pathToPrivateKey string) (*RsaSigner, error) {
 	privKeyFile, err := ioutil.ReadFile(pathToPrivateKey)
 	if err != nil {
@@ -36,6 +39,7 @@ func CreateRsaSignerFromKeyFile(pathToPrivateKey string) (*RsaSigner, error) {
 	}, nil
 }
 
+// Sign returns the signature for the data for the component-descriptor.
 func (s RsaSigner) Sign(componentDescriptor v2.ComponentDescriptor, digest v2.DigestSpec) (*v2.SignatureSpec, error) {
 	decodedHash, err := hex.DecodeString(digest.Value)
 	if err != nil {
@@ -51,7 +55,7 @@ func (s RsaSigner) Sign(componentDescriptor v2.ComponentDescriptor, digest v2.Di
 	}
 	return &v2.SignatureSpec{
 		Algorithm: "RSASSA-PKCS1-V1_5-SIGN",
-		Data:      hex.EncodeToString(signature),
+		Value:     hex.EncodeToString(signature),
 	}, nil
 }
 
@@ -64,10 +68,13 @@ func hashAlgorithmLookup(algorithm string) (crypto.Hash, error) {
 	return 0, fmt.Errorf("hash Algorithm %s not found", algorithm)
 }
 
+// RsaVerifier is a signatures.Verifier compatible struct to verify RSASSA-PKCS1-V1_5-SIGN signatures.
 type RsaVerifier struct {
 	publicKey rsa.PublicKey
 }
 
+// CreateRsaVerifierFromKeyFile creates an Instance of RsaVerifier with the given rsa public key.
+// The private key has to be in the PKIX, ASN.1 DER form, see x509.ParsePKIXPublicKey.
 func CreateRsaVerifierFromKeyFile(pathToPublicKey string) (*RsaVerifier, error) {
 	publicKey, err := ioutil.ReadFile(pathToPublicKey)
 	if err != nil {
@@ -91,12 +98,13 @@ func CreateRsaVerifierFromKeyFile(pathToPublicKey string) (*RsaVerifier, error) 
 	}
 }
 
+// Verify checks the signature, returns an error on verification failure
 func (v RsaVerifier) Verify(componentDescriptor v2.ComponentDescriptor, signature v2.Signature) error {
 	decodedHash, err := hex.DecodeString(signature.Digest.Value)
 	if err != nil {
 		return fmt.Errorf("failed decoding hash %s: %w", signature.Digest.Value, err)
 	}
-	decodedSignature, err := hex.DecodeString(signature.Signature.Data)
+	decodedSignature, err := hex.DecodeString(signature.Signature.Value)
 	if err != nil {
 		return fmt.Errorf("failed decoding hash %s: %w", signature.Digest.Value, err)
 	}

@@ -15,14 +15,14 @@ type TestSigner struct{}
 func (s TestSigner) Sign(componentDescriptor v2.ComponentDescriptor, digest v2.DigestSpec) (*v2.SignatureSpec, error) {
 	return &v2.SignatureSpec{
 		Algorithm: "testSignAlgorithm",
-		Data:      fmt.Sprintf("%s:%s-signed", digest.Algorithm, digest.Value),
+		Value:     fmt.Sprintf("%s:%s-signed", digest.Algorithm, digest.Value),
 	}, nil
 }
 
 type TestVerifier struct{}
 
 func (v TestVerifier) Verify(componentDescriptor v2.ComponentDescriptor, signature v2.Signature) error {
-	if signature.Signature.Data != fmt.Sprintf("%s:%s-signed", signature.Digest.Algorithm, signature.Digest.Value) {
+	if signature.Signature.Value != fmt.Sprintf("%s:%s-signed", signature.Digest.Algorithm, signature.Digest.Value) {
 		return fmt.Errorf("signature verification failed: Invalid signature")
 	}
 	return nil
@@ -92,7 +92,7 @@ var _ = Describe("Sign/Verify component-descriptor", func() {
 			Expect(baseCd.Signatures[0].Digest.Algorithm).To(BeIdenticalTo("sha256"))
 			Expect(baseCd.Signatures[0].Digest.Value).To(BeIdenticalTo(correctBaseCdHash))
 			Expect(baseCd.Signatures[0].Signature.Algorithm).To(BeIdenticalTo("testSignAlgorithm"))
-			Expect(baseCd.Signatures[0].Signature.Data).To(BeIdenticalTo(fmt.Sprintf("%s:%s-signed", "sha256", correctBaseCdHash)))
+			Expect(baseCd.Signatures[0].Signature.Value).To(BeIdenticalTo(fmt.Sprintf("%s:%s-signed", "sha256", correctBaseCdHash)))
 		})
 	})
 	Describe("verify component-descriptor signature", func() {
@@ -107,7 +107,7 @@ var _ = Describe("Sign/Verify component-descriptor", func() {
 			err := signatures.SignComponentDescriptor(&baseCd, TestSigner{}, testSHA256Hasher, signatureName)
 			Expect(err).To(BeNil())
 			Expect(len(baseCd.Signatures)).To(BeIdenticalTo(1))
-			baseCd.Signatures[0].Signature.Data = "invalidSignature"
+			baseCd.Signatures[0].Signature.Value = "invalidSignature"
 			err = signatures.VerifySignedComponentDescriptor(&baseCd, TestVerifier{}, signatureName)
 			Expect(err).ToNot(BeNil())
 		})
@@ -129,7 +129,7 @@ var _ = Describe("Sign/Verify component-descriptor", func() {
 				},
 				Signature: v2.SignatureSpec{
 					Algorithm: "testSigning",
-					Data:      "AdditionalSignature",
+					Value:     "AdditionalSignature",
 				},
 			})
 			err = signatures.VerifySignedComponentDescriptor(&baseCd, TestVerifier{}, signatureName)
