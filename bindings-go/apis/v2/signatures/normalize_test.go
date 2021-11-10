@@ -34,7 +34,7 @@ var _ = Describe("Normalise/Hash component-descriptor", func() {
 						ExtraIdentity: v2.Identity{
 							"refKey": "refName",
 						},
-						Digest: v2.DigestSpec{
+						Digest: &v2.DigestSpec{
 							Algorithm: "sha256",
 							Value:     "00000000000000",
 						},
@@ -49,7 +49,7 @@ var _ = Describe("Normalise/Hash component-descriptor", func() {
 								"key": "value",
 							},
 						},
-						Digest: v2.DigestSpec{
+						Digest: &v2.DigestSpec{
 							Algorithm: "sha256",
 							Value:     "00000000000000",
 						},
@@ -61,7 +61,7 @@ var _ = Describe("Normalise/Hash component-descriptor", func() {
 
 	Describe("missing componentReference Digest", func() {
 		It("should fail to hash", func() {
-			baseCd.ComponentSpec.ComponentReferences[0].Digest = v2.DigestSpec{}
+			baseCd.ComponentSpec.ComponentReferences[0].Digest = nil
 			hash, err := signatures.HashForComponentDescriptor(baseCd, sha256.New())
 			Expect(hash).To(BeNil())
 			Expect(err).ToNot(BeNil())
@@ -69,7 +69,7 @@ var _ = Describe("Normalise/Hash component-descriptor", func() {
 	})
 	Describe("missing resource Digest", func() {
 		It("should fail to hash", func() {
-			baseCd.ComponentSpec.Resources[0].Digest = v2.DigestSpec{}
+			baseCd.ComponentSpec.Resources[0].Digest = nil
 			hash, err := signatures.HashForComponentDescriptor(baseCd, sha256.New())
 			Expect(hash).To(BeNil())
 			Expect(err).ToNot(BeNil())

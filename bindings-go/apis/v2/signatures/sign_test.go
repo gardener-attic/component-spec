@@ -58,7 +58,7 @@ var _ = Describe("Sign/Verify component-descriptor", func() {
 						ExtraIdentity: v2.Identity{
 							"refKey": "refName",
 						},
-						Digest: v2.DigestSpec{
+						Digest: &v2.DigestSpec{
 							Algorithm: "sha256",
 							Value:     "00000000000000",
 						},
@@ -73,7 +73,7 @@ var _ = Describe("Sign/Verify component-descriptor", func() {
 								"key": "value",
 							},
 						},
-						Digest: v2.DigestSpec{
+						Digest: &v2.DigestSpec{
 							Algorithm: "sha256",
 							Value:     "00000000000000",
 						},

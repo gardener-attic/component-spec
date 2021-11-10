@@ -19,22 +19,22 @@ func AddDigestsToComponentDescriptor(ctx context.Context, cd *v2.ComponentDescri
 	resResolver func(context.Context, v2.ComponentDescriptor, v2.Resource) (*v2.DigestSpec, error)) error {
 
 	for i, reference := range cd.ComponentReferences {
-		if reference.Digest.Algorithm == "" || reference.Digest.Value == "" {
+		if reference.Digest == nil || reference.Digest.Algorithm == "" || reference.Digest.Value == "" {
 			digest, err := compRefResolver(ctx, *cd, reference)
 			if err != nil {
 				return fmt.Errorf("failed resolving componentReference for %s:%s: %w", reference.Name, reference.Version, err)
 			}
-			cd.ComponentReferences[i].Digest = *digest
+			cd.ComponentReferences[i].Digest = digest
 		}
 	}
 
 	for i, res := range cd.Resources {
-		if res.Digest.Algorithm == "" || res.Digest.Value == "" {
+		if res.Digest == nil || res.Digest.Algorithm == "" || res.Digest.Value == "" {
 			digest, err := resResolver(ctx, *cd, res)
 			if err != nil {
 				return fmt.Errorf("failed resolving resource for %s:%s: %w", res.Name, res.Version, err)
 			}
-			cd.Resources[i].Digest = *digest
+			cd.Resources[i].Digest = digest
 		}
 	}
 	return nil
@@ -187,14 +187,14 @@ func getOnlyValueInEntry(entry Entry) interface{} {
 func isNormaliseable(cd v2.ComponentDescriptor) error {
 	// check for digests on component references
 	for _, reference := range cd.ComponentReferences {
-		if reference.Digest.Algorithm == "" || reference.Digest.Value == "" {
+		if reference.Digest == nil || reference.Digest.Algorithm == "" || reference.Digest.Value == "" {
 			return fmt.Errorf("missing digest in componentReference for %s:%s", reference.Name, reference.Version)
 		}
 	}
 
 	// check for digests on resources
 	for _, res := range cd.Resources {
-		if res.Digest.Algorithm == "" || res.Digest.Value == "" {
+		if res.Digest == nil || res.Digest.Algorithm == "" || res.Digest.Value == "" {
 			return fmt.Errorf("missing digest in resource for %s:%s", res.Name, res.Version)
 		}
 	}

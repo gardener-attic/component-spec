@@ -356,7 +356,7 @@ type Resource struct {
 
 	// Digest is the optional digest of the referenced resource.
 	// +optional
-	Digest DigestSpec `json:"digest,omitempty"`
+	Digest *DigestSpec `json:"digest,omitempty"`
 
 	// Relation describes the relation of the resource to the component.
 	// Can be a local or external resource
@@ -386,7 +386,7 @@ type ComponentReference struct {
 	ExtraIdentity Identity `json:"extraIdentity,omitempty"`
 	// Digest is the optional digest of the referenced component.
 	// +optional
-	Digest DigestSpec `json:"digest,omitempty"`
+	Digest *DigestSpec `json:"digest,omitempty"`
 	// Labels defines an optional set of additional labels
 	// describing the object.
 	// +optional

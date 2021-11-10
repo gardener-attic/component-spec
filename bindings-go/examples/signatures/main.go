@@ -27,7 +27,7 @@ func main() {
 					ExtraIdentity: v2.Identity{
 						"refKey": "refName",
 					},
-					Digest: v2.DigestSpec{
+					Digest: &v2.DigestSpec{
 						Algorithm: "sha256",
 						Value:     "00000000000000",
 					},
@@ -42,7 +42,7 @@ func main() {
 							"key": "value",
 						},
 					},
-					Digest: v2.DigestSpec{
+					Digest: &v2.DigestSpec{
 						Algorithm: "sha256",
 						Value:     "00000000000000",
 					},
