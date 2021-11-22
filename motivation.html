@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>Index &mdash; Gardener Component-Descriptor Contract and Specification  documentation</title>
+  <title>Motivation and Scope &mdash; Gardener Component-Descriptor Contract and Specification  documentation</title>
   
 
   
@@ -39,8 +39,10 @@
     <script type="text/javascript" src="_static/js/theme.js"></script>
 
     
-    <link rel="index" title="Index" href="#" />
-    <link rel="search" title="Search" href="search.html" /> 
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Gardener Component Descriptor Semantics" href="concepts.html" />
+    <link rel="prev" title="Gardener Component-Descriptor Contract and Specification" href="index.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -86,8 +88,8 @@
             
             
               <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="motivation.html">Motivation and Scope</a></li>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Motivation and Scope</a></li>
 <li class="toctree-l1"><a class="reference internal" href="concepts.html">Gardener Component Descriptor Semantics</a></li>
 <li class="toctree-l1"><a class="reference internal" href="format.html">Gardener Component Descriptor Format Specification</a></li>
 <li class="toctree-l1"><a class="reference internal" href="component_descriptor_registries.html">Component Descriptor Registries</a></li>
@@ -141,11 +143,13 @@
     
       <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
         
-      <li>Index</li>
+      <li>Motivation and Scope</li>
     
     
       <li class="wy-breadcrumbs-aside">
         
+          
+            <a href="_sources/motivation.rst.txt" rel="nofollow"> View page source</a>
           
         
       </li>
@@ -158,11 +162,31 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-
-<h1 id="index">Index</h1>
-
-<div class="genindex-jumpbox">
- 
+  <div class="section" id="motivation-and-scope">
+<h1>Motivation and Scope<a class="headerlink" href="#motivation-and-scope" title="Permalink to this headline">¶</a></h1>
+<p>Operating Software installations both for Cloud and on-premises covers many aspects:</p>
+<ul class="simple">
+<li><p>how, when and where are the technical artifacts created</p></li>
+<li><p>how are technical artifacts stored and accessed</p></li>
+<li><p>which technical artifacts are to be deployed</p></li>
+<li><p>how is the configuration managed</p></li>
+<li><p>when are technical artifacts deployed</p></li>
+<li><p>where and how are those artifacts deployed</p></li>
+<li><p>which other software installations are required and how are they deployed and accessed</p></li>
+</ul>
+<p>The overall problem domain has a complexity that make it challenging to be solved as a whole.
+However, the problem domain can be divided into two disjoint subdomains:</p>
+<ul class="simple">
+<li><p>production of software artifacts</p></li>
+<li><p>deployment and lifecycle management of installations</p></li>
+</ul>
+<p>The elements transitioning between those two subdomains are synchronisation
+data (“when things should happen”) and technical artifacts and their purposes.</p>
+<p>By standardising those elements, it is possible to decouple those two aspects. This allows
+to split the overall complexity smaller parts. By this, the overall complexity can also be
+reduced.</p>
+<p>The CNUDIE Component Descriptor model defines a standardisation of the latter (technical
+artifacts and their purposes).</p>
 </div>
 
 
@@ -170,6 +194,10 @@
            
           </div>
           <footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+        <a href="concepts.html" class="btn btn-neutral float-right" title="Gardener Component Descriptor Semantics" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="index.html" class="btn btn-neutral float-left" title="Gardener Component-Descriptor Contract and Specification" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
 
   <hr/>
 

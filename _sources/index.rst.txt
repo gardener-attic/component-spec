@@ -20,10 +20,12 @@ This contract encompasses:
   :maxdepth: 2
   :caption: Contents:
 
+  motivation
+  concepts
   format
-  semantics
   component_descriptor_registries
   oci
+  building_components
 
 
 Indices and tables

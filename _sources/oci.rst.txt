@@ -120,11 +120,12 @@ OCI related Access Types
 To be able to describe access to artefacts stored in an OCU repository the
 component descriptor supports several dedicated access types.
 There are two ways to reference OCI stored artefacts:
-- using the fully qualified access url to address artefacts stored in
+
+- using the fully qualified access url to address artefacts stored in \
   repositories different from the one hosting the using component descriptor.
-- using repository local names used to refer artefacts in the same repository.
-  Supporting such local references enables the usage of technical replication
-  tools for copying complete content of repositories without knowing about the
+- using repository local names used to refer artefacts in the same repository. \
+  Supporting such local references enables the usage of technical replication \
+  tools for copying complete content of repositories without knowing about the \
   component model and the structure of component descriptor files.
 
 Additionally there are two kinds of artefacts that have to be addressed in an

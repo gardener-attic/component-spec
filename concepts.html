@@ -1,0 +1,356 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>Gardener Component Descriptor Semantics &mdash; Gardener Component-Descriptor Contract and Specification  documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Gardener Component Descriptor Format Specification" href="format.html" />
+    <link rel="prev" title="Motivation and Scope" href="motivation.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index.html" class="icon icon-home"> Gardener Component-Descriptor Contract and Specification
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="motivation.html">Motivation and Scope</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Gardener Component Descriptor Semantics</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#component">Component</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#component-descriptor">Component Descriptor</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#component-repository">Component Repository</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#component-repository-history">Component Repository History</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#identities-and-accessors">Identities and Accessors</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#component-sources">Component Sources</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#name-attribute">Name Attribute</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#component-references">Component References</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#resources">Resources</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="format.html">Gardener Component Descriptor Format Specification</a></li>
+<li class="toctree-l1"><a class="reference internal" href="component_descriptor_registries.html">Component Descriptor Registries</a></li>
+<li class="toctree-l1"><a class="reference internal" href="oci.html">Component Content in an OCI Registry</a></li>
+<li class="toctree-l1"><a class="reference internal" href="building_components.html">Building Components</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Gardener Component-Descriptor Contract and Specification</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+        
+      <li>Gardener Component Descriptor Semantics</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="_sources/concepts.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="gardener-component-descriptor-semantics">
+<h1>Gardener Component Descriptor Semantics<a class="headerlink" href="#gardener-component-descriptor-semantics" title="Permalink to this headline">¶</a></h1>
+<p><cite>Component Descriptors</cite> adhere to a schema defined in the JSON-schema contained in the
+<a class="reference external" href="https://github.com/gardener/component-spec">component-spec</a> repository.</p>
+<p>In this section, the semantics of those elements are defined.</p>
+<div class="section" id="component">
+<h2>Component<a class="headerlink" href="#component" title="Permalink to this headline">¶</a></h2>
+<p><cite>Components</cite> are semantical entities with a certain semantical focus, as part
+of a software product. They are typically built from <cite>sources</cite>, which are being
+conciously developed.</p>
+<p>Components have an identity that is defined through their name.
+Component versions have an identity that is defined through component identity and version.</p>
+<p><cite>Sources</cite> are typically maintained in source code managment systems, and are
+transformed into <cite>Resources</cite> (for example by a build), which are used at
+installation or runtime for the product.</p>
+<p><cite>Resources</cite> are “local” if they are derived from a <cite>source</cite> declared by the same component.
+<cite>Resources</cite> are “external” if they are not derived form a <cite>source</cite> declared by the same component.</p>
+<p>For each of those entities, sets of versions exist. Over time, new versions are created
+by changing sources.</p>
+<p>Each component version defines a certain version vector or sources, from which a version vector
+of resources can be derived.</p>
+<div class="section" id="component-descriptor">
+<h3>Component Descriptor<a class="headerlink" href="#component-descriptor" title="Permalink to this headline">¶</a></h3>
+<p>A <cite>Component Descriptor version</cite> is determined from a component version. It describes
+the full version vectors of comprised source versions, and corresponding resource versions.</p>
+<p>It <em>MAY</em> declare dependencies towards other component versions.</p>
+<p>In addition, it may contain additional metadata.</p>
+</div>
+<div class="section" id="component-repository">
+<h3>Component Repository<a class="headerlink" href="#component-repository" title="Permalink to this headline">¶</a></h3>
+<p><cite>Component Repositories</cite> store <cite>Component Descriptors versions</cite> and allow referencing them through
+the corresponding component version identities.</p>
+<p><cite>Component Descriptor versions</cite> stored in a component repository <em>SHOULD</em> be immutable.</p>
+<p><cite>Component Repositories</cite> <em>MAY</em> also be used to store sources or resources.</p>
+</div>
+<div class="section" id="component-repository-history">
+<h3>Component Repository History<a class="headerlink" href="#component-repository-history" title="Permalink to this headline">¶</a></h3>
+<p>Components are typically being developed in a common context. Such a context consists of
+organisational aspects (for example code ownership), and related infrastructure. Examples for
+related infrastructure contain source code repositories, build infrastructure, and resource
+repositories. An example for a source code repository being github.com, and an example for a
+resource repository being an OCI Registry, such as eu.gcr.io for OCI images.</p>
+<p><cite>Component Repositories</cite> span such contexts.</p>
+<p>Each component <em>MUST</em> have at least one such component repository, which is its
+initial repository.</p>
+<p>Additional component repositories <em>MAY</em> be defined, for example to model delivery
+scenarios.</p>
+<p>Component versions can be “transported” between component repositories by copying
+the corresponding component descriptors, retaining their identities. This <em>MUST</em>
+be done for the full transitive closure of referenced component versions.</p>
+<p>In addition, referenced sources or resources <em>MAY</em> also be copied. If done,
+the then-changed resource or source access information in the new (copied)
+component descriptor versions <em>MUST</em> be adjusted.</p>
+<p>In order to retain the transport history, the original repository history <em>MUST</em> be
+retained. The target component repository must be appended to the list of component
+repositories.</p>
+<p>The last component repository is the “current” component repository.</p>
+</div>
+</div>
+<div class="section" id="identities-and-accessors">
+<h2>Identities and Accessors<a class="headerlink" href="#identities-and-accessors" title="Permalink to this headline">¶</a></h2>
+<p>Component versions are unambiguously identified by 2-tuples of <cite>name</cite> and <cite>version</cite> in the
+context of a <cite>Component Repository</cite>. Their identity never changes across
+any replication between context repositories.</p>
+<p>Component descriptor versions reference <cite>Source Versions</cite>, <cite>Resources</cite> and other <cite>Components</cite>.</p>
+<p>Any of those dependency declarations have an umambiguous identity in the context of their
+declaring component version. Their identities always consist of their formal type
+(<cite>Source</cite>, <cite>Resource</cite>, <cite>Component Reference</cite>) and a <cite>name</cite>.</p>
+<p>Independent from the formal type, the following restrictions for valid names
+are defined. All <cite>name</cite> attributes <em>MUST</em> be printable ASCII-characters from
+any combination of the following character classes:</p>
+<ul class="simple">
+<li><p>lower-cased alphanumeric (<cite>[a-z0-9]</cite>)</p></li>
+<li><p>special characters (<cite>[-_+]</cite>)</p></li>
+<li><p>any other characters are <em>NOT</em> acceptable</p></li>
+<li><p>names <em>SHOULD</em> consist of at least two, and less than <cite>64</cite> characters</p></li>
+<li><p>names <em>MUST</em> start with a lowercase character</p></li>
+</ul>
+<p>Dependency declarations <em>MAY</em> declare additional identity attributes.</p>
+<p>Additional identity attribute names <em>MUST</em> adhere to the restrictions defined for <cite>name</cite> values
+(see above). Their values <em>MUST</em> be UTF-8-encoded strings. It is strongly recommended to apply
+the same restrictions, as defined for valid <cite>names</cite> (e.g. considering serialisation to
+file-systems). As they are, however, component-specific, their concrete values are not assumed
+to bear any concrete semantics, and are thus to be handled as opaque octet-sequences from any
+generic tooling working on the component-model. Thus, any valid UTF-8 character is allowed.</p>
+<p>Considering the tuple of <cite>formal type</cite>, <cite>name</cite>, and the optional additional identity attributes,
+all dependency declarations <em>MUST</em> be unique for any given component version starting with the next
+component descriptor version to be released after <cite>v2</cite>.</p>
+<p>In <cite>v2</cite>, for backwards-compatibility-reasons, the (mandatory) <cite>version</cite> attribute is implicitly
+added to the set of additional identity attributes iff it is not explicitly declared as such, and
+the uniqueness constraint would otherwise be violated.</p>
+<p>They also declare a format type (for example OCI Container Image).</p>
+<p>Sources and resources also <em>MUST</em> declare through their <cite>access</cite> attribute a means to
+access the underlying artifacts. This is done by declaring an access type (for example an OCI
+Image Registry), which defines the protocol through which access is done. Depending on the
+access type, additional attributes are required (e.g. an OCI Image Reference).</p>
+<p>Component references do not need to declare an <cite>access</cite>, as the access method is defined by
+the component descriptor specifiation.</p>
+<p>In addition to the aforementioned mandatory attributes, any dependency declaration, and the
+component itself may declare optional <cite>labels</cite>.</p>
+</div>
+<div class="section" id="component-sources">
+<h2>Component Sources<a class="headerlink" href="#component-sources" title="Permalink to this headline">¶</a></h2>
+<p>Components are expected to have at least one source (code) representation. For each component
+version, the corresponding source snapshot from which the component was built <em>MUST</em> be
+specified.</p>
+<div class="section" id="name-attribute">
+<h3>Name Attribute<a class="headerlink" href="#name-attribute" title="Permalink to this headline">¶</a></h3>
+</div>
+</div>
+<div class="section" id="component-references">
+<h2>Component References<a class="headerlink" href="#component-references" title="Permalink to this headline">¶</a></h2>
+<p>Component versions may declare dependencies towards other component versions. Dependencies are
+always resolved in the same repository context. At the time of publishing a <cite>Component Descriptor</cite>,
+<cite>Component Descriptors</cite> for each referenced component version <em>MUST</em> already be present in the
+context repository.</p>
+<p>A component descriptor registry <em>MUST</em> reject component descriptors with references to absent
+component versions.</p>
+</div>
+<div class="section" id="resources">
+<h2>Resources<a class="headerlink" href="#resources" title="Permalink to this headline">¶</a></h2>
+<p>resources are technical artifacts of a certain format (or <cite>type</cite>).</p>
+<p>If built from the declaring component’s sources, their <cite>versions</cite> <em>MUST</em> match the component’s
+version. Whether or not a resource is built from the referencing component is expressed through
+the <cite>relation</cite> attribute.</p>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+        <a href="format.html" class="btn btn-neutral float-right" title="Gardener Component Descriptor Format Specification" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="motivation.html" class="btn btn-neutral float-left" title="Motivation and Scope" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright 2020, The Gardener Team.
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

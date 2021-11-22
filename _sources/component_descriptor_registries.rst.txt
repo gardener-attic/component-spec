@@ -60,7 +60,7 @@ Where:
 
 
 Component Name Mapping `sha256-digest`
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Component Descriptor OCI Names are constructed like so:
 
