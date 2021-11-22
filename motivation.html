@@ -89,7 +89,11 @@
             
               <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul class="current">
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Motivation and Scope</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Motivation and Scope</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#core-concepts">Core Concepts</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#scope-definition">Scope Definition</a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="concepts.html">Gardener Component Descriptor Semantics</a></li>
 <li class="toctree-l1"><a class="reference internal" href="format.html">Gardener Component Descriptor Format Specification</a></li>
 <li class="toctree-l1"><a class="reference internal" href="component_descriptor_registries.html">Component Descriptor Registries</a></li>
@@ -166,27 +170,84 @@
 <h1>Motivation and Scope<a class="headerlink" href="#motivation-and-scope" title="Permalink to this headline">¶</a></h1>
 <p>Operating Software installations both for Cloud and on-premises covers many aspects:</p>
 <ul class="simple">
-<li><p>how, when and where are the technical artifacts created</p></li>
-<li><p>how are technical artifacts stored and accessed</p></li>
-<li><p>which technical artifacts are to be deployed</p></li>
+<li><p>how, when and where are the technical artefacts created</p></li>
+<li><p>how are technical artefacts stored and accessed</p></li>
+<li><p>which technical artefacts are to be deployed</p></li>
 <li><p>how is the configuration managed</p></li>
-<li><p>when are technical artifacts deployed</p></li>
-<li><p>where and how are those artifacts deployed</p></li>
+<li><p>when are technical artefacts deployed</p></li>
+<li><p>where and how are those artefacts deployed</p></li>
 <li><p>which other software installations are required and how are they deployed and accessed</p></li>
 </ul>
 <p>The overall problem domain has a complexity that make it challenging to be solved as a whole.
 However, the problem domain can be divided into two disjoint subdomains:</p>
 <ul class="simple">
-<li><p>production of software artifacts</p></li>
+<li><p>production of software artefacts</p></li>
 <li><p>deployment and lifecycle management of installations</p></li>
 </ul>
 <p>The elements transitioning between those two subdomains are synchronisation
-data (“when things should happen”) and technical artifacts and their purposes.</p>
+data (“when things should happen”) and technical artefacts and their purposes.</p>
 <p>By standardising those elements, it is possible to decouple those two aspects. This allows
-to split the overall complexity smaller parts. By this, the overall complexity can also be
+to split the overall complexity into smaller parts. By this, the overall complexity can also be
 reduced.</p>
-<p>The CNUDIE Component Descriptor model defines a standardisation of the latter (technical
-artifacts and their purposes).</p>
+<p>The CNUDIE Component Model defines a standardisation of the latter (technical
+artefacts and their purposes). The major goal that is tried to be achieved by
+this standardisation is to allow for components and their artefacts to be
+umambiguously addressed and accessed in a location- and technology-agnostic
+manner. This should work for both global and local or even private environments.</p>
+<div class="section" id="core-concepts">
+<h2>Core Concepts<a class="headerlink" href="#core-concepts" title="Permalink to this headline">¶</a></h2>
+<p><a class="reference internal" href="concepts.html#concepts-components"><span class="std std-ref">Components</span></a> in CNUDIE are semantical entities with a
+certain semantical focus, as part of a software product. They are typically
+built from <span class="xref std std-ref">Sources &lt;concepts_sources</span>, which are being conciously developed.</p>
+<p>They consist of a set of (component) versions. Each version is described by a
+<a class="reference internal" href="concepts.html#concepts-component-descriptors"><span class="std std-ref">Component Descriptor</span></a>, which describes
+the included set of artefacts. <cite>Component Descriptors</cite> are stored in a
+<span class="xref std std-ref">Component Repository &lt;_concepts_component_repositories</span> in a standardised
+way. Within such a component repository, component descriptors are addressed by
+their component name and version.</p>
+<p>By separating the storage locations (component repository) from the component version
+identity, in combination with a defined addressing scheme, it is possible to
+access component descriptors in a component repository, in a location-independent manner.
+This can be leveraged to replicate component descriptors between component repositories.</p>
+<p>Each of the artefacts declared in a <cite>Component Descriptor</cite> has an <cite>identity</cite>, an <cite>access</cite>
+description and a <cite>type</cite>. <cite>Artefact identities</cite> can be used to reference an artefact in
+the context of the declaring component descriptor. The <cite>Artefact type</cite> defines how the
+artefact is to be interpreted. The <cite>access Description</cite> defines from where the artefact
+can be retrieved.</p>
+<p>When replicating component descriptors and their artefacts, the artefacts’ <cite>access</cite> descriptions
+may be changed. However, <cite>artefact types</cite> and <cite>artefact identities</cite> always remain unchanged.</p>
+<p>The CNUDIE Component Model can roughly be compared to a filesystem “living” in an arbitrary
+storage (e.g. a blobstore, oci-registry, archive, ..).</p>
+<p>Starting from an arbitrary component repository used as root repository it is
+possible to access any artefact described by the component model as long as the
+dedicated component version has been imported into this repository. The
+dedicated component repository together with the component version identity
+allows to access the component descriptor which then is used to determine the
+access for dedicated artefacts given by their local identity. This way the
+component respository acts as composed filesystem with fixed top level folders,
+the components and their versions, followed by the artefact level, which then
+may point into any another (kind of) repository. Sub folders can be described
+by component version references described by component descriptors, which again
+feature a local identity in the describing component descriptor.</p>
+</div>
+<div class="section" id="scope-definition">
+<h2>Scope Definition<a class="headerlink" href="#scope-definition" title="Permalink to this headline">¶</a></h2>
+<p>The CNUDIE Component model intends to solve the problem of addressing,
+identifying, and accessing artefacts for software components, relative to an
+arbitrary component repository. By that, it also enables the transport of
+software components between component repositories.</p>
+<p>Through the standardisation of structure and <cite>access</cite> to artefacts, it can serve as an
+interface to any operations that need to interact with the content. This allows
+for tools operating against this interface to be implemented in a re-usable, and
+technology-agnostic manner (examples being transport, compliance and security
+scanning, codesigning, ..).</p>
+<p>Higherlevel functionality, such as deployment, or lifecycle-management aspects are
+out of the scope the CNUDIE Component Model targets. Data for such aspects (for example
+a deployment blueprint) can, however, be described by the CNUDIE Component Model
+as dedicated typed artefacts. This is equivalent to e.g. adding a <cite>Makefile</cite>
+into a filesystem. The filesystem does not “know” about the semantics of the
+<cite>Makefile</cite> (including, e.g. declared dependencies towards other files).</p>
+</div>
 </div>
 
 
