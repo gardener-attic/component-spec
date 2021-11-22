@@ -10,6 +10,8 @@ In this section, the semantics of those elements are defined.
 Component
 ---------
 
+.. _concepts_components:
+
 `Components` are semantical entities with a certain semantical focus, as part
 of a software product. They are typically built from `sources`, which are being
 conciously developed.
@@ -33,6 +35,8 @@ of resources can be derived.
 Component Descriptor
 ~~~~~~~~~~~~~~~~~~~~
 
+.. _concepts_component_descriptors:
+
 A `Component Descriptor version` is determined from a component version. It describes
 the full version vectors of comprised source versions, and corresponding resource versions.
 
@@ -43,6 +47,8 @@ In addition, it may contain additional metadata.
 
 Component Repository
 ~~~~~~~~~~~~~~~~~~~~
+
+.. _concepts_component_repositories:
 
 `Component Repositories` store `Component Descriptors versions` and allow referencing them through
 the corresponding component version identities.
@@ -140,13 +146,11 @@ component itself may declare optional `labels`.
 Component Sources
 -----------------
 
+.. _concepts_sources:
+
 Components are expected to have at least one source (code) representation. For each component
 version, the corresponding source snapshot from which the component was built *MUST* be
 specified.
-
-Name Attribute
-~~~~~~~~~~~~~~
-
 
 
 Component References
