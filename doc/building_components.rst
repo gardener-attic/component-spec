@@ -7,7 +7,7 @@ About those build processes, the CNUDIE Component Descriptor model also does not
 assumptions.
 
 To make generating Component Descriptors more convenient, there is a re-usable toolset that can
-be used (`<https://gitub.com/gardener/component-cli>`_).
+be used (`<https://github.com/gardener/component-cli>`_).
 
 The following example shows how this can be done based on a `make`-based build.
 
