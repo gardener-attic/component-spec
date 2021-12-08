@@ -83,7 +83,7 @@ The normalisationAlgorithm defines the normalisation of the component-descriptor
     - name: 'example.com/my-component'
       version: 'v1.1.1'
       digest:
-        algorithm: sha256
+        hashAlgorithm: sha256
         normalisationAlgorithm: sorted-alphabetically-v1
         value: abcdef
 
@@ -93,7 +93,7 @@ The normalisationAlgorithm defines the normalisation of the component-descriptor
       extraIdentity:
         -key1: value1
       digest:
-        algorithm: sha256
+        hashAlgorithm: sha256
         normalisationAlgorithm: manifest-digest-v1
         value: abcdef
 
@@ -106,7 +106,7 @@ The normalisationAlgorithm defines the normalisation of the component-descriptor
   signatures:
   - name: signatureName
     digest:
-      algorithm: sha256
+      hashAlgorithm: sha256
       normalisationAlgorithm: sorted-alphabetically-v1
       value: abcdef
     signature:
