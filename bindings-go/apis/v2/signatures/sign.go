@@ -38,7 +38,7 @@ func SignComponentDescriptor(cd *v2.ComponentDescriptor, signer Signer, hasher H
 func VerifySignedComponentDescriptor(cd *v2.ComponentDescriptor, verifier Verifier, signatureName string) error {
 	//find matching signature
 
-	matchingSignature, err := selectSignatureByName(cd, signatureName)
+	matchingSignature, err := SelectSignatureByName(cd, signatureName)
 	if err != nil {
 		return fmt.Errorf("failed checking signature: %w", err)
 	}
@@ -67,7 +67,8 @@ func VerifySignedComponentDescriptor(cd *v2.ComponentDescriptor, verifier Verifi
 	return nil
 }
 
-func selectSignatureByName(cd *v2.ComponentDescriptor, signatureName string) (*v2.Signature, error) {
+// SelectSignatureByName returns the Signature (Digest and SigantureSpec) matching the given name
+func SelectSignatureByName(cd *v2.ComponentDescriptor, signatureName string) (*v2.Signature, error) {
 	for _, signature := range cd.Signatures {
 		if signature.Name == signatureName {
 			return &signature, nil
