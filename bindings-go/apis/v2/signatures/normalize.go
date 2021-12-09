@@ -2,9 +2,9 @@ package signatures
 
 import (
 	"context"
+	"encoding/hex"
 	"encoding/json"
 	"fmt"
-	"hash"
 	"sort"
 
 	v2 "github.com/gardener/component-spec/bindings-go/apis/v2"
@@ -19,7 +19,7 @@ func AddDigestsToComponentDescriptor(ctx context.Context, cd *v2.ComponentDescri
 	resResolver func(context.Context, v2.ComponentDescriptor, v2.Resource) (*v2.DigestSpec, error)) error {
 
 	for i, reference := range cd.ComponentReferences {
-		if reference.Digest == nil || reference.Digest.Algorithm == "" || reference.Digest.Value == "" {
+		if reference.Digest == nil || reference.Digest.HashAlgorithm == "" || reference.Digest.NormalisationAlgorithm == "" || reference.Digest.Value == "" {
 			digest, err := compRefResolver(ctx, *cd, reference)
 			if err != nil {
 				return fmt.Errorf("failed resolving componentReference for %s:%s: %w", reference.Name, reference.Version, err)
@@ -29,7 +29,7 @@ func AddDigestsToComponentDescriptor(ctx context.Context, cd *v2.ComponentDescri
 	}
 
 	for i, res := range cd.Resources {
-		if res.Digest == nil || res.Digest.Algorithm == "" || res.Digest.Value == "" {
+		if res.Digest == nil || res.Digest.HashAlgorithm == "" || res.Digest.NormalisationAlgorithm == "" || res.Digest.Value == "" {
 			digest, err := resResolver(ctx, *cd, res)
 			if err != nil {
 				return fmt.Errorf("failed resolving resource for %s:%s: %w", res.Name, res.Version, err)
@@ -42,16 +42,20 @@ func AddDigestsToComponentDescriptor(ctx context.Context, cd *v2.ComponentDescri
 
 // HashForComponentDescriptor return the hash for the component-descriptor, if it is normaliseable
 // (= componentReferences and resources contain digest field)
-func HashForComponentDescriptor(cd v2.ComponentDescriptor, hashFunction hash.Hash) ([]byte, error) {
+func HashForComponentDescriptor(cd v2.ComponentDescriptor, hash Hasher) (*v2.DigestSpec, error) {
 	normalisedComponentDescriptor, err := normalizeComponentDescriptor(cd)
 	if err != nil {
 		return nil, fmt.Errorf("failed normalising component descriptor %w", err)
 	}
-	hashFunction.Reset()
-	if _, err = hashFunction.Write(normalisedComponentDescriptor); err != nil {
+	hash.HashFunction.Reset()
+	if _, err = hash.HashFunction.Write(normalisedComponentDescriptor); err != nil {
 		return nil, fmt.Errorf("failed hashing the normalisedComponentDescriptorJson: %w", err)
 	}
-	return hashFunction.Sum(nil), nil
+	return &v2.DigestSpec{
+		HashAlgorithm:          hash.AlgorithmName,
+		NormalisationAlgorithm: string(v2.JsonNormalisationV1),
+		Value:                  hex.EncodeToString(hash.HashFunction.Sum(nil)),
+	}, nil
 }
 
 func normalizeComponentDescriptor(cd v2.ComponentDescriptor) ([]byte, error) {
@@ -68,7 +72,8 @@ func normalizeComponentDescriptor(cd v2.ComponentDescriptor) ([]byte, error) {
 		extraIdentity := buildExtraIdentity(ref.ExtraIdentity)
 
 		digest := []Entry{
-			{"algorithm": ref.Digest.Algorithm},
+			{"hashAlgorithm": ref.Digest.HashAlgorithm},
+			{"normalisationAlgorithm": ref.Digest.NormalisationAlgorithm},
 			{"value": ref.Digest.Value},
 		}
 
@@ -86,7 +91,8 @@ func normalizeComponentDescriptor(cd v2.ComponentDescriptor) ([]byte, error) {
 		extraIdentity := buildExtraIdentity(res.ExtraIdentity)
 
 		digest := []Entry{
-			{"algorithm": res.Digest.Algorithm},
+			{"hashAlgorithm": res.Digest.HashAlgorithm},
+			{"normalisationAlgorithm": res.Digest.NormalisationAlgorithm},
 			{"value": res.Digest.Value},
 		}
 
@@ -187,14 +193,14 @@ func getOnlyValueInEntry(entry Entry) interface{} {
 func isNormaliseable(cd v2.ComponentDescriptor) error {
 	// check for digests on component references
 	for _, reference := range cd.ComponentReferences {
-		if reference.Digest == nil || reference.Digest.Algorithm == "" || reference.Digest.Value == "" {
+		if reference.Digest == nil || reference.Digest.HashAlgorithm == "" || reference.Digest.NormalisationAlgorithm == "" || reference.Digest.Value == "" {
 			return fmt.Errorf("missing digest in componentReference for %s:%s", reference.Name, reference.Version)
 		}
 	}
 
 	// check for digests on resources
 	for _, res := range cd.Resources {
-		if res.Digest == nil || res.Digest.Algorithm == "" || res.Digest.Value == "" {
+		if res.Digest == nil || res.Digest.HashAlgorithm == "" || res.Digest.NormalisationAlgorithm == "" || res.Digest.Value == "" {
 			return fmt.Errorf("missing digest in resource for %s:%s", res.Name, res.Version)
 		}
 	}

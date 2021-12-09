@@ -52,8 +52,9 @@ var _ = Describe("RSA Sign/Verify", func() {
 			signer, err := signatures.CreateRsaSignerFromKeyFile(pathPrivateKey)
 			Expect(err).To(BeNil())
 			signature, err := signer.Sign(v2.ComponentDescriptor{}, v2.DigestSpec{
-				Algorithm: "sha256",
-				Value:     hex.EncodeToString(hashOfString[:]),
+				HashAlgorithm:          "sha256",
+				NormalisationAlgorithm: string(v2.JsonNormalisationV1),
+				Value:                  hex.EncodeToString(hashOfString[:]),
 			})
 			Expect(err).To(BeNil())
 			Expect(signature.Algorithm).To(BeIdenticalTo("RSASSA-PKCS1-V1_5-SIGN"))
@@ -65,8 +66,9 @@ var _ = Describe("RSA Sign/Verify", func() {
 			signer, err := signatures.CreateRsaSignerFromKeyFile(pathPrivateKey)
 			Expect(err).To(BeNil())
 			signature, err := signer.Sign(v2.ComponentDescriptor{}, v2.DigestSpec{
-				Algorithm: "unknown",
-				Value:     hex.EncodeToString(hashOfString[:]),
+				HashAlgorithm:          "unknown",
+				NormalisationAlgorithm: string(v2.JsonNormalisationV1),
+				Value:                  hex.EncodeToString(hashOfString[:]),
 			})
 			Expect(err).ToNot(BeNil())
 			Expect(signature).To(BeNil())
@@ -80,8 +82,9 @@ var _ = Describe("RSA Sign/Verify", func() {
 			signer, err := signatures.CreateRsaSignerFromKeyFile(pathPrivateKey)
 			Expect(err).To(BeNil())
 			digest := v2.DigestSpec{
-				Algorithm: "sha256",
-				Value:     hex.EncodeToString(hashOfString[:]),
+				HashAlgorithm:          "sha256",
+				NormalisationAlgorithm: string(v2.JsonNormalisationV1),
+				Value:                  hex.EncodeToString(hashOfString[:]),
 			}
 			signature, err := signer.Sign(v2.ComponentDescriptor{}, digest)
 			Expect(err).To(BeNil())
@@ -108,8 +111,9 @@ var _ = Describe("RSA Sign/Verify", func() {
 			signer, err := signatures.CreateRsaSignerFromKeyFile(pathWrongPrivateKey)
 			Expect(err).To(BeNil())
 			digest := v2.DigestSpec{
-				Algorithm: "sha256",
-				Value:     hex.EncodeToString(hashOfString[:]),
+				HashAlgorithm:          "sha256",
+				NormalisationAlgorithm: string(v2.JsonNormalisationV1),
+				Value:                  hex.EncodeToString(hashOfString[:]),
 			}
 			signature, err := signer.Sign(v2.ComponentDescriptor{}, digest)
 			Expect(err).To(BeNil())

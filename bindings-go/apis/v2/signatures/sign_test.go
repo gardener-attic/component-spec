@@ -16,14 +16,14 @@ type TestSigner struct{}
 func (s TestSigner) Sign(componentDescriptor v2.ComponentDescriptor, digest v2.DigestSpec) (*v2.SignatureSpec, error) {
 	return &v2.SignatureSpec{
 		Algorithm: "testSignAlgorithm",
-		Value:     fmt.Sprintf("%s:%s-signed", digest.Algorithm, digest.Value),
+		Value:     fmt.Sprintf("%s:%s-signed", digest.HashAlgorithm, digest.Value),
 	}, nil
 }
 
 type TestVerifier struct{}
 
 func (v TestVerifier) Verify(componentDescriptor v2.ComponentDescriptor, signature v2.Signature) error {
-	if signature.Signature.Value != fmt.Sprintf("%s:%s-signed", signature.Digest.Algorithm, signature.Digest.Value) {
+	if signature.Signature.Value != fmt.Sprintf("%s:%s-signed", signature.Digest.HashAlgorithm, signature.Digest.Value) {
 		return fmt.Errorf("signature verification failed: Invalid signature")
 	}
 	return nil
@@ -38,7 +38,7 @@ var _ = Describe("Sign/Verify component-descriptor", func() {
 		AlgorithmName: "sha256",
 	}
 	signatureName := "testSignatureName"
-	correctBaseCdHash := "dcefe8d7b4a43f5d7569234adbd696dfbfe3f1fc402ac3bed3f5e587624b9ac0"
+	correctBaseCdHash := "64c04405dcd03a6f345584adb860cad4f4ed6dba1943d5535db3407b2bf9f000"
 
 	BeforeEach(func() {
 		baseCd = v2.ComponentDescriptor{
@@ -59,8 +59,9 @@ var _ = Describe("Sign/Verify component-descriptor", func() {
 							"refKey": "refName",
 						},
 						Digest: &v2.DigestSpec{
-							Algorithm: "sha256",
-							Value:     "00000000000000",
+							HashAlgorithm:          "sha256",
+							NormalisationAlgorithm: string(v2.JsonNormalisationV1),
+							Value:                  "00000000000000",
 						},
 					},
 				},
@@ -74,8 +75,9 @@ var _ = Describe("Sign/Verify component-descriptor", func() {
 							},
 						},
 						Digest: &v2.DigestSpec{
-							Algorithm: "sha256",
-							Value:     "00000000000000",
+							HashAlgorithm:          "sha256",
+							NormalisationAlgorithm: string(v2.ManifestDigestV1),
+							Value:                  "00000000000000",
 						},
 					},
 				},
@@ -89,8 +91,8 @@ var _ = Describe("Sign/Verify component-descriptor", func() {
 			Expect(err).To(BeNil())
 			Expect(len(baseCd.Signatures)).To(BeIdenticalTo(1))
 			Expect(baseCd.Signatures[0].Name).To(BeIdenticalTo(signatureName))
-			Expect(baseCd.Signatures[0].NormalisationVersion).To(BeIdenticalTo(v2.NormalisationVersionV1))
-			Expect(baseCd.Signatures[0].Digest.Algorithm).To(BeIdenticalTo("sha256"))
+			Expect(baseCd.Signatures[0].Digest.NormalisationAlgorithm).To(BeIdenticalTo(string(v2.JsonNormalisationV1)))
+			Expect(baseCd.Signatures[0].Digest.HashAlgorithm).To(BeIdenticalTo("sha256"))
 			Expect(baseCd.Signatures[0].Digest.Value).To(BeIdenticalTo(correctBaseCdHash))
 			Expect(baseCd.Signatures[0].Signature.Algorithm).To(BeIdenticalTo("testSignAlgorithm"))
 			Expect(baseCd.Signatures[0].Signature.Value).To(BeIdenticalTo(fmt.Sprintf("%s:%s-signed", "sha256", correctBaseCdHash)))
@@ -125,8 +127,9 @@ var _ = Describe("Sign/Verify component-descriptor", func() {
 			baseCd.Signatures = append(baseCd.Signatures, v2.Signature{
 				Name: "testSignAlgorithmNOTRight",
 				Digest: v2.DigestSpec{
-					Algorithm: "testAlgorithm",
-					Value:     "testValue",
+					HashAlgorithm:          "testAlgorithm",
+					NormalisationAlgorithm: string(v2.JsonNormalisationV1),
+					Value:                  "testValue",
 				},
 				Signature: v2.SignatureSpec{
 					Algorithm: "testSigning",

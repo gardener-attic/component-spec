@@ -45,7 +45,7 @@ func (s RsaSigner) Sign(componentDescriptor v2.ComponentDescriptor, digest v2.Di
 	if err != nil {
 		return nil, fmt.Errorf("failed decoding hash to bytes")
 	}
-	hashType, err := hashAlgorithmLookup(digest.Algorithm)
+	hashType, err := hashAlgorithmLookup(digest.HashAlgorithm)
 	if err != nil {
 		return nil, fmt.Errorf("failed looking up hash algorithm")
 	}
@@ -108,9 +108,9 @@ func (v RsaVerifier) Verify(componentDescriptor v2.ComponentDescriptor, signatur
 	if err != nil {
 		return fmt.Errorf("failed decoding hash %s: %w", signature.Digest.Value, err)
 	}
-	algorithm, err := hashAlgorithmLookup(signature.Digest.Algorithm)
+	algorithm, err := hashAlgorithmLookup(signature.Digest.HashAlgorithm)
 	if err != nil {
-		return fmt.Errorf("failed looking up hash algorithm for %s: %w", signature.Digest.Algorithm, err)
+		return fmt.Errorf("failed looking up hash algorithm for %s: %w", signature.Digest.HashAlgorithm, err)
 	}
 	err = rsa.VerifyPKCS1v15(&v.publicKey, algorithm, decodedHash, decodedSignature)
 	if err != nil {

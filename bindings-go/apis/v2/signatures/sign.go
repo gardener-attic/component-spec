@@ -1,7 +1,6 @@
 package signatures
 
 import (
-	"encoding/hex"
 	"fmt"
 
 	v2 "github.com/gardener/component-spec/bindings-go/apis/v2"
@@ -10,25 +9,19 @@ import (
 // SignComponentDescriptor signs the given component-descriptor with the signer.
 // The component-descriptor has to contain digests for componentReferences and resources.
 func SignComponentDescriptor(cd *v2.ComponentDescriptor, signer Signer, hasher Hasher, signatureName string) error {
-	hashCd, err := HashForComponentDescriptor(*cd, hasher.HashFunction)
+	hashedDigest, err := HashForComponentDescriptor(*cd, hasher)
 	if err != nil {
 		return fmt.Errorf("failed getting hash for cd: %w", err)
 	}
 
-	digest := v2.DigestSpec{
-		Algorithm: hasher.AlgorithmName,
-		Value:     hex.EncodeToString(hashCd),
-	}
-
-	signature, err := signer.Sign(*cd, digest)
+	signature, err := signer.Sign(*cd, *hashedDigest)
 	if err != nil {
 		return fmt.Errorf("failed signing hash of normalised component descriptor, %w", err)
 	}
 	cd.Signatures = append(cd.Signatures, v2.Signature{
-		Name:                 signatureName,
-		NormalisationVersion: v2.NormalisationVersionV1,
-		Digest:               digest,
-		Signature:            *signature,
+		Name:      signatureName,
+		Digest:    *hashedDigest,
+		Signature: *signature,
 	})
 	return nil
 }
@@ -50,17 +43,17 @@ func VerifySignedComponentDescriptor(cd *v2.ComponentDescriptor, verifier Verifi
 	}
 
 	//get hasher by algorithm name
-	hasher, err := HasherForName(matchingSignature.Digest.Algorithm)
+	hasher, err := HasherForName(matchingSignature.Digest.HashAlgorithm)
 	if err != nil {
-		return fmt.Errorf("failed creating hasher for %s: %w", matchingSignature.Digest.Algorithm, err)
+		return fmt.Errorf("failed creating hasher for %s: %w", matchingSignature.Digest.HashAlgorithm, err)
 	}
 
 	//Verify normalised cd to given (and verified) hash
-	hashCd, err := HashForComponentDescriptor(*cd, hasher.HashFunction)
+	hashCd, err := HashForComponentDescriptor(*cd, *hasher)
 	if err != nil {
 		return fmt.Errorf("failed getting hash for cd: %w", err)
 	}
-	if hex.EncodeToString(hashCd) != matchingSignature.Digest.Value {
+	if hashCd.Value != matchingSignature.Digest.Value {
 		return fmt.Errorf("normalised component-descriptor does not match signed hash")
 	}
 

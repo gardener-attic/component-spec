@@ -442,8 +442,9 @@ func (o *ComponentReference) GetIdentityDigest() []byte {
 // +k8s:deepcopy-gen=true
 // +k8s:openapi-gen=true
 type DigestSpec struct {
-	Algorithm string `json:"algorithm"`
-	Value     string `json:"value"`
+	HashAlgorithm          string `json:"hashAlgorithm"`
+	NormalisationAlgorithm string `json:"normalisationAlgorithm"`
+	Value                  string `json:"value"`
 }
 
 // SignatureSpec defines the signature and algorithm.
@@ -454,19 +455,19 @@ type SignatureSpec struct {
 	Value     string `json:"value"`
 }
 
-// NormalisationVersion versions the algorithm used for normalising the component-descriptor.
-type NormalisationVersion string
+// NormalisationAlgorithm types and versions the algorithm used for digest generation.
+type NormalisationAlgorithm string
 
 const (
-	NormalisationVersionV1 NormalisationVersion = "v1"
+	JsonNormalisationV1 NormalisationAlgorithm = "jsonNormalisationV1"
+	ManifestDigestV1    NormalisationAlgorithm = "manifestDigestV1"
 )
 
 // Signature defines a digest and corresponding signature, identifyable by name.
 // +k8s:deepcopy-gen=true
 // +k8s:openapi-gen=true
 type Signature struct {
-	Name                 string               `json:"name"`
-	NormalisationVersion NormalisationVersion `json:"normalisationVersion"`
-	Digest               DigestSpec           `json:"digest"`
-	Signature            SignatureSpec        `json:"signature"`
+	Name      string        `json:"name"`
+	Digest    DigestSpec    `json:"digest"`
+	Signature SignatureSpec `json:"signature"`
 }

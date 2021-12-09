@@ -1,9 +1,6 @@
 package signatures_test
 
 import (
-	"crypto/sha256"
-	"encoding/hex"
-
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
 
@@ -13,9 +10,9 @@ import (
 
 var _ = Describe("Normalise/Hash component-descriptor", func() {
 	var baseCd v2.ComponentDescriptor
-	correctBaseCdHash := "dcefe8d7b4a43f5d7569234adbd696dfbfe3f1fc402ac3bed3f5e587624b9ac0"
+	correctBaseCdHash := "64c04405dcd03a6f345584adb860cad4f4ed6dba1943d5535db3407b2bf9f000"
 	//corresponding normalised CD:
-	//[{"component":[{"componentReferences":[[{"digest":[{"algorithm":"sha256"},{"value":"00000000000000"}]},{"extraIdentity":[{"refKey":"refName"}]},{"name":"compRefName"},{"version":"v0.0.2compRef"}]]},{"name":"CD-Name"},{"resources":[[{"digest":[{"algorithm":"sha256"},{"value":"00000000000000"}]},{"extraIdentity":[{"key":"value"}]},{"name":"Resource1"},{"version":"v0.0.3resource"}]]},{"version":"v0.0.1"}]},{"meta":[{"schemaVersion":"v2"}]}]
+	//[{"component":[{"componentReferences":[[{"digest":[{"hashAlgorithm":"sha256"},{"normalisationAlgorithm":"jsonNormalisationV1"},{"value":"00000000000000"}]},{"extraIdentity":[{"refKey":"refName"}]},{"name":"compRefName"},{"version":"v0.0.2compRef"}]]},{"name":"CD-Name"},{"resources":[[{"digest":[{"hashAlgorithm":"sha256"},{"normalisationAlgorithm":"manifestDigestV1"},{"value":"00000000000000"}]},{"extraIdentity":[{"key":"value"}]},{"name":"Resource1"},{"version":"v0.0.3resource"}]]},{"version":"v0.0.1"}]},{"meta":[{"schemaVersion":"v2"}]}]
 	BeforeEach(func() {
 		baseCd = v2.ComponentDescriptor{
 			Metadata: v2.Metadata{
@@ -35,8 +32,9 @@ var _ = Describe("Normalise/Hash component-descriptor", func() {
 							"refKey": "refName",
 						},
 						Digest: &v2.DigestSpec{
-							Algorithm: "sha256",
-							Value:     "00000000000000",
+							HashAlgorithm:          "sha256",
+							NormalisationAlgorithm: string(v2.JsonNormalisationV1),
+							Value:                  "00000000000000",
 						},
 					},
 				},
@@ -50,8 +48,9 @@ var _ = Describe("Normalise/Hash component-descriptor", func() {
 							},
 						},
 						Digest: &v2.DigestSpec{
-							Algorithm: "sha256",
-							Value:     "00000000000000",
+							HashAlgorithm:          "sha256",
+							NormalisationAlgorithm: string(v2.ManifestDigestV1),
+							Value:                  "00000000000000",
 						},
 					},
 				},
@@ -62,7 +61,9 @@ var _ = Describe("Normalise/Hash component-descriptor", func() {
 	Describe("missing componentReference Digest", func() {
 		It("should fail to hash", func() {
 			baseCd.ComponentSpec.ComponentReferences[0].Digest = nil
-			hash, err := signatures.HashForComponentDescriptor(baseCd, sha256.New())
+			hasher, err := signatures.HasherForName("sha256")
+			Expect(err).To(BeNil())
+			hash, err := signatures.HashForComponentDescriptor(baseCd, *hasher)
 			Expect(hash).To(BeNil())
 			Expect(err).ToNot(BeNil())
 		})
@@ -70,35 +71,41 @@ var _ = Describe("Normalise/Hash component-descriptor", func() {
 	Describe("missing resource Digest", func() {
 		It("should fail to hash", func() {
 			baseCd.ComponentSpec.Resources[0].Digest = nil
-			hash, err := signatures.HashForComponentDescriptor(baseCd, sha256.New())
+			hasher, err := signatures.HasherForName("sha256")
+			Expect(err).To(BeNil())
+			hash, err := signatures.HashForComponentDescriptor(baseCd, *hasher)
 			Expect(hash).To(BeNil())
 			Expect(err).ToNot(BeNil())
 		})
 	})
 	Describe("should give the correct hash hash", func() {
 		It("with sha256", func() {
-			hash, err := signatures.HashForComponentDescriptor(baseCd, sha256.New())
+			hasher, err := signatures.HasherForName("sha256")
 			Expect(err).To(BeNil())
-			Expect(hex.EncodeToString(hash)).To(Equal(correctBaseCdHash))
+			hash, err := signatures.HashForComponentDescriptor(baseCd, *hasher)
+			Expect(err).To(BeNil())
+			Expect(hash.Value).To(Equal(correctBaseCdHash))
 		})
 	})
 	Describe("should ignore modifications in unhashed fields", func() {
 		It("should succed with signature changes", func() {
 			baseCd.Signatures = append(baseCd.Signatures, v2.Signature{
-				Name:                 "TestSig",
-				NormalisationVersion: "v1",
+				Name: "TestSig",
 				Digest: v2.DigestSpec{
-					Algorithm: "sha256",
-					Value:     "00000",
+					HashAlgorithm:          "sha256",
+					NormalisationAlgorithm: string(v2.JsonNormalisationV1),
+					Value:                  "00000",
 				},
 				Signature: v2.SignatureSpec{
 					Algorithm: "test",
 					Value:     "0000",
 				},
 			})
-			hash, err := signatures.HashForComponentDescriptor(baseCd, sha256.New())
+			hasher, err := signatures.HasherForName("sha256")
 			Expect(err).To(BeNil())
-			Expect(hex.EncodeToString(hash)).To(Equal(correctBaseCdHash))
+			hash, err := signatures.HashForComponentDescriptor(baseCd, *hasher)
+			Expect(err).To(BeNil())
+			Expect(hash.Value).To(Equal(correctBaseCdHash))
 		})
 		It("should succed with source changes", func() {
 			baseCd.Sources = append(baseCd.Sources, v2.Source{
@@ -107,17 +114,21 @@ var _ = Describe("Normalise/Hash component-descriptor", func() {
 					Version: "v0.0.0",
 				},
 			})
-			hash, err := signatures.HashForComponentDescriptor(baseCd, sha256.New())
+			hasher, err := signatures.HasherForName("sha256")
 			Expect(err).To(BeNil())
-			Expect(hex.EncodeToString(hash)).To(Equal(correctBaseCdHash))
+			hash, err := signatures.HashForComponentDescriptor(baseCd, *hasher)
+			Expect(err).To(BeNil())
+			Expect(hash.Value).To(Equal(correctBaseCdHash))
 		})
 		It("should succed with resource access reference changes", func() {
 			access, err := v2.NewUnstructured(v2.NewOCIRegistryAccess("ociRef/path/to/image"))
 			Expect(err).To(BeNil())
 			baseCd.Resources[0].Access = &access
-			hash, err := signatures.HashForComponentDescriptor(baseCd, sha256.New())
+			hasher, err := signatures.HasherForName("sha256")
 			Expect(err).To(BeNil())
-			Expect(hex.EncodeToString(hash)).To(Equal(correctBaseCdHash))
+			hash, err := signatures.HashForComponentDescriptor(baseCd, *hasher)
+			Expect(err).To(BeNil())
+			Expect(hash.Value).To(Equal(correctBaseCdHash))
 		})
 	})
 })

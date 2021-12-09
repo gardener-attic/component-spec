@@ -2,7 +2,6 @@ package main
 
 import (
 	"context"
-	"encoding/hex"
 	"fmt"
 
 	v2 "github.com/gardener/component-spec/bindings-go/apis/v2"
@@ -28,8 +27,9 @@ func main() {
 						"refKey": "refName",
 					},
 					Digest: &v2.DigestSpec{
-						Algorithm: "sha256",
-						Value:     "00000000000000",
+						HashAlgorithm:          "sha256",
+						NormalisationAlgorithm: string(v2.JsonNormalisationV1),
+						Value:                  "00000000000000",
 					},
 				},
 			},
@@ -43,8 +43,9 @@ func main() {
 						},
 					},
 					Digest: &v2.DigestSpec{
-						Algorithm: "sha256",
-						Value:     "00000000000000",
+						HashAlgorithm:          "sha256",
+						NormalisationAlgorithm: string(v2.ManifestDigestV1),
+						Value:                  "00000000000000",
 					},
 				},
 			},
@@ -53,13 +54,15 @@ func main() {
 	ctx := context.TODO()
 	err := signatures.AddDigestsToComponentDescriptor(ctx, &cd, func(ctx context.Context, cd v2.ComponentDescriptor, cr v2.ComponentReference) (*v2.DigestSpec, error) {
 		return &v2.DigestSpec{
-			Algorithm: "testing",
-			Value:     string(cr.GetIdentityDigest()),
+			HashAlgorithm:          "testing",
+			NormalisationAlgorithm: string(v2.JsonNormalisationV1),
+			Value:                  string(cr.GetIdentityDigest()),
 		}, nil
 	}, func(ctx context.Context, cd v2.ComponentDescriptor, r v2.Resource) (*v2.DigestSpec, error) {
 		return &v2.DigestSpec{
-			Algorithm: "testing",
-			Value:     string(r.GetIdentityDigest()),
+			HashAlgorithm:          "testing",
+			NormalisationAlgorithm: string(v2.ManifestDigestV1),
+			Value:                  string(r.GetIdentityDigest()),
 		}, nil
 	})
 	if err != nil {
@@ -71,12 +74,12 @@ func main() {
 		fmt.Printf("ERROR: %s", err)
 	}
 
-	norm, err := signatures.HashForComponentDescriptor(cd, hasher.HashFunction)
+	norm, err := signatures.HashForComponentDescriptor(cd, *hasher)
 	if err != nil {
 		fmt.Printf("ERROR: %s", err)
 		return
 	}
-	fmt.Println(hex.EncodeToString(norm))
+	fmt.Println(norm.Value)
 
 	signer, err := signatures.CreateRsaSignerFromKeyFile("private")
 	if err != nil {
