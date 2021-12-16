@@ -12,7 +12,7 @@ import (
 
 // ListResolver describes a ComponentResolver using a list of Component Descriptors
 type ListResolver struct {
-	List *cdv2.ComponentDescriptorList
+	List         *cdv2.ComponentDescriptorList
 	blobResolver *AggregatedBlobResolver
 }
 

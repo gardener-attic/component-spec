@@ -16,12 +16,14 @@ package ctf
 
 import (
 	"archive/tar"
+	"compress/gzip"
 	"context"
 	"errors"
 	"fmt"
 	"io"
 	"os"
 
+	"github.com/mandelsoft/vfs/pkg/osfs"
 	"github.com/mandelsoft/vfs/pkg/projectionfs"
 	"github.com/mandelsoft/vfs/pkg/vfs"
 
@@ -91,32 +93,112 @@ const (
 )
 
 type CTF struct {
-	fs vfs.FileSystem
+	fs      vfs.FileSystem
 	ctfPath string
+	format  ArchiveFormat
 	tempDir string
-	tempFs vfs.FileSystem
+	ctfFS   vfs.FileSystem
 }
 
 // NewCTF reads a CTF archive from a file.
 // The use should call "Close" to remove all temporary files
 func NewCTF(fs vfs.FileSystem, ctfPath string) (*CTF, error) {
-	tempDir, err := vfs.TempDir(fs, "", "ctf-")
-	if err != nil {
-		return nil, err
+	return OpenCTF(fs, ctfPath, CTF_OPEN)
+}
+
+type CTFMode int
+
+const (
+	CTF_OPEN CTFMode = 0
+	CTF_DIR          = 1
+	CTF_TAR          = 2
+	CTF_TGZ          = 3
+)
+
+// OpenCTF opens an existing or newly created ctf
+func OpenCTF(fs vfs.FileSystem, ctfPath string, mode CTFMode) (*CTF, error) {
+	if fs == nil {
+		fs = osfs.New()
 	}
-	tempFs, err := projectionfs.New(fs, tempDir)
+	var format ArchiveFormat = ""
+	// fmt.Println("open archive "+ctfPath)
+	fi, err := fs.Stat(ctfPath)
+
 	if err != nil {
-		return nil, fmt.Errorf("unable to create fs for temporary directory %q: %w", tempDir, err)
+		if mode == CTF_OPEN || !os.IsNotExist(err) {
+			return nil, err
+		}
+		if mode == CTF_DIR {
+			// fmt.Println("creating dir "+ctfPath)
+			err = fs.Mkdir(ctfPath, os.ModePerm)
+			if err != nil {
+				return nil, fmt.Errorf("unable to create directory %s: %w", ctfPath, err)
+			}
+		} else {
+			// fmt.Println("creating archive "+ctfPath)
+			file, err := fs.OpenFile(ctfPath, os.O_WRONLY|os.O_CREATE|os.O_TRUNC, 0660)
+			if err != nil {
+				return nil, fmt.Errorf("unable to open file for %s: %w", ctfPath, err)
+			}
+			var w io.Writer = file
+			if mode == CTF_TGZ {
+				w = gzip.NewWriter(w)
+				format = ArchiveFormatTarGzip
+			} else {
+				format = ArchiveFormatTar
+			}
+			tw := tar.NewWriter(file)
+			if err := tw.Close(); err != nil {
+				return nil, fmt.Errorf("unable to close tarwriter for emtpy tar: %w", err)
+			}
+			if err := file.Close(); err != nil {
+				return nil, fmt.Errorf("unable to close tarwriter for emtpy tar: %w", err)
+			}
+		}
+		fi, err = fs.Stat(ctfPath)
+		if err != nil {
+			return nil, fmt.Errorf("unable to get info for %s: %w", ctfPath, err)
+		}
 	}
 
+	if err != nil {
+		if os.IsNotExist(err) {
+			return nil, vfs.ErrNotExist
+		}
+		return nil, err
+	}
 	ctf := &CTF{
 		fs:      fs,
 		ctfPath: ctfPath,
-		tempDir: tempDir,
-		tempFs:  tempFs,
+		format:  format,
 	}
-	if err := ctf.extract(); err != nil {
-		return nil, fmt.Errorf("unable to read ctf: %w", err)
+	if fi.IsDir() {
+		if mode == CTF_TAR || mode == CTF_TGZ {
+			return nil, fmt.Errorf("archive requested, but found directory")
+		}
+		tempFs, err := projectionfs.New(fs, ctfPath)
+		if err != nil {
+			return nil, fmt.Errorf("unable to create fs for directory %q: %w", ctfPath, err)
+		}
+		ctf.ctfFS = tempFs
+	} else {
+		if mode == CTF_DIR {
+			return nil, fmt.Errorf("directory requested, but found tar")
+		}
+		tempDir, err := vfs.TempDir(fs, "", "ctf-")
+		if err != nil {
+			return nil, err
+		}
+		tempFs, err := projectionfs.New(fs, tempDir)
+		if err != nil {
+			return nil, fmt.Errorf("unable to create fs for temporary directory %q: %w", tempDir, err)
+		}
+
+		ctf.tempDir = tempDir
+		ctf.ctfFS = tempFs
+		if err := ctf.extract(); err != nil {
+			return nil, fmt.Errorf("unable to read ctf: %w", err)
+		}
 	}
 	return ctf, nil
 }
@@ -125,7 +207,7 @@ type WalkFunc = func(ca *ComponentArchive) error
 
 // Walk traverses through all component archives that are included in the ctf.
 func (ctf *CTF) Walk(walkFunc WalkFunc) error {
-	err := vfs.Walk(ctf.tempFs, "/", func(path string, info os.FileInfo, err error) error {
+	err := vfs.Walk(ctf.ctfFS, "/", func(path string, info os.FileInfo, err error) error {
 		if err != nil {
 			return err
 		}
@@ -133,15 +215,10 @@ func (ctf *CTF) Walk(walkFunc WalkFunc) error {
 			return nil
 		}
 
-		file, err := ctf.tempFs.Open(path)
-		if err != nil {
-			return fmt.Errorf("unable to read component archive file %q: %w", path, err)
-		}
-		ca, err := NewComponentArchiveFromTarReader(file)
+		ca, err := OpenComponentArchive(ctf.ctfFS, path)
 		if err != nil {
 			return err
 		}
-
 		return walkFunc(ca)
 	})
 	return err
@@ -159,7 +236,7 @@ func (ctf *CTF) AddComponentArchive(ca *ComponentArchive, format ArchiveFormat) 
 // AddComponentArchiveWithName adds or updates a component archive in the ctf archive.
 // The archive is added to the ctf with the given name
 func (ctf *CTF) AddComponentArchiveWithName(filename string, ca *ComponentArchive, format ArchiveFormat) error {
-	file, err := ctf.tempFs.OpenFile(filename, os.O_WRONLY|os.O_CREATE|os.O_TRUNC, os.ModePerm)
+	file, err := ctf.ctfFS.OpenFile(filename, os.O_WRONLY|os.O_CREATE|os.O_TRUNC, os.ModePerm)
 	if err != nil {
 		return err
 	}
@@ -187,21 +264,83 @@ func (ctf *CTF) extract() error {
 	if err != nil {
 		return err
 	}
+	var reader io.Reader
+	reader, err = gzip.NewReader(file)
+	if err != nil {
+		file.Close()
+		reader, err = ctf.fs.Open(ctf.ctfPath)
+		if err != nil {
+			return err
+		}
+		ctf.format = ArchiveFormatTar
+	} else {
+		ctf.format = ArchiveFormatTarGzip
+	}
 	defer file.Close()
-	return ExtractTarToFs(ctf.tempFs, file)
+	return ExtractTarToFs(ctf.ctfFS, reader)
 }
 
 // Write writes the current changes back to the original ctf.
 func (ctf *CTF) Write() error {
-	file, err := ctf.fs.OpenFile(ctf.ctfPath, os.O_WRONLY|os.O_CREATE|os.O_TRUNC, os.ModePerm)
+	if ctf.tempDir == "" {
+		return nil
+	}
+	return ctf.WriteToArchive(ctf.fs, ctf.ctfPath, ctf.format)
+}
+
+func (ctf *CTF) WriteToFilesystem(fs vfs.FileSystem, ctfpath string) error {
+	fi, err := fs.Stat(ctfpath)
+	if err != nil && !vfs.IsErrNotExist(err) {
+		return err
+	}
+	if err == nil {
+		if !fi.IsDir() {
+			return vfs.ErrNotDir
+		}
+		/*
+			err = fs.RemoveAll(path)
+			if err != nil {
+				return err
+			}
+		*/
+	}
+	err = fs.Mkdir(ctfpath, 0770)
+	if err != nil && !vfs.IsErrExist(err) {
+		return err
+	}
+
+	err = vfs.Walk(ctf.ctfFS, "/", func(path string, info os.FileInfo, err error) error {
+		if err != nil {
+			return err
+		}
+		if info.IsDir() {
+			return nil
+		}
+		fmt.Printf("copying %s to %s\n", path, vfs.Join(fs, ctfpath, path))
+		return vfs.CopyFile(ctf.ctfFS, path, fs, vfs.Join(fs, ctfpath, path))
+	})
+	return err
+}
+
+func (ctf *CTF) WriteToArchive(fs vfs.FileSystem, path string, format ArchiveFormat) error {
+	if fs == nil {
+		fs = osfs.New()
+	}
+	file, err := fs.OpenFile(path, os.O_WRONLY|os.O_CREATE|os.O_TRUNC, os.ModePerm)
 	if err != nil {
 		return err
 	}
+	var writer io.Writer = file
 	defer file.Close()
-	tw := tar.NewWriter(file)
+	if format == ArchiveFormatTarGzip {
+		zw := gzip.NewWriter(writer)
+		defer zw.Close()
+		writer = zw
+	}
+	tw := tar.NewWriter(writer)
 	defer tw.Close()
 
-	err = vfs.Walk(ctf.tempFs, "/", func(path string, info os.FileInfo, err error) error {
+	err = vfs.Walk(ctf.ctfFS, "/", func(path string, info os.FileInfo, err error) error {
 		if err != nil {
 			return err
 		}
@@ -216,7 +355,7 @@ func (ctf *CTF) Write() error {
 			return fmt.Errorf("unable to write header for %q: %w", path, err)
 		}
 
-		blob, err := ctf.tempFs.Open(path)
+		blob, err := ctf.ctfFS.Open(path)
 		if err != nil {
 			return fmt.Errorf("unable to open blob %q: %w", path, err)
 		}
@@ -231,7 +370,10 @@ func (ctf *CTF) Write() error {
 
 // Close closes the CTF that deletes all temporary files
 func (ctf *CTF) Close() error {
-	return ctf.fs.RemoveAll(ctf.tempDir)
+	if ctf.tempDir != "" {
+		return ctf.fs.RemoveAll(ctf.tempDir)
+	}
+	return nil
 }
 
 // AggregatedBlobResolver combines multiple blob resolver.

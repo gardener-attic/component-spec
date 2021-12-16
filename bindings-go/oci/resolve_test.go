@@ -21,7 +21,7 @@ import (
 	"github.com/gardener/component-spec/bindings-go/oci"
 )
 
-var _ = Describe("resolve", func(){
+var _ = Describe("resolve", func() {
 
 	Context("Resolve", func() {
 
@@ -32,12 +32,12 @@ var _ = Describe("resolve", func(){
 					return &ocispecv1.Manifest{
 						Config: ocispecv1.Descriptor{
 							MediaType: oci.ComponentDescriptorConfigMimeType,
-							Digest: digest.FromString("config"),
+							Digest:    digest.FromString("config"),
 						},
 						Layers: []ocispecv1.Descriptor{
 							{
 								MediaType: oci.ComponentDescriptorJSONMimeType,
-								Digest: digest.FromString("cd"),
+								Digest:    digest.FromString("cd"),
 							},
 						},
 					}, nil
@@ -48,7 +48,7 @@ var _ = Describe("resolve", func(){
 						config := oci.ComponentDescriptorConfig{
 							ComponentDescriptorLayer: &oci.OciBlobRef{
 								MediaType: oci.ComponentDescriptorConfigMimeType,
-								Digest: digest.FromString("cd").String(),
+								Digest:    digest.FromString("cd").String(),
 							},
 						}
 						return json.NewEncoder(writer).Encode(config)
@@ -116,12 +116,12 @@ var _ = Describe("resolve", func(){
 					return &ocispecv1.Manifest{
 						Config: ocispecv1.Descriptor{
 							MediaType: oci.ComponentDescriptorConfigMimeType,
-							Digest: digest.FromString("config"),
+							Digest:    digest.FromString("config"),
 						},
 						Layers: []ocispecv1.Descriptor{
 							{
 								MediaType: oci.ComponentDescriptorJSONMimeType,
-								Digest: digest.FromString("cd"),
+								Digest:    digest.FromString("cd"),
 							},
 						},
 					}, nil
@@ -132,7 +132,7 @@ var _ = Describe("resolve", func(){
 						config := oci.ComponentDescriptorConfig{
 							ComponentDescriptorLayer: &oci.OciBlobRef{
 								MediaType: oci.ComponentDescriptorConfigMimeType,
-								Digest: digest.FromString("cd").String(),
+								Digest:    digest.FromString("cd").String(),
 							},
 						}
 						return json.NewEncoder(writer).Encode(config)
