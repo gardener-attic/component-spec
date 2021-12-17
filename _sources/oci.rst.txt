@@ -34,7 +34,7 @@ Typically versions for components are provided by builds.
 To support this scenario thers is a contract between a build and a
 component uploader tool.
 
-Te task of the build is then just to provide such a contract file
+The task of the build is then just to provide such a contract file
 containing the generated component descriptor version with approriate
 artefact and component referencen together with referenced blob artefacts.
 To describe references to those local artefact blobs the
