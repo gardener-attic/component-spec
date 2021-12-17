@@ -17,7 +17,7 @@
 
 # -- Project information -----------------------------------------------------
 
-project = 'Gardener Component-Descriptor Contract and Specification'
+project = 'Open Component Model Contract and Specification'
 copyright = '2020, The Gardener Team'
 author = 'The Gardener Team'
 

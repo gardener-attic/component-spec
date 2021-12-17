@@ -3,18 +3,18 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-Gardener Component-Descriptor Contract and Specification
-========================================================
+Open Component Model
+====================
 
 
-This document describes the contract components adhere to in order to declare in a
-machine-readable way dependency graphs of multiple components and their resources.
+This document describes the Open Component Model (OCM), its idea and reasoning, scope, contract
+and some tools working on top of this model.
 
-This contract encompasses:
-
-- technical format specification
-- schema specification (JSON-schema)
-- semantical specification
+The component model provides a machine-readable way to describe versioned artefact sets that finally
+build installable software packages, that can be transported among public and local repository contexts.
+It is a sound technology-independent basis for cooperating tools to access artefacts in a
+locaction-agnostic manner. This can be used to run tools and processes uniformly for the
+same software in various, even fenced environments.
 
 .. toctree::
   :maxdepth: 2
