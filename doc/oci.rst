@@ -101,6 +101,7 @@ It is a YAML or JSON file describing the artefact meta data. Additionally it may
 signatures like the component descriptor.
 
 .. code-block::
+
   apiVersion: ocm.gardener.cloud/v1
   kind: ArtefactDescriptor
   metadata:
