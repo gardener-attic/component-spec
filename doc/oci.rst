@@ -74,7 +74,8 @@ artefact archives.
 Component Archive
 .................
 
-So far there is only a specification for the format for a component artefact.
+The component archive contains a first file ``component-descriptor.yaml``
+which contains the component descriptor of the component version.
 
 .. code-block::
 
@@ -95,7 +96,19 @@ OCI Artefact
 ............
 
 A similar format for standard OCI Artefacts (including OCI Images as special case)
-could look like this
+always contains the file ``artefact-descriptor.yaml`` as first file.
+It is a YAML or JSON file describing the artefact meta data. Additionally it may contain
+signatures like the component descriptor.
+
+.. code-block::
+  apiVersion: ocm.gardener.cloud/v1
+  kind: ArtefactDescriptor
+  metadata:
+    name: <artefact name>
+    version: <artefact version>
+
+Then it contains the files belonging to this oci artefact. It is the
+``oci-artefact.json`` and the blobs described by the oci-artefact.
 
 .. code-block::
 
@@ -106,13 +119,10 @@ could look like this
       ├──  ...
       └── blobn
 
-Like the component descriptor the additional file ``artefact-descriptor.yaml``
-described the artefact name and version. The other files are just taken
-from the OCI artefact api. The blob names should be the correct OCI
-digests used in the ``oci-manifest.json``.
+The blob names should be the correct OCI digests used in the ``oci-manifest.json``.
 
-The artefact descriptor must be the first entry in the tar archive to
-support streaming, followed by the oci manifest.
+The artefact descriptor must be the first entry in the tar archive followed by the
+oci manifest to support streaming.
 
 OCI related Access Types
 ------------------------
