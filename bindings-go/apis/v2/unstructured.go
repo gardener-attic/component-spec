@@ -54,16 +54,16 @@ func TypedObjectEqual(a, b TypedObjectAccessor) bool {
 	if err != nil {
 		return false
 	}
-	return UnstructuredTypesEqual(&uA, &uB)
+	return UnstructuredTypesEqual(uA, uB)
 }
 
 // NewUnstructured creates a new unstructured object from a typed object using the default codec.
-func NewUnstructured(obj TypedObjectAccessor) (UnstructuredTypedObject, error) {
-	uObj, err := ToUnstructuredTypedObject(NewDefaultCodec(), obj)
+func NewUnstructured(obj TypedObjectAccessor) (*UnstructuredTypedObject, error) {
+	uObj, err := ToUnstructuredTypedObject(nil, obj)
 	if err != nil {
-		return UnstructuredTypedObject{}, nil
+		return &UnstructuredTypedObject{}, err
 	}
-	return *uObj, nil
+	return uObj, nil
 }
 
 // NewEmptyUnstructured creates a new typed object without additional data.

@@ -352,7 +352,6 @@ definitions:
             - $ref: '#/definitions/ociRepositoryContext' # currently, we only allow this one
       provider:
         type: 'string'
-        enum: ['internal', 'external']
       labels:
         type: 'array'
         items:

@@ -22,7 +22,7 @@ func TestConfig(t *testing.T) {
 	RunSpecs(t, "oci Test Suite")
 }
 
-var _ = Describe("helper", func(){
+var _ = Describe("helper", func() {
 
 	Context("OCIRef", func() {
 
@@ -56,7 +56,7 @@ var _ = Describe("helper", func(){
 
 		It("should correctly parse a repository url with a sha256-digest name mapping", func() {
 			repoCtx := cdv2.OCIRegistryRepository{
-				BaseURL: "example.com:443",
+				BaseURL:              "example.com:443",
 				ComponentNameMapping: cdv2.OCIRegistryDigestMapping,
 			}
 			ref, err := oci.OCIRef(repoCtx, "somecomp", "v0.0.0")
@@ -71,7 +71,7 @@ var _ = Describe("helper", func(){
 // testClient describes a test oci client.
 type testClient struct {
 	getManifest func(ctx context.Context, ref string) (*ocispecv1.Manifest, error)
-	fetch func(ctx context.Context, ref string, desc ocispecv1.Descriptor, writer io.Writer) error
+	fetch       func(ctx context.Context, ref string, desc ocispecv1.Descriptor, writer io.Writer) error
 }
 
 var _ oci.Client = &testClient{}
@@ -86,7 +86,7 @@ func (t testClient) Fetch(ctx context.Context, ref string, desc ocispecv1.Descri
 
 // testCache describes a test resolve cache.
 type testCache struct {
-	get func (ctx context.Context, repoCtx cdv2.OCIRegistryRepository, name, version string) (*cdv2.ComponentDescriptor, error)
+	get   func(ctx context.Context, repoCtx cdv2.OCIRegistryRepository, name, version string) (*cdv2.ComponentDescriptor, error)
 	store func(ctx context.Context, descriptor *cdv2.ComponentDescriptor) error
 }
 
@@ -99,4 +99,3 @@ func (t testCache) Get(ctx context.Context, repoCtx cdv2.OCIRegistryRepository, 
 func (t testCache) Store(ctx context.Context, descriptor *cdv2.ComponentDescriptor) error {
 	return t.store(ctx, descriptor)
 }
-

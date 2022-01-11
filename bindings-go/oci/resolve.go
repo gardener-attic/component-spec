@@ -91,17 +91,17 @@ type Cache interface {
 // Resolver is a generic resolve to resolve a component descriptor from a oci registry.
 // This resolver implements the ctf.ComponentResolver interface.
 type Resolver struct {
-	log logr.Logger
-	client  Client
-	cache Cache
+	log        logr.Logger
+	client     Client
+	cache      Cache
 	decodeOpts []codec.DecodeOption
 }
 
 // NewResolver creates a new resolver.
 func NewResolver(client Client, decodeOpts ...codec.DecodeOption) *Resolver {
 	return &Resolver{
-		log: logr.Discard(),
-		client: client,
+		log:        logr.Discard(),
+		client:     client,
 		decodeOpts: decodeOpts,
 	}
 }
@@ -162,7 +162,7 @@ func (r *Resolver) resolve(ctx context.Context, repoCtx v2.Repository, name, ver
 			}
 		} else {
 			if withBlobResolver {
-				manifest, ref , err := r.fetchManifest(ctx, repo, name, version)
+				manifest, ref, err := r.fetchManifest(ctx, repo, name, version)
 				if err != nil {
 					return nil, nil, err
 				}
@@ -172,7 +172,7 @@ func (r *Resolver) resolve(ctx context.Context, repoCtx v2.Repository, name, ver
 		}
 	}
 
-	manifest, ref , err := r.fetchManifest(ctx, repo, name, version)
+	manifest, ref, err := r.fetchManifest(ctx, repo, name, version)
 	if err != nil {
 		return nil, nil, err
 	}
