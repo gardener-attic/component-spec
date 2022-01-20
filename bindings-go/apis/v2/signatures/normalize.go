@@ -1,6 +1,7 @@
 package signatures
 
 import (
+	"bytes"
 	"context"
 	"encoding/hex"
 	"encoding/json"
@@ -67,7 +68,7 @@ func normalizeComponentDescriptor(cd v2.ComponentDescriptor) ([]byte, error) {
 		{"schemaVersion": cd.Metadata.Version},
 	}
 
-	componentReferences := [][]Entry{}
+	componentReferences := []interface{}{}
 	for _, ref := range cd.ComponentSpec.ComponentReferences {
 		extraIdentity := buildExtraIdentity(ref.ExtraIdentity)
 
@@ -86,7 +87,7 @@ func normalizeComponentDescriptor(cd v2.ComponentDescriptor) ([]byte, error) {
 		componentReferences = append(componentReferences, componentReference)
 	}
 
-	resources := [][]Entry{}
+	resources := []interface{}{}
 	for _, res := range cd.ComponentSpec.Resources {
 		extraIdentity := buildExtraIdentity(res.ExtraIdentity)
 
@@ -121,10 +122,20 @@ func normalizeComponentDescriptor(cd v2.ComponentDescriptor) ([]byte, error) {
 		return nil, fmt.Errorf("failed sorting during normalisation: %w", err)
 	}
 
-	normalizedJson, err := json.Marshal(normalizedComponentDescriptor)
+	byteBuffer := bytes.NewBuffer([]byte{})
+	encoder := json.NewEncoder(byteBuffer)
+	encoder.SetEscapeHTML(false)
 
+	err := encoder.Encode(normalizedComponentDescriptor)
 	if err != nil {
 		return nil, err
+	}
+
+	normalizedJson := byteBuffer.Bytes()
+
+	// encoder.Encode appends a newline that we do not want
+	if normalizedJson[len(normalizedJson)-1] == 10 {
+		normalizedJson = normalizedJson[:len(normalizedJson)-1]
 	}
 
 	return normalizedJson, nil
@@ -158,7 +169,7 @@ func deepSort(in interface{}) error {
 		if err := deepSort(val); err != nil {
 			return err
 		}
-	case [][]Entry:
+	case []interface{}:
 		for _, v := range castIn {
 			if err := deepSort(v); err != nil {
 				return err

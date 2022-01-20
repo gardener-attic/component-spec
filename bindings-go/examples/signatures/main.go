@@ -15,7 +15,7 @@ func main() {
 		},
 		ComponentSpec: v2.ComponentSpec{
 			ObjectMeta: v2.ObjectMeta{
-				Name:    "CD-Name",
+				Name:    "CD-Name<html>cool</html> Unicode ♥ unprintable characters \u0007 \u0031",
 				Version: "v0.0.1",
 			},
 			ComponentReferences: []v2.ComponentReference{
