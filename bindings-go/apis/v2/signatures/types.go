@@ -1,6 +1,7 @@
 package signatures
 
 import (
+	"context"
 	"crypto/sha256"
 	"fmt"
 	"hash"
@@ -39,4 +40,8 @@ func HasherForName(algorithmName string) (*Hasher, error) {
 		}, nil
 	}
 	return nil, fmt.Errorf("hash algorithm %s not found/implemented", algorithmName)
+}
+
+type ResourceDigester interface {
+	DigestForResource(ctx context.Context, componentDescriptor v2.ComponentDescriptor, resource v2.Resource, hasher Hasher) (*v2.DigestSpec, error)
 }

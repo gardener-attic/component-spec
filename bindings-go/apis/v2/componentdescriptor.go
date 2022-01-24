@@ -459,8 +459,9 @@ type SignatureSpec struct {
 type NormalisationAlgorithm string
 
 const (
-	JsonNormalisationV1 NormalisationAlgorithm = "jsonNormalisationV1"
-	ManifestDigestV1    NormalisationAlgorithm = "manifestDigestV1"
+	JsonNormalisationV1  NormalisationAlgorithm = "jsonNormalisationV1"
+	ManifestDigestV1     NormalisationAlgorithm = "manifestDigestV1"
+	LocalOciBlobDigestV1 NormalisationAlgorithm = "localOciBlobDigestV1"
 )
 
 // Signature defines a digest and corresponding signature, identifyable by name.
