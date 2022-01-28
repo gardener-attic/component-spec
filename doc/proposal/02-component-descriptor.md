@@ -1,7 +1,7 @@
 # Component Descriptor Specification
 
 *Component Descriptors* are the central concept of OCM. A *Component Descriptor* describes what belongs to a particular
-version of a software component  and how to access it. This includes:
+version of a software component and how to access it. This includes:
 
 - resources, i.e. technical artefacts like binaries, docker images, ...
 - sources like code in github
@@ -28,7 +28,7 @@ The order of elements in sequences MAY be significant and MUST be retained in ca
 
 ## Schema Version
 
-A *Component Descriptor* document consist of two top level elements: *meta*, *component*
+A *Component Descriptor* document consists of two top level elements: *meta*, *component*
 
 The *meta* element contains the schema version of the *Component Descriptor* specification. This document defines
 schema version *v2*.
@@ -40,12 +40,11 @@ component:
   ...
 ```
 
-
 ## Name and Version
 
 Every *Component Descriptor* has a name (*component.name*) and version (*component.version), also called component
-name and version. Name and version are the identifier for a *Component Descriptor* and the component version described
-by it.
+name and component version. Name and version are the identifier for a *Component Descriptor* and the component version 
+described by it.
 
 ```
 meta:
@@ -60,7 +59,7 @@ name (as specified by RFC-1034, RFC-1035) with an optional URL path suffix (as s
 
 If no URL path suffix is specified, the domain MUST be possessed by the component proprietor. If a URL path suffix is
 specified, the namespace started by the concatenation of domain and URL path suffix MUST be possessed by the component
-proprietor.
+owner.
 
 The component name SHOULD reference a location where the component’s resources (typically source code, and/or
 documentation) are hosted. An example and recommended practise is using GitHub repository names for components on
@@ -77,7 +76,7 @@ Different to strict semver 2.0.0, component versions MAY:
 ## Sources, Resources
 
 Components versions are typically built from sources, maintained in source code management systems,
-and transformed into resources (for example by a build), which are used at installation or runtime for the product.
+and transformed into resources (for example by a build), which are used at installation or runtime of the product.
 
 Each *Component Descriptor* contains a field for references to the used sources and a field for references
 to the used resources.
@@ -140,6 +139,10 @@ Sources and resources declare through their access attribute a means to access t
 This is done by declaring an access type (for example an OCI Image Registry), which defines the protocol through which
 access is done. Depending on the access type, additional attributes are required (e.g. an OCI Image Reference).
 
+OCM does not specify the format and semantics of particular access types for resources and sources. This can be done 
+in extensions to this specification. An exception are the two access types  *localOciBlob* and *localOciArtefact* 
+explained later.
+
 ## Component References
 
 A component version might have dependencies to other component versions. The semantics of component version dependencies
@@ -147,7 +150,8 @@ is not defined here. Such dependencies could be expressed for different relation
 e.g. deploy order, a component version comprise other component versions, a component version uses artefacts of
 another component version etc.
 
-To express such dependencies, a *Component Descriptor* has a field to specify dependencies to other *Component Descriptors*.
+To express dependencies to other component versions, a *Component Descriptor* has a field to specify dependencies to 
+other *Component Descriptors*.
 
 ```
 component:
@@ -191,7 +195,7 @@ An *extraIdentity* is a map, of key value pairs whereby:
 
 Two *extraIdentities* are equal iff they have the same key value pairs whereby the order is not relevant.
 
-Example:
+Example for twi resource entries with the same name but different extra identities and therefore different identifier:
 
 ```
 component:
@@ -211,7 +215,7 @@ component:
 ## Labels for Sources, Resources and Component References
 
 Every entry in the *sources*, *resources* and *componentReferences* fields, and the component itself may declare
-optional labels. This allows application specific extensions.
+optional labels. This allows to express application specific extensions.
 
 ## Repository Contexts
 
@@ -226,4 +230,4 @@ in which the *Component Descriptor* is stored.
 
 Other fields of a *Component Descriptor* are:
 
-- provider: provider of the components,e.g. a company, organization,...
+- provider: provider of the component,e.g. a company, organization,...
