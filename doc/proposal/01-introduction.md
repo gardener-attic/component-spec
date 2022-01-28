@@ -1,30 +1,31 @@
 # Introduction
 
 The definition, structure and management of software in larger enterprises often builds upon tools and processes, which
-largely originate from former on-premise thinking and monolythical architectures. Development teams responsible for
+largely originate from former on-premise thinking and monolithic architectures. Development teams responsible for
 solutions or services have built specific, often point-2-point integrations with CI/CD systems, compliance tools,
 reporting dashboards or delivery processes in the past. Larger development teams might have even built their own
 toolsets specifically for their products, including those needed for compliance handling and delivery automation.
 These concepts, process integrations and resulting tools are often still in use today, even though everyone knows:
-They don't fit into todays cloud world.
+They don't fit into today's cloud world.
 
 The result, especially in larger companies, is a fragmented set of homegrown specific tools across products, solutions
-and services, leading to a multitude of problems, all of them tremendously affecting an enterprises ability to deliver
-software consistently and compliant to its own or customer operated target environments.<br> Due to cumbersome delivery
+and services, leading to a multitude of problems, all of them tremendously affecting an enterprises' ability to deliver
+software consistently and compliant to its own or customer operated target environments. Due to cumbersome delivery
 and compliance processes, overly complex and thus hard to understand CI/CD pipelines, and the inability to instantly
 provide a holistic aggregated view of currently running technical artifacts for each and every production environment
-(including both cloud and on-premise), the overall management of software at scale becomes tedious, error prone and
+(including both cloud and on-premise), the overall management of software at scale becomes tedious, error-prone and
 ineffective.
 
 ## Why is this a huge problem?
+
 Most prominently, with an "accumulated zoo of tools" and the general unalignment of how software is defined and managed,
 it is not possible without additional overhead (like setting up even more processes and specific tools on top) to manage
 the complete lifecycle of all solutions, services or individual deployment artifacts and their versions running in any
-given landscape. Even worse, when trying to setup new target landscapes, potentially, a roll call to dozens of
-development teams might be needed in order to succesfully orchestrate, deploy and configure the software in the new
+given landscape. Even worse, when trying to set up new target landscapes, potentially, a roll call to dozens of
+development teams might be needed in order to successfully orchestrate, deploy and configure the software in the new
 environments.
 
-The major problem at hand here is the abscence of one aligned software component model, consistently used across the
+The major problem at hand here is the absence of one aligned software component model, consistently used across the
 enterprise to define, describe and finally deliver compliant software components and their technical artifacts. Such
 a model would help not only with streamlined deployments to public and private cloud environments, but also in various
 other areas of lifecycle management like compliance processes and reporting.
@@ -54,7 +55,7 @@ management of software, is a must.
 
 ## Scope
 
-Operating software installations/products both for cloud and on-premises covers many aspects:
+Operating software installations/products, both for cloud and on-premises, covers many aspects:
 
 - how, when and where are the technical artefacts created
 - how are technical artefacts stored and accessed

@@ -198,7 +198,7 @@ The details how the layer information is provided, e.g. as a tar with an entry f
 **Inputs**:
 
 - String ociArtefactName: name of the OCI artefact
-- String tag: reference of the OCI artefact
+- String tag: tag of the OCI artefact
 - String artefactMediaType: media type of the whole oci artefact
 - String configMediaType: media type of the config of the OCI artefact
 - Array[String] layerMediaTypes: the list of media types for each layer, whereby the ith entry belongs to the ith layer 
@@ -223,7 +223,8 @@ in a *Component Descriptor* as follows:
   - name: example-chart-blob
     type: ociImage
     access:
-      imageReference: example.com/test
+      ociArtefactName: example.com/test
+      tag: 1.1.1
       type: localOciArtefact
   ... 
 ```

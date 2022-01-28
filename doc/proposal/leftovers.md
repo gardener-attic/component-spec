@@ -12,6 +12,8 @@ Component-Spec-Meeting
   - What is the semantic of this section?
   - current schema only allows OCI-Ref, this needs to be extensible
   - Should OCI ref be part of this spec?
+
+- Resources.srcref: do we still need this?
   
 - What are the next step to specify?
   - particular types
