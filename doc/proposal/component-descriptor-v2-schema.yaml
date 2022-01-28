@@ -87,6 +87,7 @@ definitions:
       access:
         anyOf:
           - $ref: '#/definitions/access'
+          - $ref: '#/definitions/localBlobAccess'
 
   componentReference:
     type: 'object'
