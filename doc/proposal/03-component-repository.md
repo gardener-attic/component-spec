@@ -8,7 +8,10 @@ and the *Component Descriptor* contains only the information how to access it. A
 also provide the possibility to store technical artefacts together with the *Component Descriptors* in the 
 *Component Repository* itself as so-called *local blobs*. This allows to pack all component versions with their 
 technical artefacts in a *Component Repository* as a completely self-contained package. This is a typical requirement 
-if you need to deliver your product into a fenced landscape.
+if you need to deliver your product into a fenced landscape. 
+
+Local blobs could be referenced in the *resources* section of a *Component Descriptor, e.g. if the blob contains a 
+binary, or in the *sources* section, e.g. if the blob contains a tar archive of a git repo. 
 
 As we assume that OCI repositories will become the leading storage technology for technical artefacts and will
 often be the backend of *Component Repository* implementations, *Component Repositories* provide methods
@@ -16,7 +19,9 @@ to store OCI artefacts as so-called local OCI artefacts, i.e. OCI artefacts whic
 *getLocalOCIArtefact*. It is not required that these OCI artefacts are accessible by an external OCI HTTP endpoint as 
 specified [here](https://github.com/opencontainers/distribution-spec/blob/main/spec.md). If the repository provides 
 such an HTTP endpoint, it could be requested by the method getOciEndpointForLocalOciArtefact. This allows to e.g. 
-transport images from one *Component Repository* to another without the need to transform them into local blobs first. 
+transport images from one *Component Repository* to another without the need to transform them into local blobs first.
+
+Local OCI blobs could only be referenced in the *resources* section of a *Component Descriptor.
 
 Particular *Component Repository* implementations might extend the interface by special methods for other
 types of binaries, e.g. helm charts.
