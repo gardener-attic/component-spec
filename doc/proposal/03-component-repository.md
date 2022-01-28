@@ -3,18 +3,22 @@
 *Component Descriptors* are stored in *Component Repositories*. This chapter describes in a programing language/protocol
 agnostic fashion the functions a *Component Repository* must implement to be OCM conform.
 
-To allow storing all technical artefacts together with the *Component Descriptors* of a software product version,
-these could also be stored in a *Component Repository* as so-called local blobs.
+Usually sources and resources are stored in some external storage, e.g. a docker image is stored in some OCI registry
+and the *Component Descriptor* contains only the information how to access it. As an alternative *Component Repositories* 
+also provide the possibility to store technical artefacts together with the *Component Descriptors* in the 
+*Component Repository* itself as so-called *local blobs*. This allows to pack all component versions with their 
+technical artefacts in a *Component Repository* as a completely self-contained package. This is a typical requirement 
+if you need to deliver your product into a fenced landscape.
 
 As we assume that OCI repositories will become the leading storage technology for technical artefacts and will
-often be the backend of *Component Repository* Implementations, *Component Repositories* provide methods
+often be the backend of *Component Repository* implementations, *Component Repositories* provide methods
 to store OCI artefacts as so-called local OCI artefacts, i.e. OCI artefacts which are accessible by a special function
 *getLocalOCIArtefact*. It is not required that these OCI artefacts are accessible by an external OCI HTTP endpoint as 
-specified [here](https://docs.docker.com/registry/spec/api/). If the repository provides such an HTTP endpoint, it could 
-be requested by the method getOciEndpointForLocalOciArtefact. This allows to e.g. transport images from one *Component
-Repository* to another without the need to transform them into local blobs first. 
+specified [here](https://github.com/opencontainers/distribution-spec/blob/main/spec.md). If the repository provides 
+such an HTTP endpoint, it could be requested by the method getOciEndpointForLocalOciArtefact. This allows to e.g. 
+transport images from one *Component Repository* to another without the need to transform them into local blobs first. 
 
-Particular *Component Repository* implementations might extend the interface by special methods handling other
+Particular *Component Repository* implementations might extend the interface by special methods for other
 types of binaries, e.g. helm charts.
 
 **Todo: Image mit CDs, localblobs, localociimages, ...**
@@ -31,8 +35,8 @@ with the same name and version, the upload fails.
 A *Component Repository* must check if all referenced *Component Descriptors*, local blobs and local OCI artefacts 
 are already stored in the *Component Repository*.
 
-If the identifier of entries  *resources*, *sources* or *componentReferences* are not unique, as described before,
-an *invalidArgument* error is returned.
+If the identifier of entries in *resources*, *sources* or *componentReferences* are not unique, as described before,
+an *invalidArgument* error must be returned.
 
 If the identifier of *resources* and *sources* (name plus extraIdentity) are not unique, a *Component Repository* might 
 automatically add the version field to the extraIdentity to resolve this problem. Of course, it must still fail, if 
@@ -49,8 +53,7 @@ entry is automatically added.
 
 **Errors**:
 
-- alreadyExists: If there already exists a *Component Descriptor*
-  with the same name and version
+- alreadyExists: If there already exists a *Component Descriptor* with the same name and version
 - missingReference: If a referenced *Component Descriptor*, local blob or local OCI artefact does not exist in 
   the *Component Repository*
 - invalidArgument: If the parameter *componentDescriptor* is missing or is not conform to the
@@ -59,7 +62,7 @@ entry is automatically added.
 
 ### GetComponentDescriptor
 
-**Description**: Returns the *Component Descriptor* as a Yaml string.
+**Description**: Returns the *Component Descriptor* as a Yaml string according the [JSON schema](component-descriptor-v2-schema.yaml).
 
 **Inputs**:
 
@@ -99,12 +102,12 @@ by another *Component Descriptor*.
 ### UploadLocalBlob
 
 **Description**: Allows uploading binary data. The binary data belongs to a particular *Component Descriptor* 
-and can be referenced by the component descriptor in its *resources* section. *Component Descriptors* are not allowed
-to reference local blobs of other *Component Descriptors*. 
+and can be referenced by the component descriptor in its *resources* or *sources* section. 
+*Component Descriptors* are not allowed to reference local blobs of other *Component Descriptors*. 
 
 When uploading a local blob it is not required that the corresponding *Component Descriptor* already exists. 
 Usually local blobs are uploaded first because it is not allowed to upload a *Component Descriptor* if its local 
-blobs not already exists.
+blobs not already exist.
 
 **Inputs**:
 
@@ -114,11 +117,11 @@ blobs not already exists.
 
 **Outputs**:
 
-- String blobIdentifier: The identifier, which must be used in the resource reference in the *Component Descriptor* 
+- String blobIdentifier: The identifier, which must be used in the resource or source reference in the *Component Descriptor* 
 
 **Errors**:
 
-- invalidArgument: If one of the input parameters is empty
+- invalidArgument: If one of the input parameters is empty or not valid
 - repositoryError: If some error occurred in the *Component Repository*
 
 **Example**: 
@@ -160,12 +163,12 @@ The entry in the *Component Descriptor* looks as follows:
 **Errors**:
 
 - doesNotExist: If the local blob does not exist
-- invalidArgument: If one of the input parameters is empty
+- invalidArgument: If one of the input parameters is empty or invalid
 - repositoryError: If some error occurred in the *Component Repository*
 
 ### DeleteLocalBlob
 
-**Description**: Deletes a local blob.
+**Description**: Deletes a local blob. An error occurs if there is still an existing reference to the blob.
 
 **Inputs**:
 
@@ -183,10 +186,10 @@ The entry in the *Component Descriptor* looks as follows:
 
 ## Functions for Local OCI Artefacts
 
-OCI artefacts and here mainly OCI images are usually referenced by more than one *Component Descriptor*. Therefore
-we decided not to store local OCI artefacts in the context of a *Component Descriptor* as local blobs. Remember, when you 
-upload a local blob you need to specify the *Component Descriptor* it belongs to. Only this *Component Descriptor* could 
-reference it.
+OCI artefacts and here mainly OCI images are usually referenced by more than one *Component Descriptor*. Therefore,
+local OCI artefacts are not stored in the context of a *Component Descriptor* as local blobs. Remember, when you 
+upload a local blob, you need to specify the *Component Descriptor* it belongs to and only this *Component Descriptor* 
+could reference it.
 
 ### UploadLocalOCIArtefact
 
@@ -214,7 +217,7 @@ The details how the layer information is provided, e.g. as a tar with an entry f
 - repositoryError: If some error occurred in the *Component Repository*
 
 **Example**:
-Assume you have uploaded a local OCI artefact with name *example.com/test* and tag *1.1.1* you could reference it 
+Assume you have uploaded a local OCI artefact with name *example.com/test* and tag *1.1.1*, you could reference it 
 in a *Component Descriptor* as follows:
 
 ```
@@ -243,7 +246,7 @@ an entry for every layer, are implementation specific.
 
 - String artefactMediaType: media type of the whole oci artefact
 - String configMediaType: media type of the config of the OCI artefact
-- Array[String] layerMediaTypes: the list of media types for each layer, whereby the ith entry belongs to the ith layer
+- Array[String] layerMediaTypes: the array of media types for each layer, whereby the ith entry belongs to the ith layer
 - BinaryStream config: stream of the data of the config blob
 - BinaryStream layer: stream of the binary data of the different layer
 
@@ -255,7 +258,7 @@ an entry for every layer, are implementation specific.
 
 ### DeleteLocalOCIArtefact
 
-**Description**: Deletes a local OCI artefact. 
+**Description**: Deletes a local OCI artefact. This operation must fail if the local OCI artefact is still referenced.
 
 **Inputs**:
 
@@ -274,9 +277,9 @@ an entry for every layer, are implementation specific.
 
 **Description**: If the *Component Repository* supports the[Open Container Initiative Distribution Specification]
 (https://github.com/opencontainers/distribution-spec/blob/main/spec.md) and provides a spec conforming endpoint
-this endpoint could be retrieved by this function.
+for a local OCI artefact, this endpoint could be retrieved by this function.
 
-The v2 http endpoint to e.g. the manifest are as follows: 
+The v2 http endpoints to e.g. the manifest are as follows: 
 
 ``` registryEndPoint/v2/name/manifests/digestOfManifest ```
 
@@ -285,7 +288,7 @@ or
 ``` registryEndPoint/v2/name/manifests/tag ```
 
 The returned `name` needs not to be the same as specified in the parameter *ociArtefactName*, but it is recommended 
-that *ociArtefactName* is at least a suffix of `<name>`.
+that *ociArtefactName* is a suffix of `<name>`.
 
 **Inputs**:
 
@@ -307,7 +310,7 @@ that *ociArtefactName* is at least a suffix of `<name>`.
 
 **Example:**
 
-Assume the method is called ass follows
+Assume the method is called as follows
 
 ```
     getOciEndpointForLocalOciArtefact("example.com/test", "0.1.1")
@@ -321,7 +324,7 @@ and returns the following data
     digestOfManifest="sha256:b5733194756a0a4a99a4b71c4328f1ccf01f866b5c3efcb4a025f02201ccf623"
 ```
 
-then the manifest could be fetched using one of the following URLs
+then the manifest could be fetched with a HTTP GET request using one of the following URLs
 
 ```
     test.example-registry.com/v2/examplefolder/example.com/test/manifests/sha256:b5733194756a0a4a99a4b71c4328f1ccf01f866b5c3efcb4a025f02201ccf623
@@ -332,9 +335,3 @@ or
 ```
     test.example-registry.com/v2/examplefolder/example.com/test/manifests/0.1.1
 ```
-
-
-
-
-
-
