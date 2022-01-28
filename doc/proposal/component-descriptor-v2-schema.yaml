@@ -54,19 +54,6 @@ definitions:
       type:
         type: 'string'
 
-  ociRepositoryContext:
-    allOf:
-      - $ref: '#/definitions/repositoryContext'
-      - required:
-        - 'type'
-        - 'baseUrl'
-        properties:
-          type:
-            type: 'string'
-            enum: ['ociRegistry']
-          baseUrl:
-            type: 'string'
-
   access:
     type: 'object'
     description: 'base type for the access of a source or resource'
@@ -198,7 +185,7 @@ definitions:
         type: 'string'
       tag:
         description: 'tag of the local oci artefact'
-        type: 'string'
+        $ref: '#/definitions/relaxedSemver'
 
   component:
     type: 'object'
@@ -219,9 +206,7 @@ definitions:
       repositoryContexts:
         type: 'array'
         items:
-          anyOf:
-            - $ref: '#/definitions/repositoryContext'
-            - $ref: '#/definitions/ociRepositoryContext'
+          $ref: '#/definitions/repositoryContext'
       provider:
         type: 'string'
       labels:
