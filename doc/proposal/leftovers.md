@@ -1,26 +1,19 @@
 ## Topics for Meeting with Uwe and Christian
 
-Punkte für Component-Spec-Meeting
+Component-Spec-Meeting
 - Which resource types exists for cd.resource.access.type?
-    - lokale (welche lokalen gibt es, wirklich nur einen)
-    - was muss man für nicht lokale spezifizieren?
-        - typspezifisches Format
-        - welche Typen nehmen wir gleich auf
-        - erweiterbar
-- welche typen von sourcen gibt es git/http, welche sollen in die spec
-- warum haben source entries 2 Type-Felder?
-- Warum 3 Definitionen für Resourcen? https://gardener.github.io/component-spec/component-descriptor-v2.html#tab-pane_component_resources_items_anyOf_i2
-- Was sollen diese Sätze?
+    - we have only two local types: localOciBlob, LocalOciArtefact
+      - better name for localOciBlob localBlob but what about our current CDs 
+    - Do we want to specify a format for other resource type and source types?
+        - if yes where and which types
+- Was does this mean?
     - In v2, for backwards-compatibility-reasons, the (mandatory) version attribute is implicitly added to the set of additional identity attributes iff it
       is not explicitly declared as such, and the uniqueness constraint would otherwise be violated.
       - https://gardener.github.io/component-spec/concepts.html
 - Repository Context in CD
-  - unglücklich, dass es kein Top-Level-Typfeld und der Rest in untergeordneter Struktur
-  - seltsam, das ein Object auch seinen Speicherort beinhaltet, oder ist das nur für Transport-Historie?
-  - aktuelles Schema erlaubt nur OCI-Ref. Wir haben aber auch Filesystem etc. und eine Standart muss hier erweiterbar sein!
+  - current schema only allows OCI-Ref, this needs to be extensible
 
 ## Todo
-- Currently the access type for a local blob is localOciBlob, which sounds wrong. localBlob would be better.
 - change technical artefacts to software artefacts 
 - describe that name and version of a component descriptor are unique in the context of a component repository
 - check json schema for component descriptor

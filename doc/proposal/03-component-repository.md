@@ -31,6 +31,8 @@ with the same name and version, the upload fails.
 A *Component Repository* must check if all referenced *Component Descriptors*, local blobs and local OCI artefacts 
 are already stored in the *Component Repository*.
 
+If the last entry in the 
+
 
 **Inputs**:
 
