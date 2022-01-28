@@ -6,12 +6,18 @@ Component-Spec-Meeting
       - better name for localOciBlob localBlob but what about our current CDs 
     - Do we want to specify a format for other resource type and source types?
         - if yes where and which types
-- Was does this mean?
-    - In v2, for backwards-compatibility-reasons, the (mandatory) version attribute is implicitly added to the set of additional identity attributes iff it
-      is not explicitly declared as such, and the uniqueness constraint would otherwise be violated.
-      - https://gardener.github.io/component-spec/concepts.html
+
 - Repository Context in CD
+  - why are there location data withing the data? 
+  - What is the semantic of this section?
   - current schema only allows OCI-Ref, this needs to be extensible
+  - Should OCI ref be part of this spec?
+  
+- What are the next step to specify?
+  - particular types
+  - Transport, CTF
+  - Signing 
+  - etc.
 
 ## Todo
 - change technical artefacts to software artefacts 

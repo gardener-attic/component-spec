@@ -31,8 +31,15 @@ with the same name and version, the upload fails.
 A *Component Repository* must check if all referenced *Component Descriptors*, local blobs and local OCI artefacts 
 are already stored in the *Component Repository*.
 
-If the last entry in the 
+If the identifier of entries  *resources*, *sources* or *componentReferences* are not unique, as described before,
+an *invalidArgument* error is returned.
 
+If the identifier of *resources* and *sources* (name plus extraIdentity) are not unique, a *Component Repository* might 
+automatically add the version field to the extraIdentity to resolve this problem. Of course, it must still fail, if 
+uniqueness of the resource identifier is not achieved this way.
+
+If the last entry in the "repositoryContext" field, is not an entry for the current *Component Repository*, such an 
+entry is automatically added.
 
 **Inputs**:
 
