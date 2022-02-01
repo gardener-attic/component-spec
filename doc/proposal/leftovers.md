@@ -1,11 +1,19 @@
 ## Topics for Meeting with Uwe and Christian
 
 Component-Spec-Meeting
+
+- Reference in CD to localOciArtefact has a name and tag access. Do we also need digest instead of tag
+
+- localBlob
+  - currently only info like "type:helm/chart, type: localBlob"
+  - But no info if this a tar or zipped tar?
+  - Why not already provide info like helmchart+tar to help the repo storing data
+
 - Which resource types exists for cd.resource.access.type?
-    - we have only two local types: localOciBlob, LocalOciArtefact
-      - better name for localOciBlob localBlob but what about our current CDs 
-    - Do we want to specify a format for other resource type and source types?
-        - if yes where and which types
+  - we have only two local types: localOciBlob, LocalOciArtefact
+    - better name for localOciBlob localBlob but what about our current CDs 
+  - Do we want to specify a format for other resource type and source types?
+      - if yes where and which types
 
 - Repository Context in CD
   - why are there location data withing the data? 
@@ -14,6 +22,10 @@ Component-Spec-Meeting
   - Should OCI ref be part of this spec?
 
 - Resources.srcref: do we still need this?
+
+- CTF:
+  - Should be included in OCM?
+  - Aren't there already any OCI based transport formats?
   
 - What are the next step to specify?
   - particular types

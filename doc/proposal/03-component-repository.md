@@ -191,38 +191,150 @@ The entry in the *Component Descriptor* looks as follows:
 
 ## Functions for Local OCI Artefacts
 
-OCI artefacts and here mainly OCI images are usually referenced by more than one *Component Descriptor*. Therefore,
-local OCI artefacts are not stored in the context of a *Component Descriptor* as local blobs. Remember, when you 
-upload a local blob, you need to specify the *Component Descriptor* it belongs to and only this *Component Descriptor* 
-could reference it.
+OCI artefacts are usually referenced by more than one *Component Descriptor*. Therefore, local OCI artefacts are not 
+stored in the context of a *Component Descriptor* as local blobs. Remember, when you upload a local blob, you need 
+to specify the *Component Descriptor* it belongs to and only this *Component Descriptor* could reference it.
 
-### UploadLocalOCIArtefact
+The semantics of the methods for handling OCI artefacts are quite similar to the 
+[OCI specification](https://github.com/opencontainers/distribution-spec/blob/main/spec.md) but abstracts from the
+protocol details.
 
-**Description**: Uploads an OCI artefact to the *Component Repository*. The *name* and *tag* of the OCI artefact
+### UploadLocalOciBlob
+
+**Description**: Uploads an OCI blob to the *Component Repository*. The *name* and *tag* of the OCI artefact
 must follow the rules specified [here](https://github.com/opencontainers/distribution-spec/blob/main/spec.md#pull).
-
-The details how the layer information is provided, e.g. as a tar with an entry for every layer, are implementation specific.
 
 **Inputs**:
 
 - String ociArtefactName: name of the OCI artefact
 - String tag: tag of the OCI artefact
-- String artefactMediaType: media type of the whole oci artefact
-- String configMediaType: media type of the config of the OCI artefact
-- Array[String] layerMediaTypes: the list of media types for each layer, whereby the ith entry belongs to the ith layer 
-- BinaryStream config: stream of the data of the config blob
-- BinaryStream layer: stream of the binary data of the different layer
+- BinaryStream content: stream of the binary data of the blob
 
 **Outputs**:
+
+- String digest: digest to access the blob according to the OCI specification
+
+**Errors**:
+
+- invalidArgument: If one of the input parameters is empty or has the wrong format.
+- repositoryError: If some error occurred in the *Component Repository*
+
+### UploadLocalOCIManifest
+
+**Description**: Uploads an OCI manifest. The manifest could be either an
+[image manifest](https://github.com/opencontainers/image-spec/blob/main/manifest.md) or an
+[image index manifest](https://github.com/opencontainers/image-spec/blob/main/image-index.md).
+
+The *name* and *tag* of the OCI artefact must follow the rules specified 
+[here](https://github.com/opencontainers/distribution-spec/blob/main/spec.md#pull).
+
+The rules for rejecting a manifest are the same as specified in the 
+[OCI distribution spec](https://github.com/opencontainers/distribution-spec/blob/main/spec.md#push).
+
+**Inputs**:
+
+- String ociArtefactName: name of the OCI artefact
+- String tag: tag of the OCI artefact
+- BinaryStream manifest: stream of the manifest
+
+**Outputs**:
+
+- String digest: digest to access the manifest according to the OCI specification
 
 **Errors**:
 
 - alreadyExists: If there exists a local OCI artefact with the same name and tag
-- invalidArgument: If one of the input parameters is empty or has the wrong format
+- invalidArgument: If one of the input parameters is empty or has the wrong format.
+- invalidArtefact: If the *Component Repository* found some inconsistencies with respect to the OCI manifest
+- missingReference: If referenced blobs or manifests are missing
+- repositoryError: If some error occurred in the *Component Repository*
+
+### GetLocalOciBlob
+
+**Description**: Returns an OCI blob of the *Component Repository*. The *name* of the OCI artefact
+must follow the rules specified [here](https://github.com/opencontainers/distribution-spec/blob/main/spec.md#pull).
+
+**Inputs**:
+
+- String ociArtefactName: name of the OCI artefact
+- String digest: digest of the blob
+
+**Outputs**:
+
+- BinaryStream content: binary data of the blob
+
+**Errors**:
+
+- invalidArgument: If one of the input parameters is empty or has the wrong format.
+- doesNotExist: If the blob does not exist
+- repositoryError: If some error occurred in the *Component Repository*
+
+### GetLocalOciManifest
+
+**Description**: Returns manifest of the *Component Repository*. The *name* of the OCI artefact
+must follow the rules specified [here](https://github.com/opencontainers/distribution-spec/blob/main/spec.md#pull).
+
+Either tag or manifest must be set, but not both.
+
+**Inputs**:
+
+- String ociArtefactName: name of the OCI artefact
+- String tag: tag of the manifest
+- String digest: digest of the manifest
+
+**Outputs**:
+
+- BinaryStream content: binary data of the manifest
+
+**Errors**:
+
+- invalidArgument: If one of the input parameters is empty or has the wrong format.
+- doesNotExist: If the manifest does not exist
+- repositoryError: If some error occurred in the *Component Repository*
+
+### DeleteLocalOciBlob
+
+**Description**: Deletes an OCI blob of the *Component Repository*. The *name* of the OCI artefact
+must follow the rules specified [here](https://github.com/opencontainers/distribution-spec/blob/main/spec.md#pull).
+
+It is up to the *Component Repository* if an error is thrown if the blob is still referenced by a manifest.
+
+**Inputs**:
+
+- String ociArtefactName: name of the OCI artefact
+- String digest: digest of the blob
+
+**Outputs**:
+
+- invalidArgument: If one of the input parameters is empty or has the wrong format.
+- existingReference: vis still referenced by a manifest
+- doesNotExist: if the blob does not exist
+- repositoryError: If some error occurred in the *Component Repository*
+
+### DeleteLocalOciManifest
+
+**Description**: Deletes an OCI manifest of the *Component Repository*. The *name* of the OCI artefact
+must follow the rules specified [here](https://github.com/opencontainers/distribution-spec/blob/main/spec.md#pull).
+
+It is up to the *Component Repository* if an error is thrown if the manifest is still referenced by a manifest.
+
+Either tag or manifest must be set, but not both.
+
+**Inputs**:
+
+- String ociArtefactName: name of the OCI artefact
+- String tag: tag of the manifest
+- String digest: digest of the manifest
+
+**Outputs**:
+
+- invalidArgument: If one of the input parameters is empty or has the wrong format.
+- existingReference: if the blob is still referenced by a manifest
+- doesNotExist: if the blob does not exist
 - repositoryError: If some error occurred in the *Component Repository*
 
 **Example**:
-Assume you have uploaded a local OCI artefact with name *example.com/test* and tag *1.1.1*, you could reference it 
+Assume you have uploaded a manifest for a local OCI artefact with name *example.com/test* and tag *1.1.1*, you could reference it 
 in a *Component Descriptor* as follows:
 
 ```
@@ -237,74 +349,26 @@ in a *Component Descriptor* as follows:
   ... 
 ```
 
-### GetLocalOCIArtefact
+### GetOciEndpointForLocalOciArtefact
 
-**Description**: Returns the local OCI artefact. The details how the layer information is provided, e.g. as a tar with 
-an entry for every layer, are implementation specific.
-
-**Inputs**:
-
-- String ociArtefactName: name of the OCI artefact
-- String tag: reference of the OCI artefact
-
-**Outputs**:
-
-- String artefactMediaType: media type of the whole oci artefact
-- String configMediaType: media type of the config of the OCI artefact
-- Array[String] layerMediaTypes: the array of media types for each layer, whereby the ith entry belongs to the ith layer
-- BinaryStream config: stream of the data of the config blob
-- BinaryStream layer: stream of the binary data of the different layer
-
-**Errors**:
-
-- doesNotExist: If the artefact does not exist
-- invalidArgument: If one of the input parameters is empty or has a wrong format
-- repositoryError: If some error occurred in the *Component Repository*
-
-### DeleteLocalOCIArtefact
-
-**Description**: Deletes a local OCI artefact. This operation must fail if the local OCI artefact is still referenced.
-
-**Inputs**:
-
-- String ociArtefactName: name of the OCI artefact
-- String tag: tag of the local OCI artefact
-
-**Outputs**:
-
-**Errors**:
-
-- existingReference: If the local OCI artefact is still referenced in some *Component Descriptor*
-- invalidArgument: If one of the input parameters is empty or has a wrong format
-- repositoryError: If some error occurred in the *Component Repository*
-
-### getOciEndpointForLocalOciArtefact
-
-**Description**: If the *Component Repository* supports the[Open Container Initiative Distribution Specification]
+**Description**: If the *Component Repository* supports the [Open Container Initiative Distribution Specification]
 (https://github.com/opencontainers/distribution-spec/blob/main/spec.md) and provides a spec conforming endpoint
-for a local OCI artefact, this endpoint could be retrieved by this function.
+for local OCI artefacts, it is possible that these are accessible by another external name, e.g. if you implement a solution
+where several *Component Repositories* on top of one OCI registry.
 
-The v2 http endpoints to e.g. the manifest are as follows: 
+Providing the ociArtefactName, this method returns the external name. 
 
-``` registryEndPoint/v2/name/manifests/digestOfManifest ```
-
-or 
-
-``` registryEndPoint/v2/name/manifests/tag ```
-
-The returned `name` needs not to be the same as specified in the parameter *ociArtefactName*, but it is recommended 
-that *ociArtefactName* is a suffix of `<name>`.
+The external name needs not to be the same as *ociArtefactName*, but it is recommended 
+that *ociArtefactName* is a suffix of the external name.
 
 **Inputs**:
 
 - String ociArtefactName: name of the OCI artefact
-- String tag: tag of the OCI artefact
 
 **Outputs**:
 
 - String registryEndPoint: endpoint of the OCI registry
-- String name: name of the OCI artefact
-- String digestOfManifest: digest of manifest
+- String externalNam: external name of the OCI artefact
 
 **Errors**:
 
@@ -318,7 +382,7 @@ that *ociArtefactName* is a suffix of `<name>`.
 Assume the method is called as follows
 
 ```
-    getOciEndpointForLocalOciArtefact("example.com/test", "0.1.1")
+    GetOciEndpointForLocalOciArtefact("example.com/test")
 ```
 
 and returns the following data
@@ -326,10 +390,9 @@ and returns the following data
 ```
     registryEndPoint="test.example-registry.com
     name="examplefolder/example.com/test"
-    digestOfManifest="sha256:b5733194756a0a4a99a4b71c4328f1ccf01f866b5c3efcb4a025f02201ccf623"
 ```
 
-then the manifest could be fetched with a HTTP GET request using one of the following URLs
+then the manifest could be fetched with an HTTP GET request using one of the following URLs
 
 ```
     test.example-registry.com/v2/examplefolder/example.com/test/manifests/sha256:b5733194756a0a4a99a4b71c4328f1ccf01f866b5c3efcb4a025f02201ccf623
@@ -340,3 +403,4 @@ or
 ```
     test.example-registry.com/v2/examplefolder/example.com/test/manifests/0.1.1
 ```
+
