@@ -29,7 +29,7 @@ not improve and will only get worse over time.
 The major problem at hand here is the absence of one aligned software component model, consistently used across the
 enterprise, to manage compliant software components and their technical artifacts. Such
 a model would help not only with streamlined deployments to public and private cloud environments, but also in various
-other areas of lifecycle management like compliance processes and reporting. This software component model must describe all technical artifacts of a software product, and establish an ID, which could then be used across all lifecycle management tasks.
+other areas of lifecycle management like compliance processes and reporting. This software component model must describe all technical artifacts of a software product, and establish an ID for each component, which should then be used across all lifecycle management tasks.
 
 First and foremost, the model has to be technology-agnostic at its heart, so that not only modern containerized cloud,
 but also legacy software is supported, out-of-the-box. It simply has to be acknowledged that companies are not able to
