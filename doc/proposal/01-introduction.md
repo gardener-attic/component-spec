@@ -29,19 +29,15 @@ not improve and will only get worse over time.
 The major problem at hand here is the absence of one aligned software component model, consistently used across the
 enterprise, to manage compliant software components and their technical artifacts. Such
 a model would help not only with streamlined deployments to public and private cloud environments, but also in various
-other areas of lifecycle management like compliance processes and reporting.
+other areas of lifecycle management like compliance processes and reporting. This software component model must describe all technical artifacts of a software product, and establish an ID, which could then be used across all lifecycle management tasks.
 
-The issues outlined above all lead to one conclusion: There is an imminent requirement for one aligned software
-component model, which describes all technical artefacts of a software product, to be used for all lifecycle management
-tasks.
-
-This model first and foremost has to be technology-agnostic at its heart, so that not only modern containerized cloud,
+First and foremost, the model has to be technology-agnostic at its heart, so that not only modern containerized cloud,
 but also legacy software is supported, out-of-the-box. It simply has to be acknowledged that companies are not able to
 just drop everything that has been used in the past and solely use shiny new cloud native workloads. This fact makes it
 crucial to establish a common component model, which is able to handle both cloud native and legacy software, for which
 it needs to be fully agnostic about the technology used.
 
-Additionally, a model suitable to help with the outlined problem(s) needs to be easily extensible. None is able to
+Additionally, the model needs to be easily extensible. No one is able to
 predict the future, apart from the fact that things will always change, especially in the area of IT. Being able to
 adapt to future trends, without constantly affecting the processes and tools responsible for the core of the lifecycle
 management of software, is a must.
