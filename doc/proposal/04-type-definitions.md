@@ -9,7 +9,7 @@ recommended use these formats in all implementations based on OCM.
 
 This is the recommended format to reference an OCI artefact in a 
 
-```
+```yaml
     name: example-name
     type: ociImage
     access:
@@ -20,4 +20,31 @@ This is the recommended format to reference an OCI artefact in a
 
 *imageReference* is the reference to the OCI image reference, whereby name, tag and digest are specified 
 [here](https://github.com/opencontainers/distribution-spec/blob/main/spec.md#pull)
+
+### Local Blob
+
+```yaml
+resources:
+  - name: example-resource-local
+    relation: local
+    type: helm.io/chart
+    version: v0.1.0
+    access:
+      digest: sha256:123...
+      type: localOciBlob
+```
+
+### S3
+
+```yaml
+resources:
+  - name: example-resource-s3
+    relation: local
+    type: example-type
+    version: "v0.1.0"
+    access:
+      bucketName: examplebucket
+      objectKey: objects/123...
+      type: s3
+```
 
