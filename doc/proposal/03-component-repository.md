@@ -14,12 +14,15 @@ Local blobs could be referenced in the *resources* section of a *Component Descr
 binary, or in the *sources* section, e.g. if the blob contains a tar archive of a git repo. 
 
 As we assume that OCI repositories will become the leading storage technology for technical artefacts and will
-often be the backend of *Component Repository* implementations, *Component Repositories* provide methods
-to store OCI artefacts as so-called local OCI artefacts, i.e. OCI artefacts which are accessible by a special function
-*getLocalOCIArtefact*. It is not required that these OCI artefacts are accessible by an external OCI HTTP endpoint as 
-specified [here](https://github.com/opencontainers/distribution-spec/blob/main/spec.md). If the repository provides 
-such an HTTP endpoint, it could be requested by the method getOciEndpointForLocalOciArtefact. This allows to e.g. 
-transport images from one *Component Repository* to another without the need to transform them into local blobs first.
+often be the backend of a *Component Repository* implementations, *Component Repositories* provide methods
+to store OCI artefacts as so-called local OCI artefacts. It is not required that these OCI artefacts are accessible by 
+an external OCI HTTP endpoint as specified [here](https://github.com/opencontainers/distribution-spec/blob/main/spec.md). 
+If the repository provides such an HTTP endpoint, it could be requested by the method GetOciEndpointForLocalOciArtefact. 
+
+The idea behind requiring methods for local OCI artefacts is the possibility is to define a file based transport format 
+and implement a *Component Repository* interface on top of it. This allows implementing e.g. transport algorithms just 
+working with the *Component Repository* interface on the source *Component Repository*, the transport format and the 
+target *Component Repository* with no need to convert OCI artefacts into local blobs and vice versa. 
 
 Local OCI blobs could only be referenced in the *resources* section of a *Component Descriptor.
 
@@ -98,6 +101,7 @@ by another *Component Descriptor*.
 
 **Errors**:
 
+- doesNotExist: If the *Component Descriptor* does not exist
 - existingReference: If the *Component Descriptor* is still referenced
 - invalidArgument: If one of the input parameters is empty
 - repositoryError: If some error occurred in the *Component Repository*
@@ -185,6 +189,7 @@ The entry in the *Component Descriptor* looks as follows:
 
 **Errors**:
 
+- doesNotExist: If the local blob does not exist
 - existingReference: If the local blob is still referenced
 - invalidArgument: If one of the input parameters is empty
 - repositoryError: If some error occurred in the *Component Repository*
@@ -354,9 +359,9 @@ in a *Component Descriptor* as follows:
 **Description**: If the *Component Repository* supports the [Open Container Initiative Distribution Specification]
 (https://github.com/opencontainers/distribution-spec/blob/main/spec.md) and provides a spec conforming endpoint
 for local OCI artefacts, it is possible that these are accessible by another external name, e.g. if you implement a solution
-where several *Component Repositories* on top of one OCI registry.
+where several *Component Repositories* on top of only one OCI registry.
 
-Providing the ociArtefactName, this method returns the external name. 
+Providing the ociArtefactName, i.e. the name for the local OCI artefact, this method returns the external name. 
 
 The external name needs not to be the same as *ociArtefactName*, but it is recommended 
 that *ociArtefactName* is a suffix of the external name.
@@ -403,4 +408,3 @@ or
 ```
     test.example-registry.com/v2/examplefolder/example.com/test/manifests/0.1.1
 ```
-

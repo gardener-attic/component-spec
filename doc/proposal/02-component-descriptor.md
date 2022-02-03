@@ -122,6 +122,7 @@ component:
       access:
         digest: sha256:b5733194756a0a4a99a4b71c4328f1ccf01f866b5c3efcb4a025f02201ccf623
         type: localOciBlob
+        mediaType: oci.image+tar
       ...
 ```
 

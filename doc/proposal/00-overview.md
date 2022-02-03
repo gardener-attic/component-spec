@@ -7,3 +7,4 @@ as a common basis to exchange this information between different tools and proce
 1. [Introduction](./01-introduction.md)
 2. [Component Descriptor Specification](./02-component-descriptor.md)
 3. [Component Repository Specification](./03-component-repository.md)
+4. [Type Definitions](./04-type-definitions.md)

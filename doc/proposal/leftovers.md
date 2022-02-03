@@ -2,7 +2,11 @@
 
 Component-Spec-Meeting
 
-- Reference in CD to localOciArtefact has a name and tag access. Do we also need digest instead of tag
+- Questions about types:
+  - Reference in CD to localOciArtefact has a name and tag access. Do we also need a digest instead of a tag
+  - 
+
+- application/vnd.oci.image.manifest.v1+json
 
 - localBlob
   - currently only info like "type:helm/chart, type: localBlob"
