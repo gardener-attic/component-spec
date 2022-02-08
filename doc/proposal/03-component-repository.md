@@ -102,7 +102,7 @@ blobs not already exist.
 
 The optional parameter *mediaType* provides information about the internal structure of the provided blob.
 
-With the optional parameter *localBlobInfos* you could provide additional information about the blob. This information
+With the optional parameter *annotations* you could provide additional information about the blob. This information
 could be used by the *Component Repository* itself or later if the local blob is stored again in some external
 location, e.g. an OCI registry.   
 
@@ -129,7 +129,7 @@ globalAccessInfo:
 - String version: Version of the *Component Descriptor*
 - BinaryStream data: Binary stream containing the local blob data.
 - String mediaType: media-type of the uploaded data (optional)
-- map(string,string) localBlobInfos: Additional information about the uploaded artefact (optional)
+- map(string,string) annotations: Additional information about the uploaded artefact (optional)
 
 **Outputs**:
 
@@ -143,14 +143,14 @@ globalAccessInfo:
 
 **Example**: 
 Assume you want to upload an OCI image to your *Component Repository* with the *UploadLocalBlob* function with media type
-*application/vnd.oci.image.manifest.v1+json* and the *localBlobInfos* "name: test/monitoring", and get the *localAccessInfo*: 
+*application/vnd.oci.image.manifest.v1+json* and the *annotations* "name: test/monitoring", and get the *localAccessInfo*: 
 
 ```
 localAccessInfo: 
   digest: sha256:b5733194756a0a4a99a4b71c4328f1ccf01f866b5c3efcb4a025f02201ccf623
 ```
 
-Then the entry in the *Component Descriptor* might look as follows. It is up to you, if you add the localBlobInfos 
+Then the entry in the *Component Descriptor* might look as follows. It is up to you, if you add the annotations 
 provided to the upload function and depends on the use case.
 
 ```
@@ -159,7 +159,7 @@ provided to the upload function and depends on the use case.
   - name: example-image
     type: oci-image
     access:
-      localBlobInfos:
+      annotations:
         name: test/monitoring
       mediaType: application/vnd.oci.image.manifest.v1+json
       type: localOciBlob
@@ -177,7 +177,7 @@ globalAccessInfo:
 ```
 
 An entry to this resource with this information in the *Component Descriptor* looks as the following. Again, it is up 
-to you, if you store the *localBlobInfos* provided to the upload function and depends on the use case.
+to you, if you store the *annotations* provided to the upload function and depends on the use case.
 
 ```
 - name: test-monitoring
@@ -185,7 +185,7 @@ to you, if you store the *localBlobInfos* provided to the upload function and de
   relation: external
   type: ociImage
   access:
-    localBlobInfos:
+    annotations:
       name: test/monitoring
     mediaType: application/vnd.oci.image.manifest.v1+json
     # here starts the global access information
