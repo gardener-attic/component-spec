@@ -8,7 +8,8 @@ and the *Component Descriptor* contains only the information how to access it. A
 also provide the possibility to store technical artefacts together with the *Component Descriptors* in the 
 *Component Repository* itself as so-called *local blobs*. This allows to pack all component versions with their 
 technical artefacts in a *Component Repository* as a completely self-contained package. This is a typical requirement 
-if you need to deliver your product into a fenced landscape.
+if you need to deliver your product into a fenced landscape. This also allows storing e.g. configuration data together 
+with your *Component Descriptor*.
 
 **Todo: Image mit CDs, localblobs ...**
 
@@ -16,22 +17,22 @@ if you need to deliver your product into a fenced landscape.
 
 ### UploadComponentDescriptor
 
-**Description**: Uploads a *Component Descriptor* to the *Component Repository*. If successful the *Component Descriptor*
+**Description**: Uploads a *Component Descriptor* to the *Component Repository*. If successful, the *Component Descriptor*
 is accessible by its name and version (see GetComponentDescriptor). The name and version of a *Component Descriptor*
 is the identifier of a *Component Descriptor*, therefore if there already exists a *Component Descriptor*
 with the same name and version, the upload fails. 
 
-A *Component Repository* must check if all referenced *Component Descriptors*, local blobs and local OCI artefacts 
-are already stored in the *Component Repository*.
+A *Component Repository* must check if all referenced *Component Descriptors* and local blobs are already stored in 
+the *Component Repository*.
 
 If the identifier of entries in *resources*, *sources* or *componentReferences* are not unique, as described before,
 an *invalidArgument* error must be returned.
 
 If the identifier of *resources* and *sources* (name plus extraIdentity) are not unique, a *Component Repository* might 
 automatically add the version field to the extraIdentity to resolve this problem. Of course, it must still fail, if 
-uniqueness of the resource identifier is not achieved this way.
+uniqueness of the resource identifiers could not be achieved this way.
 
-If the last entry in the "repositoryContext" field, is not an entry for the current *Component Repository*, such an 
+If the last entry in the "repositoryContext" field is not an entry for the current *Component Repository*, such an 
 entry is automatically added.
 
 **Inputs**:
@@ -43,15 +44,15 @@ entry is automatically added.
 **Errors**:
 
 - alreadyExists: If there already exists a *Component Descriptor* with the same name and version
-- missingReference: If a referenced *Component Descriptor*, local blob or local OCI artefact does not exist in 
-  the *Component Repository*
+- missingReference: If a referenced *Component Descriptor* or local blob does not exist in the *Component Repository*
 - invalidArgument: If the parameter *componentDescriptor* is missing or is not conform to the
-    [specified json schema](component-descriptor-v2-schema.yaml)
+  [specified json schema](component-descriptor-v2-schema.yaml)
 - repositoryError: If some error occurred in the *Component Repository*
 
 ### GetComponentDescriptor
 
-**Description**: Returns the *Component Descriptor* as a Yaml string according the [JSON schema](component-descriptor-v2-schema.yaml).
+**Description**: Returns the *Component Descriptor* as a Yaml or Json string according the 
+[JSON schema](component-descriptor-v2-schema.yaml).
 
 **Inputs**:
 
@@ -60,7 +61,7 @@ entry is automatically added.
 
 **Outputs**:
 
-- String: Yaml string of the *Component Descriptor*
+- String: Yaml or Json string of the *Component Descriptor*
 
 **Errors**:
 
@@ -91,7 +92,7 @@ by another *Component Descriptor*.
 
 ### UploadLocalBlob
 
-**Description**: Allows uploading binary data. The binary data belongs to a particular *Component Descriptor* 
+**Description**: Allows uploading binary data. The binary data belong to a particular *Component Descriptor* 
 and can be referenced by the component descriptor in its *resources* or *sources* section. 
 *Component Descriptors* are not allowed to reference local blobs of other *Component Descriptors*. 
 
@@ -102,7 +103,8 @@ blobs not already exist.
 The optional parameter *mediaType* provides information about the internal structure of the provided blob.
 
 With the optional parameter *localBlobInfos* you could provide additional information about the blob. This information
-could be used by the *Content Repository* itself or later if the local blob should rebuild to an external one.   
+could be used by the *Component Repository* itself or later if the local blob is stored again in some external
+location, e.g. an OCI registry.   
 
 *LocalAccessInfo* provides the information how to access the blob data with the method *GetLocalBlob* (see below). It 
 must be a json or yaml string with the following format:
@@ -127,7 +129,7 @@ globalAccessInfo:
 - String version: Version of the *Component Descriptor*
 - BinaryStream data: Binary stream containing the local blob data.
 - String mediaType: media-type of the uploaded data (optional)
-- map(string,string) localBlobInfos: Labels for the uploaded artefact (optional)
+- map(string,string) localBlobInfos: Additional information about the uploaded artefact (optional)
 
 **Outputs**:
 
@@ -148,7 +150,7 @@ localAccessInfo:
   digest: sha256:b5733194756a0a4a99a4b71c4328f1ccf01f866b5c3efcb4a025f02201ccf623
 ```
 
-Then the entry in the *Component Descriptor* might look as follows. it is up to you, if you store the localBlobInfos 
+Then the entry in the *Component Descriptor* might look as follows. It is up to you, if you add the localBlobInfos 
 provided to the upload function and depends on the use case.
 
 ```
@@ -161,11 +163,12 @@ provided to the upload function and depends on the use case.
         name: test/monitoring
       mediaType: application/vnd.oci.image.manifest.v1+json
       type: localOciBlob
+      # here starts the local access information
       digest: sha256:b5733194756a0a4a99a4b71c4328f1ccf01f866b5c3efcb4a025f02201ccf623 
 ... 
 ```
 
-The *Component Repository* could also provide some *globalAccessInfo* with the access info in an OCI registry:
+The *Component Repository* could also provide some *globalAccessInfo* containing the location in an OCI registry:
 
 ```
 globalAccessInfo: 
@@ -174,7 +177,7 @@ globalAccessInfo:
 ```
 
 An entry to this resource with this information in the *Component Descriptor* looks as the following. Again, it is up 
-to you, if you store the localBlobInfos provided to the upload function and depends on the use case.
+to you, if you store the *localBlobInfos* provided to the upload function and depends on the use case.
 
 ```
 - name: test-monitoring
@@ -184,6 +187,8 @@ to you, if you store the localBlobInfos provided to the upload function and depe
   access:
     localBlobInfos:
       name: test/monitoring
+    mediaType: application/vnd.oci.image.manifest.v1+json
+    # here starts the global access information
     imageReference: somePrefix/test/monitoring@sha:...
     type: ociRegistry
 ```
@@ -194,7 +199,7 @@ Be aware that it is usually only reasonable to add either an entry to the local 
 ### GetLocalBlob
 
 **Description**: Fetches the binary data of a local blob. *blobIdentifier* is the *Component Repository* specific 
-information you got when you uploaded the local blob.
+access information you got when you uploaded the local blob.
 
 **Inputs**:
 
@@ -217,7 +222,7 @@ information you got when you uploaded the local blob.
 **Description**: Deletes a local blob. *blobIdentifier* is the *Component Repository* specific
 information you got when you uploaded the local blob.  
 
-An error occurs if there is still an existing reference to the blob.
+An error occurs if there is still an existing reference to the local blob.
 
 
 **Inputs**:
