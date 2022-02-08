@@ -1,35 +1,13 @@
-## Topics for Meeting with Uwe and Christian
+## Topics for Component-Spec-Meeting
 
-Component-Spec-Meeting
-
-- Questions about types:
-  - Reference in CD to localOciArtefact has a name and tag access. Do we also need a digest instead of a tag
-  - 
-
-- application/vnd.oci.image.manifest.v1+json
-
-- localBlob
-  - currently only info like "type:helm/chart, type: localBlob"
-  - But no info if this a tar or zipped tar?
-  - Why not already provide info like helmchart+tar to help the repo storing data
-
-- Which resource types exists for cd.resource.access.type?
-  - we have only two local types: localOciBlob, LocalOciArtefact
-    - better name for localOciBlob localBlob but what about our current CDs 
-  - Do we want to specify a format for other resource type and source types?
-      - if yes where and which types
+- localOciBlob is a bad name, localBlob is much better
 
 - Repository Context in CD
-  - why are there location data withing the data? 
-  - What is the semantic of this section?
   - current schema only allows OCI-Ref, this needs to be extensible
   - Should OCI ref be part of this spec?
-
-- Resources.srcref: do we still need this?
-
+  
 - CTF:
   - Should be included in OCM?
-  - Aren't there already any OCI based transport formats?
   
 - What are the next step to specify?
   - particular types
@@ -39,33 +17,6 @@ Component-Spec-Meeting
 
 ## Todo
 - change technical artefacts to software artefacts 
-- describe that name and version of a component descriptor are unique in the context of a component repository
-- check json schema for component descriptor
-
-## To check
----
-Each of the artefacts declared in a `Component Descriptor` has an `identity`, an `access`
-description and a `type`. `Artefact identities` can be used to reference an artefact in
-the context of the declaring component descriptor. The `Artefact type` defines how the
-artefact is to be interpreted. The `access Description` defines from where the artefact
-can be retrieved.
-
-When replicating component descriptors and their artefacts, the artefacts' `access` descriptions
-may be changed. However, `artefact types` and `artefact identities` always remain unchanged.
----
-Context Repositories
-Component Descriptors are published to Context Repositories. Context repositories MUST always contain the transitive 
-closure of all Component Descriptors, referenced by contained Comonent Descriptor versions.
-
-Adhering to the aforementioned requirement of closure, Component Descriptors MAY be transported to other Context 
-Repositories. When doing so, the history of Context Repositories MUST be retained, and appended. 
-As part of such a transporting procedure, both the components’ sources and resources MAY be transferred to different 
-repositories. The new locations MUST in this case be reflected in the new Component Descriptor.
----
-If built from the declaring component’s sources, their versions MUST match the component’s version. Whether or not a 
-resource is built from the referencing component is expressed through the relation attribute.
-
----
 
 ## Probably not needed
 

@@ -130,10 +130,10 @@ definitions:
         $ref: '#/definitions/relaxedSemver'
       type:
         type: 'string'
-#      srcRefs:
-#        type: 'array'
-#        items:
-#          $ref: '#/definitions/srcRef'
+      srcRefs:
+        type: 'array'
+        items:
+          $ref: '#/definitions/srcRef'
       relation:
         type: 'string'
         enum: ['local', 'external']
@@ -147,16 +147,15 @@ definitions:
         - $ref: '#/definitions/localBlobAccess'
         - $ref: '#/definitions/localOciArtefactAccess'
 
-#  srcRef:
-#    type: 'object'
-#    description: 'a reference to a (component-local) source'
-#    properties:
-#      identitySelector:
-#        $ref: '#/definitions/identityAttribute'
-#      labels:
-#        type: 'array'
-#        items:
-#          $ref: '#/definitions/label'
+  srcRef:
+    type: 'object'
+    description: 'a reference to a (component-local) source'
+    properties:
+      name:
+        type: 'string'
+        $ref: '#/definitions/identityAttributeKey'
+      extraIdentity:
+        $ref: '#/definitions/identityAttribute'
 
   localBlobAccess:
     type: 'object'

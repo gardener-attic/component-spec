@@ -131,7 +131,10 @@ referenced resource, i.e. if it is a helm chart, a json file etc.
 
 Resources have a *relation* field with value “local” if they are derived from a source declared by the same component.
 The value is “external” if they are not derived form a source declared by the same component, e.g. a docker image for
-a monitoring stack developed in another component.
+a monitoring stack developed in another component. 
+
+If the *relation* field has the value “local”, the *version* field of the resource reference must be the same as the 
+*version* field of the *Component Descriptor*.
 
 The *access* field of a resource entry contains the information how to access the resource. Every *access* entry has a
 required field *type* which specifies the access method.
@@ -231,4 +234,8 @@ in which the *Component Descriptor* is stored.
 
 Other fields of a *Component Descriptor* are:
 
-- provider: provider of the component,e.g. a company, organization,...
+- component.provider: provider of the component,e.g. a company, organization,...
+
+- component.resources.srcRefs: References to resources have another field *srcRefs*. If the corresponding resource was build 
+from "local" sources these could be listed here by providing their identifier within the *Component Descriptor*, i.e. 
+their names and extraIdentities.
