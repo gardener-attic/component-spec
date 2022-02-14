@@ -91,6 +91,17 @@ func normalizeComponentDescriptor(cd v2.ComponentDescriptor) ([]byte, error) {
 	for _, res := range cd.ComponentSpec.Resources {
 		extraIdentity := buildExtraIdentity(res.ExtraIdentity)
 
+		//ignore access.type=None for normalisation and hash calculation
+		if res.Access.Type == "None" {
+			resource := []Entry{
+				{"name": res.Name},
+				{"version": res.Version},
+				{"extraIdentity": extraIdentity},
+			}
+			resources = append(resources, resource)
+			continue
+		}
+
 		digest := []Entry{
 			{"hashAlgorithm": res.Digest.HashAlgorithm},
 			{"normalisationAlgorithm": res.Digest.NormalisationAlgorithm},
@@ -211,6 +222,10 @@ func isNormaliseable(cd v2.ComponentDescriptor) error {
 
 	// check for digests on resources
 	for _, res := range cd.Resources {
+		//ignore access.type=None for normalisation and hash calculation
+		if res.Access.Type == "None" {
+			continue
+		}
 		if res.Digest == nil || res.Digest.HashAlgorithm == "" || res.Digest.NormalisationAlgorithm == "" || res.Digest.Value == "" {
 			return fmt.Errorf("missing digest in resource for %s:%s", res.Name, res.Version)
 		}
