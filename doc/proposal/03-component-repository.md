@@ -106,22 +106,10 @@ With the optional parameter *annotations* you could provide additional informati
 could be used by the *Component Repository* itself or later if the local blob is stored again in some external
 location, e.g. an OCI registry.   
 
-*LocalAccessInfo* provides the information how to access the blob data with the method *GetLocalBlob* (see below). It 
-must be a json or yaml string with the following format:
-
-```
-localAccessInfo: 
-  # store specific access info
-```
+*LocalAccessInfo* provides the information how to access the blob data with the method *GetLocalBlob* (see below). 
 
 With the return value *globalAccessInfo*, the *Component Repository* could optionally provide an external reference to 
 the resource, e.g. if the blob contains the data of an OCI image it could provide an external OCI image reference. 
-*globalAccessInfo* is a json or yaml string with the following format:
-
-```
-globalAccessInfo:
-  # type specific external access info
-```
 
 **Inputs**:
 
@@ -146,8 +134,7 @@ Assume you want to upload an OCI image to your *Component Repository* with the *
 *application/vnd.oci.image.manifest.v1+json* and the *annotations* "name: test/monitoring", and get the *localAccessInfo*: 
 
 ```
-localAccessInfo: 
-  digest: sha256:b5733194756a0a4a99a4b71c4328f1ccf01f866b5c3efcb4a025f02201ccf623
+"digest: sha256:b5733194756a0a4a99a4b71c4328f1ccf01f866b5c3efcb4a025f02201ccf623"
 ```
 
 Then the entry in the *Component Descriptor* might look as follows. It is up to you, if you add the annotations 
@@ -159,42 +146,39 @@ provided to the upload function and depends on the use case.
   - name: example-image
     type: oci-image
     access:
-      annotations:
-        name: test/monitoring
-      mediaType: application/vnd.oci.image.manifest.v1+json
       type: localOciBlob
-      # here starts the local access information
-      digest: sha256:b5733194756a0a4a99a4b71c4328f1ccf01f866b5c3efcb4a025f02201ccf623 
+      mediaType: application/vnd.oci.image.manifest.v1+json
+      annotations:
+          name: test/monitoring
+      localAccess: "digest: sha256:b5733194756a0a4a99a4b71c4328f1ccf01f866b5c3efcb4a025f02201ccf623"
 ... 
 ```
 
 The *Component Repository* could also provide some *globalAccessInfo* containing the location in an OCI registry:
 
 ```
-globalAccessInfo: 
-  imageReference: somePrefix/test/monitoring@sha:...
-  type: ociRegistry
+imageReference: somePrefix/test/monitoring@sha:...
+type: ociRegistry
 ```
 
-An entry to this resource with this information in the *Component Descriptor* looks as the following. Again, it is up 
-to you, if you store the *annotations* provided to the upload function and depends on the use case.
+An entry to this resource with this information in the *Component Descriptor* looks as the following:
 
 ```
-- name: test-monitoring
-  version: v0.8.3
-  relation: external
-  type: ociImage
-  access:
-    annotations:
-      name: test/monitoring
-    mediaType: application/vnd.oci.image.manifest.v1+json
-    # here starts the global access information
-    imageReference: somePrefix/test/monitoring@sha:...
-    type: ociRegistry
+...
+  resources:
+  - name: example-image
+    type: oci-image
+    access:
+      type: localOciBlob
+      mediaType: application/vnd.oci.image.manifest.v1+json
+      annotations:
+        name: test/monitoring
+      localAccess: "digest: sha256:b5733194756a0a4a99a4b71c4328f1ccf01f866b5c3efcb4a025f02201ccf623"
+      globalAccess: 
+        imageReference: somePrefix/test/monitoring@sha:...
+        type: ociRegistry
+... 
 ```
-
-Be aware that it is usually only reasonable to add either an entry to the local or global reference to a 
-*Component Descriptor* but not both.
 
 ### GetLocalBlob
 
