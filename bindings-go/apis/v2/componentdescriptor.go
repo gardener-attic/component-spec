@@ -462,6 +462,7 @@ const (
 	JsonNormalisationV1  NormalisationAlgorithm = "jsonNormalisationV1"
 	ManifestDigestV1     NormalisationAlgorithm = "manifestDigestV1"
 	LocalOciBlobDigestV1 NormalisationAlgorithm = "localOciBlobDigestV1"
+	GenericBlobDigestV1  NormalisationAlgorithm = "genericBlobDigestV1"
 )
 
 // Signature defines a digest and corresponding signature, identifyable by name.
