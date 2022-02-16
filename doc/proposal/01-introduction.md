@@ -33,7 +33,7 @@ other areas of lifecycle management like compliance processes and reporting. Thi
 
 First and foremost, the model has to be technology-agnostic at its heart, so that not only modern containerized cloud,
 but also legacy software is supported, out-of-the-box. It simply has to be acknowledged that companies are not able to
-just drop everything that has been used in the past and solely use shiny new cloud native workloads. This fact makes it
+just drop everything that has been used in the past and solely use new cloud native workloads. This fact makes it
 crucial to establish a common component model, which is able to handle both cloud native and legacy software, for which
 it needs to be fully agnostic about the technology used.
 
