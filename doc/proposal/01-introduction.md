@@ -49,30 +49,30 @@ management of software, is a must.
 
 Operating software installations/products, both for cloud and on-premises, covers many aspects:
 
-- How, when and where are the technical artefacts created?
-- How are technical artefacts stored and accessed?
-- Which technical artefacts are to be deployed?
+- How, when and where are the technical artifacts created?
+- How are technical artifacts stored and accessed?
+- Which technical artifacts are to be deployed?
 - How is the configuration managed?
 - How and when are compliant checks, scanning etc. executed?
-- When are technical artefacts deployed?
-- Where and how are those artefacts deployed?
+- When are technical artifacts deployed?
+- Where and how are those artifacts deployed?
 - Which other software installations are required and how are they deployed and accessed?
 - etc.
 
 The overall problem domain has a complexity that make it challenging to be solved as a whole.
 However, the problem domain can be divided into two disjoint phases:
 
-- production of technical artefacts
-- deployment and lifecycle management of technical artefacts
+- production of technical artifacts
+- deployment and lifecycle management of technical artifacts
 
-The produced artefacts must be stored somewhere such that they can be accessed and collected for the deployment.
-The OCM defines a standard to describe which technical artefacts belong to a software installation and how to
+The produced artifacts must be stored somewhere such that they can be accessed and collected for the deployment.
+The OCM defines a standard to describe which technical artifacts belong to a software installation and how to
 access them. This provides a clear interface between the production and the deployment/lifecycle management phase.
 
 Though the following application areas are out of scope for OCM, it provides a common interface for
 compliance checks, security scanning, code signing, transport, deployment or other lifecycle-management aspects.
 If software installations are described using OCM, e.g. a scanning tool could use this to collect all technical
-artefacts it needs to check. If the technical resources of different software installations are described with different
+artifacts it needs to check. If the technical resources of different software installations are described with different
 formalisms, such tools must provide interfaces and implementations for all if them and data exchange becomes a nightmare.
 
 The problem becomes even harder if a software installation is build of different parts/components, each described with
@@ -81,31 +81,31 @@ a software installation is available.
 
 The OCM does not make any assumptions about the (**Todo: Is this really the case?**)
 
-- kinds of technical artefacts (e.g. docker images, helm chart, binaries etc., git sources)
-- technology how to store and access technical artefacts (e.g. as OCI artefacts in an OCI registry)
+- kinds of technical artifacts (e.g. docker images, helm chart, binaries etc., git sources)
+- technology how to store and access technical artifacts (e.g. as OCI artifacts in an OCI registry)
 
-OCM is and technology-agnostic specifications and allows implementations to define exactly those technical aspects
+OCM is a technology-agnostic specification and allows implementations to define exactly those technical aspects
 as an extension of the basic model.
 
 **ToDo: Reference to our OCI based realization**
 
 ## Motivation Example
 
-Usually complex software products are divided into logical units, which are called **components** in this specification.
+Usually, complex software products are divided into logical units, which are called **components** in this specification.
 For example, a software product might consist of three components, a frontend, a backend and some monitoring stack.
 Of course, the software product itself could be seen as a component comprising the other three components.
 
-As a result of the development phase, **component versions** are created, e.g. when you make a release for the component.
+As a result of the development phase, **component versions** are created, e.g. when you make a new release of a component.
 
-A component version consists of a set of technical artefacts, e.g. docker images, helm charts, binaries,
-configuration data etc. Such artefacts are called **resources** in this specification. 
+A component version consists of a set of technical artifacts, e.g. docker images, helm charts, binaries,
+configuration data etc. Such artifacts are called **resources** in this specification. 
 
 Resources are usually build from something, e.g. code in a git repo, which we call **sources** in this specification.
 
 The OCM introduces a so called **Component Descriptor** for every component version, to describe the resources and sources 
 belonging to a particular component version and how these could be accessed.
 
-For the three components of our example software product, one *Component Descriptor* exists for every component version,
+For the three components in our example software product, one *Component Descriptor* exists for every component version,
 e.g. three *Component Descriptor* for the three versions of the frontend, six for the six versions of the backend etc.
 
 Not all component version combinations of frontend, backend and monitoring result are compatible and build a product version.
@@ -121,7 +121,7 @@ This is only an example how to describe a particular product version with OCM as
 You are not restricted to this approach, i.e. you could still just maintain a list of component version combinations which
 build a valid product release. But OCM provides you a simple approach to specify what belongs to a product version.
 Starting with the *Component Descriptor* for a product version and following the component dependencies, you could
-collect all artefacts, belonging to this product version.
+collect all artifacts, belonging to this product version.
 
 Every *Component Descriptor* has a name and a version. See [here](02-component-descriptor.md#name-and-version) for more details.
 
