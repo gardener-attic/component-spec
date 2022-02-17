@@ -197,7 +197,7 @@ An *extraIdentity* is a map, of key value pairs whereby:
 - The keys must adhere to the same restrictions defined for name values (see above)
 - The values MUST be UTF-8-encoded strings.
 
-Two *extraIdentities* are equal iff they have the same key value pairs whereby the order is not relevant.
+Two *extraIdentities* are equal if they have the same key value pairs whereby the order is not relevant.
 
 Example for twi resource entries with the same name but different extra identities and therefore different identifier:
 
