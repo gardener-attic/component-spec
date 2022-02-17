@@ -95,7 +95,7 @@ by another *Component Descriptor*.
 
 **Description**: Allows uploading binary data. The binary data belong to a particular *Component Descriptor* 
 and can be referenced by the component descriptor in its *resources* or *sources* section. 
-*Component Descriptors* are not allowed to reference local blobs of other *Component Descriptors*. 
+*Component Descriptors* are not allowed to reference local blobs of other *Component Descriptors* in their resources. 
 
 When uploading a local blob, it is not required that the corresponding *Component Descriptor* already exists. 
 Usually local blobs are uploaded first because it is not allowed to upload a *Component Descriptor* if its local 
