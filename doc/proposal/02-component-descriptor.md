@@ -221,6 +221,21 @@ component:
 Every entry in the *sources*, *resources* and *componentReferences* fields, and the component itself may declare
 optional labels. This allows to express application specific extensions.
 
+Labels is a map, of key value pairs whereby:
+
+- The keys must adhere to the same restrictions defined for name values (see [above](#identifier-for-sources-resources-and-component-references))
+- The values MUST be UTF-8-encoded strings.
+
+Example:
+
+```
+component:
+  labels:
+    maintainer: "maintainer@my-component.net"
+    tags: "monitoring,logging,internal"
+  ...
+```
+
 ## Repository Contexts
 
 Every *Component Descriptor* has a field *repositoryContexts* containing an array of access information of 
