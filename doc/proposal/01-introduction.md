@@ -108,8 +108,8 @@ belonging to a particular component version and how these could be accessed.
 For the three components in our example software product, one *Component Descriptor* exists for every component version,
 e.g. three *Component Descriptor* for the three versions of the frontend, six for the six versions of the backend etc.
 
-Not all component version combinations of frontend, backend and monitoring result are compatible and build a product version.
-In order to define reasonable version combinations for our software product we could use another feature of
+Not all component version combinations of frontend, backend and monitoring are compatible and build a valid product version.
+In order to define reasonable version combinations for our software product, we could use another feature of
 the *Component Descriptor*, which allows the definition of dependencies to other component versions. 
 
 For our example we could introduce a component for the overall product. A particular version of this product component 
