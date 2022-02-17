@@ -230,6 +230,8 @@ The array of access information describes the transport chain of a *Component De
 *Component Descriptor Repositories*, whereby the last entry describes the current *Component Descriptor Repository*,
 in which the *Component Descriptor* is stored.
 
+The *repositoryContexts* are usually not specified manually in the *Component Descriptor*, but are rather set automatically when a component version is uploaded to a *ComponentDescriptor Repository*. More details can be found [here](03-component-repository.md#uploadcomponentdescriptor).
+
 ## Misc
 
 Other fields of a *Component Descriptor* are:
