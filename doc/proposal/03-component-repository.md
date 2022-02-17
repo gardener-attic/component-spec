@@ -2,6 +2,7 @@
 
 *Component Descriptors* are stored in *Component Repositories*. This chapter describes in a programing language/protocol
 agnostic fashion the functions a *Component Repository* must implement to be OCM conform.
+These functions are also specifying the interface whith which the user can access a *Component Repository* to perform operations on *Component Descriptors*.
 
 Usually sources and resources are stored in some external storage, e.g. a docker image is stored in some OCI registry
 and the *Component Descriptor* contains only the information how to access it. As an alternative *Component Repositories* 
