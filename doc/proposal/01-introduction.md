@@ -123,16 +123,18 @@ build a valid product release. But OCM provides you a simple approach to specify
 Starting with the *Component Descriptor* for a product version and following the component dependencies, you could
 collect all artefacts, belonging to this product version.
 
-Every *Component Descriptor* has a name and a version. 
+Every *Component Descriptor* has a name and a version. See [here](02-component-descriptor.md#name-and-version) for more details.
 
 *Component Descriptors* are stored in *Component Repositories*. A *Component Repository* must provide a possibility
 to access every stored *Component Descriptor* only by its name and version. Another requirement to a
 *Component Repository* is, that uploading a *Component Descriptors* fails if it has a dependency to another
 *Component Descriptor* which is not contained in the *Component Repository*.
+See [here](03-component-repository.md#component-repository-specification) for more details.
 
 In a *Component Descriptor* dependencies to other *Component Descriptors* are expressed by their name and version. 
 Also, the references to resources and sources in a *Component Descriptor* have (logical) names
 (and some extra information explained later) as their unique identifier.
+See [here](02-component-descriptor.md#component-references) for more details. 
 
 The concept of referencing other *Component Descriptors* only by their name and version allows the transport of
 the *Component Descriptors* from one *Component Repository* to another without the need to change component
