@@ -92,7 +92,7 @@ func normalizeComponentDescriptor(cd v2.ComponentDescriptor) ([]byte, error) {
 		extraIdentity := buildExtraIdentity(res.ExtraIdentity)
 
 		//ignore access.type=None for normalisation and hash calculation
-		if res.Access.Type == "None" {
+		if res.Access == nil || res.Access.Type == "None" {
 			resource := []Entry{
 				{"name": res.Name},
 				{"version": res.Version},

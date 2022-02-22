@@ -52,6 +52,7 @@ var _ = Describe("Normalise/Hash component-descriptor", func() {
 							NormalisationAlgorithm: string(v2.ManifestDigestV1),
 							Value:                  "00000000000000",
 						},
+						Access: v2.NewUnstructuredType(v2.OCIRegistryType, map[string]interface{}{"imageRef": "ref"}),
 					},
 				},
 			},
@@ -68,17 +69,7 @@ var _ = Describe("Normalise/Hash component-descriptor", func() {
 			Expect(err).ToNot(BeNil())
 		})
 	})
-	Describe("missing resource Digest", func() {
-		It("should fail to hash", func() {
-			baseCd.ComponentSpec.Resources[0].Digest = nil
-			hasher, err := signatures.HasherForName("sha256")
-			Expect(err).To(BeNil())
-			hash, err := signatures.HashForComponentDescriptor(baseCd, *hasher)
-			Expect(hash).To(BeNil())
-			Expect(err).ToNot(BeNil())
-		})
-	})
-	Describe("should give the correct hash hash", func() {
+	Describe("should give the correct hash", func() {
 		It("with sha256", func() {
 			hasher, err := signatures.HasherForName("sha256")
 			Expect(err).To(BeNil())

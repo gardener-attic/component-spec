@@ -79,6 +79,7 @@ var _ = Describe("Sign/Verify component-descriptor", func() {
 							NormalisationAlgorithm: string(v2.ManifestDigestV1),
 							Value:                  "00000000000000",
 						},
+						Access: v2.NewUnstructuredType(v2.OCIRegistryType, map[string]interface{}{"imageRef": "ref"}),
 					},
 				},
 			},
