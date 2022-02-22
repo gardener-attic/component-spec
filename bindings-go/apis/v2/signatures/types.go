@@ -32,11 +32,11 @@ type Hasher struct {
 
 // HasherForName creates a Hasher instance for the algorithmName.
 func HasherForName(algorithmName string) (*Hasher, error) {
-	switch strings.ToUpper(algorithmName) {
-	case "SHA256":
+	switch strings.ToLower(algorithmName) {
+	case "sha256":
 		return &Hasher{
 			HashFunction:  sha256.New(),
-			AlgorithmName: "SHA256",
+			AlgorithmName: "sha256",
 		}, nil
 	}
 	return nil, fmt.Errorf("hash algorithm %s not found/implemented", algorithmName)

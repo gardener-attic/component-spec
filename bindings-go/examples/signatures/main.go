@@ -69,7 +69,7 @@ func main() {
 		fmt.Printf("ERROR addingDigestsToComponentDescriptor %s", err)
 	}
 
-	hasher, err := signatures.HasherForName("SHA256")
+	hasher, err := signatures.HasherForName("sha256")
 	if err != nil {
 		fmt.Printf("ERROR: %s", err)
 	}
