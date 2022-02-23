@@ -128,6 +128,45 @@ definitions:
           - $ref: '#/definitions/githubAccess'
           - $ref: '#/definitions/httpAccess'
 
+  digestSpec:
+    type: 'object'
+    required:
+      - hashAlgorithm
+      - normalisationAlgorithm
+      - value
+    properties:
+      hashAlgorithm:
+        type: string
+      normalisationAlgorithm:
+        type: string
+      value:
+        type: string
+
+  signatureSpec:
+    type: 'object'
+    required:
+      - algorithm
+      - value
+    properties:
+      algorithm:
+        type: string
+      value:
+        type: string
+
+  signature:
+    type: 'object'
+    required:
+      - name
+      - digest
+      - signature
+    properties:
+      name:
+        type: string
+      digest:
+        $ref: '#/definitions/digestSpec'
+      signature:
+        $ref: '#/definitions/signatureSpec'
+
   srcRef:
     type: 'object'
     description: 'a reference to a (component-local) source'
@@ -160,6 +199,8 @@ definitions:
         type: 'array'
         items:
           $ref: '#/definitions/label'
+      digest:
+        $ref: '#/definitions/digestSpec'
 
   resourceType:
     type: 'object'
@@ -197,6 +238,8 @@ definitions:
         - $ref: '#/definitions/ociBlobAccess'
         - $ref: '#/definitions/localFilesystemBlobAccess'
         - $ref: '#/definitions/localOciBlobAccess'
+      digest:
+        $ref: '#/definitions/digestSpec'
 
   ociImageAccess:
     type: 'object'
@@ -385,3 +428,7 @@ properties:
     $ref: '#/definitions/meta'
   component:
     $ref: '#/definitions/component'
+  signatures:
+    type: 'array'
+    items:
+      $ref: '#/definitions/signature'

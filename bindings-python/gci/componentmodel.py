@@ -171,6 +171,22 @@ class LabelMethodsMixin:
             labels=patched_labels,
         )
 
+@dc
+class DigestSpec:
+    hashAlgorithm: str
+    normalisationAlgorithm: str
+    value: str
+
+@dc
+class SignatureSpec:
+    algorithm: str
+    value: str
+
+@dc
+class Signature:
+    name: str
+    digest: DigestSpec
+    signature: SignatureSpec
 
 class Provider(enum.Enum):
     '''
@@ -311,6 +327,7 @@ class ComponentReference(Artifact, LabelMethodsMixin):
     name: str
     componentName: str
     version: str
+    digest: DigestSpec
     extraIdentity: typing.Dict[str, str] = dataclasses.field(default_factory=dict)
     labels: typing.List[Label] = dataclasses.field(default_factory=tuple)
 
@@ -339,11 +356,11 @@ class Resource(Artifact, LabelMethodsMixin):
         ResourceAccess,
         None,
     ]
+    digest: DigestSpec
     extraIdentity: typing.Dict[str, str] = dataclasses.field(default_factory=dict)
     relation: ResourceRelation = ResourceRelation.LOCAL
     labels: typing.List[Label] = dataclasses.field(default_factory=tuple)
     srcRefs: typing.List[SourceReference] = dataclasses.field(default_factory=tuple)
-
 
 @dc(frozen=True)
 class RepositoryContext:
@@ -412,6 +429,7 @@ def enum_or_string(v, enum_type: enum.Enum):
 class ComponentDescriptor:
     meta: Metadata
     component: Component
+    signatures: typing.List[Signature]
 
     @staticmethod
     def validate(
