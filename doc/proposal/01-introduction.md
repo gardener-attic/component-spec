@@ -31,7 +31,9 @@ enterprise, to manage compliant software components and their technical artifact
 a model would help not only with streamlined deployments to public and private cloud environments, but also in various
 other areas of lifecycle management like compliance processes and reporting. This software component model must describe all technical artifacts of a software product, and establish an ID for each component, which should then be used across all lifecycle management tasks.
 
-First and foremost, the model has to be technology-agnostic at its heart, so that not only modern containerized cloud,
+Here, it is also crucial to understand that setting up local environments often requires the use of local artifacts. This is especially true for resticted or private clouds, in which it is usually not possible to access artifacts from their original source location (due to resticted internet access), leading to the fact that artifacts need to be transported into these environments. This local deployment scenario requires that software components must clearly separate their ID from the location of their technical artifacts, so that this techical location may change,without changing the ID.
+
+At its heart, the model has to be technology-agnostic, so that not only modern containerized cloud,
 but also legacy software is supported, out-of-the-box. It simply has to be acknowledged that companies are not able to
 just drop everything that has been used in the past and solely use new cloud native workloads. This fact makes it
 crucial to establish a common component model, which is able to handle both cloud native and legacy software, for which
@@ -69,13 +71,23 @@ The produced artifacts must be stored somewhere such that they can be accessed a
 The OCM defines a standard to describe which technical artifacts belong to a software installation and how to
 access them. This provides a clear interface between the production and the deployment/lifecycle management phase.
 
-Though the following application areas are out of scope for OCM, it provides a common interface for
-compliance checks, security scanning, code signing, transport, deployment or other lifecycle-management aspects.
-If software installations are described using OCM, e.g. a scanning tool could use this to collect all technical
+The OCM provides a common interface for
+- compliance checks
+- security scanning
+- code signing
+- transport
+- deployment or 
+- other lifecycle-management aspects.
+
+In that sense, the OCM provides the basis to
+- exchange information about software in a controlled manner by defining a location- and technology-agnostic reference framework to identify software artifacts
+- enable access to local technical artifacts via these IDs
+
+If software installations are described using the OCM, e.g. a scanning tool could use this to collect all technical
 artifacts it needs to check. If the technical resources of different software installations are described with different
 formalisms, such tools must provide interfaces and implementations for all if them and data exchange becomes a nightmare.
 
-The problem becomes even harder if a software installation is build of different parts/components, each described with
+This problem becomes even harder if a software installation is build of different parts/components, each described with
 another formalism. OCM allows a uniform definition of such dependencies such that one consistent description of 
 a software installation is available.
 
