@@ -327,7 +327,7 @@ class ComponentReference(Artifact, LabelMethodsMixin):
     name: str
     componentName: str
     version: str
-    digest: DigestSpec
+    digest: typing.Optional[DigestSpec] = dataclasses.field(default=None)
     extraIdentity: typing.Dict[str, str] = dataclasses.field(default_factory=dict)
     labels: typing.List[Label] = dataclasses.field(default_factory=tuple)
 
@@ -356,7 +356,7 @@ class Resource(Artifact, LabelMethodsMixin):
         ResourceAccess,
         None,
     ]
-    digest: DigestSpec
+    digest: typing.Optional[DigestSpec] = dataclasses.field(default=None)
     extraIdentity: typing.Dict[str, str] = dataclasses.field(default_factory=dict)
     relation: ResourceRelation = ResourceRelation.LOCAL
     labels: typing.List[Label] = dataclasses.field(default_factory=tuple)
@@ -429,7 +429,7 @@ def enum_or_string(v, enum_type: enum.Enum):
 class ComponentDescriptor:
     meta: Metadata
     component: Component
-    signatures: typing.List[Signature]
+    signatures: typing.List[Signature] = dataclasses.field(default_factory=list)
 
     @staticmethod
     def validate(

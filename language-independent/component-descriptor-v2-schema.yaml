@@ -200,7 +200,9 @@ definitions:
         items:
           $ref: '#/definitions/label'
       digest:
-        $ref: '#/definitions/digestSpec'
+        oneOf:
+        - type: 'null'
+        - $ref: '#/definitions/digestSpec'
 
   resourceType:
     type: 'object'
@@ -239,7 +241,9 @@ definitions:
         - $ref: '#/definitions/localFilesystemBlobAccess'
         - $ref: '#/definitions/localOciBlobAccess'
       digest:
-        $ref: '#/definitions/digestSpec'
+        oneOf:
+        - type: 'null'
+        - $ref: '#/definitions/digestSpec'
 
   ociImageAccess:
     type: 'object'
@@ -325,6 +329,11 @@ definitions:
           $ref: '#/definitions/label'
       access:
         $ref: '#/definitions/ociImageAccess'
+      digest:
+        oneOf:
+        - type: 'null'
+        - $ref: '#/definitions/digestSpec'
+      
 
   httpAccess:
     type: 'object'
@@ -371,6 +380,10 @@ definitions:
           $ref: '#/definitions/label'
       access:
         $ref: '#/definitions/genericAccess'
+      digest:
+        oneOf:
+        - type: 'null'
+        - $ref: '#/definitions/digestSpec'
 
   component:
     type: 'object'
