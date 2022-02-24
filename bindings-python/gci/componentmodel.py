@@ -327,7 +327,7 @@ class ComponentReference(Artifact, LabelMethodsMixin):
     name: str
     componentName: str
     version: str
-    digest: typing.Optional[DigestSpec] = dataclasses.field(default=None)
+    digest: typing.Optional[DigestSpec] = None
     extraIdentity: typing.Dict[str, str] = dataclasses.field(default_factory=dict)
     labels: typing.List[Label] = dataclasses.field(default_factory=tuple)
 
@@ -356,7 +356,7 @@ class Resource(Artifact, LabelMethodsMixin):
         ResourceAccess,
         None,
     ]
-    digest: typing.Optional[DigestSpec] = dataclasses.field(default=None)
+    digest: typing.Optional[DigestSpec] = None
     extraIdentity: typing.Dict[str, str] = dataclasses.field(default_factory=dict)
     relation: ResourceRelation = ResourceRelation.LOCAL
     labels: typing.List[Label] = dataclasses.field(default_factory=tuple)
