@@ -221,29 +221,6 @@ func getOnlyValueInEntry(entry Entry) interface{} {
 	return value
 }
 
-// isNormaliseable checks if componentReferences and resources contain digest
-// Does NOT verify if the digests are correct
-func isNormaliseable(cd v2.ComponentDescriptor) error {
-	// check for digests on component references
-	for _, reference := range cd.ComponentReferences {
-		if reference.Digest == nil || reference.Digest.HashAlgorithm == "" || reference.Digest.NormalisationAlgorithm == "" || reference.Digest.Value == "" {
-			return fmt.Errorf("missing digest in componentReference for %s:%s", reference.Name, reference.Version)
-		}
-	}
-
-	// check for digests on resources
-	for _, res := range cd.Resources {
-		//ignore access.type=None for normalisation and hash calculation
-		if res.Access.Type == "None" {
-			continue
-		}
-		if res.Digest == nil || res.Digest.HashAlgorithm == "" || res.Digest.NormalisationAlgorithm == "" || res.Digest.Value == "" {
-			return fmt.Errorf("missing digest in resource for %s:%s", res.Name, res.Version)
-		}
-	}
-	return nil
-}
-
 // isNormaliseableUnsafe checks if componentReferences contain digest. It does not check resources for containing digests.
 // Does NOT verify if the digests are correct
 func isNormaliseableUnsafe(cd v2.ComponentDescriptor) error {
