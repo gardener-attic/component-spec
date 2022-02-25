@@ -32,7 +32,7 @@ var _ = Describe("Normalise/Hash component-descriptor", func() {
 							"refKey": "refName",
 						},
 						Digest: &v2.DigestSpec{
-							HashAlgorithm:          "sha256",
+							HashAlgorithm:          signatures.SHA256,
 							NormalisationAlgorithm: string(v2.JsonNormalisationV1),
 							Value:                  "00000000000000",
 						},
@@ -48,7 +48,7 @@ var _ = Describe("Normalise/Hash component-descriptor", func() {
 							},
 						},
 						Digest: &v2.DigestSpec{
-							HashAlgorithm:          "sha256",
+							HashAlgorithm:          signatures.SHA256,
 							NormalisationAlgorithm: string(v2.ManifestDigestV1),
 							Value:                  "00000000000000",
 						},
@@ -62,7 +62,7 @@ var _ = Describe("Normalise/Hash component-descriptor", func() {
 	Describe("missing componentReference Digest", func() {
 		It("should fail to hash", func() {
 			baseCd.ComponentSpec.ComponentReferences[0].Digest = nil
-			hasher, err := signatures.HasherForName("sha256")
+			hasher, err := signatures.HasherForName(signatures.SHA256)
 			Expect(err).To(BeNil())
 			hash, err := signatures.HashForComponentDescriptor(baseCd, *hasher)
 			Expect(hash).To(BeNil())
@@ -71,7 +71,7 @@ var _ = Describe("Normalise/Hash component-descriptor", func() {
 	})
 	Describe("should give the correct hash", func() {
 		It("with sha256", func() {
-			hasher, err := signatures.HasherForName("sha256")
+			hasher, err := signatures.HasherForName(signatures.SHA256)
 			Expect(err).To(BeNil())
 			hash, err := signatures.HashForComponentDescriptor(baseCd, *hasher)
 			Expect(err).To(BeNil())
@@ -83,7 +83,7 @@ var _ = Describe("Normalise/Hash component-descriptor", func() {
 			baseCd.Signatures = append(baseCd.Signatures, v2.Signature{
 				Name: "TestSig",
 				Digest: v2.DigestSpec{
-					HashAlgorithm:          "sha256",
+					HashAlgorithm:          signatures.SHA256,
 					NormalisationAlgorithm: string(v2.JsonNormalisationV1),
 					Value:                  "00000",
 				},
@@ -92,7 +92,7 @@ var _ = Describe("Normalise/Hash component-descriptor", func() {
 					Value:     "0000",
 				},
 			})
-			hasher, err := signatures.HasherForName("sha256")
+			hasher, err := signatures.HasherForName(signatures.SHA256)
 			Expect(err).To(BeNil())
 			hash, err := signatures.HashForComponentDescriptor(baseCd, *hasher)
 			Expect(err).To(BeNil())
@@ -105,7 +105,7 @@ var _ = Describe("Normalise/Hash component-descriptor", func() {
 					Version: "v0.0.0",
 				},
 			})
-			hasher, err := signatures.HasherForName("sha256")
+			hasher, err := signatures.HasherForName(signatures.SHA256)
 			Expect(err).To(BeNil())
 			hash, err := signatures.HashForComponentDescriptor(baseCd, *hasher)
 			Expect(err).To(BeNil())
@@ -115,7 +115,7 @@ var _ = Describe("Normalise/Hash component-descriptor", func() {
 			access, err := v2.NewUnstructured(v2.NewOCIRegistryAccess("ociRef/path/to/image"))
 			Expect(err).To(BeNil())
 			baseCd.Resources[0].Access = &access
-			hasher, err := signatures.HasherForName("sha256")
+			hasher, err := signatures.HasherForName(signatures.SHA256)
 			Expect(err).To(BeNil())
 			hash, err := signatures.HashForComponentDescriptor(baseCd, *hasher)
 			Expect(err).To(BeNil())

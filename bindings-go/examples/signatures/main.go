@@ -27,7 +27,7 @@ func main() {
 						"refKey": "refName",
 					},
 					Digest: &v2.DigestSpec{
-						HashAlgorithm:          "sha256",
+						HashAlgorithm:          signatures.SHA256,
 						NormalisationAlgorithm: string(v2.JsonNormalisationV1),
 						Value:                  "00000000000000",
 					},
@@ -43,7 +43,7 @@ func main() {
 						},
 					},
 					Digest: &v2.DigestSpec{
-						HashAlgorithm:          "sha256",
+						HashAlgorithm:          signatures.SHA256,
 						NormalisationAlgorithm: string(v2.ManifestDigestV1),
 						Value:                  "00000000000000",
 					},
@@ -69,7 +69,7 @@ func main() {
 		fmt.Printf("ERROR addingDigestsToComponentDescriptor %s", err)
 	}
 
-	hasher, err := signatures.HasherForName("sha256")
+	hasher, err := signatures.HasherForName(signatures.SHA256)
 	if err != nil {
 		fmt.Printf("ERROR: %s", err)
 	}

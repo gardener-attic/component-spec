@@ -52,7 +52,7 @@ var _ = Describe("RSA Sign/Verify", func() {
 			signer, err := signatures.CreateRsaSignerFromKeyFile(pathPrivateKey)
 			Expect(err).To(BeNil())
 			signature, err := signer.Sign(v2.ComponentDescriptor{}, v2.DigestSpec{
-				HashAlgorithm:          "sha256",
+				HashAlgorithm:          signatures.SHA256,
 				NormalisationAlgorithm: string(v2.JsonNormalisationV1),
 				Value:                  hex.EncodeToString(hashOfString[:]),
 			})
@@ -82,7 +82,7 @@ var _ = Describe("RSA Sign/Verify", func() {
 			signer, err := signatures.CreateRsaSignerFromKeyFile(pathPrivateKey)
 			Expect(err).To(BeNil())
 			digest := v2.DigestSpec{
-				HashAlgorithm:          "sha256",
+				HashAlgorithm:          signatures.SHA256,
 				NormalisationAlgorithm: string(v2.JsonNormalisationV1),
 				Value:                  hex.EncodeToString(hashOfString[:]),
 			}
@@ -111,7 +111,7 @@ var _ = Describe("RSA Sign/Verify", func() {
 			signer, err := signatures.CreateRsaSignerFromKeyFile(pathWrongPrivateKey)
 			Expect(err).To(BeNil())
 			digest := v2.DigestSpec{
-				HashAlgorithm:          "sha256",
+				HashAlgorithm:          signatures.SHA256,
 				NormalisationAlgorithm: string(v2.JsonNormalisationV1),
 				Value:                  hex.EncodeToString(hashOfString[:]),
 			}

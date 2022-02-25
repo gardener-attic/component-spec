@@ -35,7 +35,7 @@ var _ = Describe("Sign/Verify component-descriptor", func() {
 	var baseCd v2.ComponentDescriptor
 	testSHA256Hasher := signatures.Hasher{
 		HashFunction:  sha256.New(),
-		AlgorithmName: "sha256",
+		AlgorithmName: signatures.SHA256,
 	}
 	signatureName := "testSignatureName"
 	correctBaseCdHash := "5995a530e81af5e974fe377f1079991c4e6a762bcff2cb92334f80d3a1da5a8a"
@@ -59,7 +59,7 @@ var _ = Describe("Sign/Verify component-descriptor", func() {
 							"refKey": "refName",
 						},
 						Digest: &v2.DigestSpec{
-							HashAlgorithm:          "sha256",
+							HashAlgorithm:          signatures.SHA256,
 							NormalisationAlgorithm: string(v2.JsonNormalisationV1),
 							Value:                  "00000000000000",
 						},
@@ -75,7 +75,7 @@ var _ = Describe("Sign/Verify component-descriptor", func() {
 							},
 						},
 						Digest: &v2.DigestSpec{
-							HashAlgorithm:          "sha256",
+							HashAlgorithm:          signatures.SHA256,
 							NormalisationAlgorithm: string(v2.ManifestDigestV1),
 							Value:                  "00000000000000",
 						},
@@ -93,10 +93,10 @@ var _ = Describe("Sign/Verify component-descriptor", func() {
 			Expect(len(baseCd.Signatures)).To(BeIdenticalTo(1))
 			Expect(baseCd.Signatures[0].Name).To(BeIdenticalTo(signatureName))
 			Expect(baseCd.Signatures[0].Digest.NormalisationAlgorithm).To(BeIdenticalTo(string(v2.JsonNormalisationV1)))
-			Expect(baseCd.Signatures[0].Digest.HashAlgorithm).To(BeIdenticalTo("sha256"))
+			Expect(baseCd.Signatures[0].Digest.HashAlgorithm).To(BeIdenticalTo(signatures.SHA256))
 			Expect(baseCd.Signatures[0].Digest.Value).To(BeIdenticalTo(correctBaseCdHash))
 			Expect(baseCd.Signatures[0].Signature.Algorithm).To(BeIdenticalTo("testSignAlgorithm"))
-			Expect(baseCd.Signatures[0].Signature.Value).To(BeIdenticalTo(fmt.Sprintf("%s:%s-signed", "sha256", correctBaseCdHash)))
+			Expect(baseCd.Signatures[0].Signature.Value).To(BeIdenticalTo(fmt.Sprintf("%s:%s-signed", signatures.SHA256, correctBaseCdHash)))
 		})
 	})
 	Describe("verify component-descriptor signature", func() {

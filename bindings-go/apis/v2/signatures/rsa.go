@@ -62,7 +62,7 @@ func (s RsaSigner) Sign(componentDescriptor v2.ComponentDescriptor, digest v2.Di
 // maps a hashing algorithm string to crypto.Hash
 func hashAlgorithmLookup(algorithm string) (crypto.Hash, error) {
 	switch strings.ToLower(algorithm) {
-	case "sha256":
+	case SHA256:
 		return crypto.SHA256, nil
 	}
 	return 0, fmt.Errorf("hash Algorithm %s not found", algorithm)
