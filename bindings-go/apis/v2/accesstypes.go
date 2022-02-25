@@ -220,10 +220,10 @@ func (a GitHubAccess) GetType() string {
 	return GitHubAccessType
 }
 
-// S3AccessType is the type of a s3 acces.
+// S3AccessType is the type of a s3 access.
 const S3AccessType = "s3"
 
-// S3AccessType describes a github repository resource access.
+// S3AccessType describes a s3 resource access.
 type S3Access struct {
 	ObjectType `json:",inline"`
 
@@ -233,7 +233,7 @@ type S3Access struct {
 	ObjectKey string `json:"objectKey"`
 }
 
-// NewGitHubAccess creates a new Web accessor
+// NewS3Access creates a new s3 accessor
 func NewS3Access(bucketName, objectKey string) *S3Access {
 	return &S3Access{
 		ObjectType: ObjectType{
