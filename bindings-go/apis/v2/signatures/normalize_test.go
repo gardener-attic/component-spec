@@ -79,7 +79,7 @@ var _ = Describe("Normalise/Hash component-descriptor", func() {
 		})
 	})
 	Describe("should ignore modifications in unhashed fields", func() {
-		It("should succed with signature changes", func() {
+		It("should succeed with signature changes", func() {
 			baseCd.Signatures = append(baseCd.Signatures, v2.Signature{
 				Name: "TestSig",
 				Digest: v2.DigestSpec{
@@ -98,7 +98,7 @@ var _ = Describe("Normalise/Hash component-descriptor", func() {
 			Expect(err).To(BeNil())
 			Expect(hash.Value).To(Equal(correctBaseCdHash))
 		})
-		It("should succed with source changes", func() {
+		It("should succeed with source changes", func() {
 			baseCd.Sources = append(baseCd.Sources, v2.Source{
 				IdentityObjectMeta: v2.IdentityObjectMeta{
 					Name:    "source1",
@@ -111,7 +111,7 @@ var _ = Describe("Normalise/Hash component-descriptor", func() {
 			Expect(err).To(BeNil())
 			Expect(hash.Value).To(Equal(correctBaseCdHash))
 		})
-		It("should succed with resource access reference changes", func() {
+		It("should succeed with resource access reference changes", func() {
 			access, err := v2.NewUnstructured(v2.NewOCIRegistryAccess("ociRef/path/to/image"))
 			Expect(err).To(BeNil())
 			baseCd.Resources[0].Access = &access
