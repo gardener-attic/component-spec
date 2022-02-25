@@ -38,7 +38,7 @@ var _ = Describe("Sign/Verify component-descriptor", func() {
 		AlgorithmName: "sha256",
 	}
 	signatureName := "testSignatureName"
-	correctBaseCdHash := "64c04405dcd03a6f345584adb860cad4f4ed6dba1943d5535db3407b2bf9f000"
+	correctBaseCdHash := "5995a530e81af5e974fe377f1079991c4e6a762bcff2cb92334f80d3a1da5a8a"
 
 	BeforeEach(func() {
 		baseCd = v2.ComponentDescriptor{
