@@ -148,8 +148,7 @@ func normalizeComponentDescriptor(cd v2.ComponentDescriptor) ([]byte, error) {
 	encoder := json.NewEncoder(byteBuffer)
 	encoder.SetEscapeHTML(false)
 
-	err := encoder.Encode(normalizedComponentDescriptor)
-	if err != nil {
+	if err := encoder.Encode(normalizedComponentDescriptor); err != nil {
 		return nil, err
 	}
 
