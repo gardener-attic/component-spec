@@ -79,7 +79,7 @@ Components versions are typically built from sources, maintained in source code 
 and transformed into resources (for example by a build), which are used at installation or runtime of the product.
 
 Each *Component Descriptor* contains a field for references to the used sources and a field for references
-to the used resources.
+to the required resources.
 
 Example for sources:
 
