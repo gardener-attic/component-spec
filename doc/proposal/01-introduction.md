@@ -88,7 +88,7 @@ artifacts it needs to check. If the technical resources of different software in
 formalisms, such tools must provide interfaces and implementations for all if them and data exchange becomes a nightmare.
 
 This problem becomes even harder if a software installation is build of different parts/components, each described with
-another formalism. OCM allows a uniform definition of such dependencies such that one consistent description of 
+another formalism. OCM allows a uniform definition of such compositions such that one consistent description of 
 a software installation is available.
 
 The OCM does not make any assumptions about the (**Todo: Is this really the case?**)
@@ -122,17 +122,17 @@ e.g. three *Component Descriptor* for the three versions of the frontend, six fo
 
 Not all component version combinations of frontend, backend and monitoring are compatible and build a valid product version.
 In order to define reasonable version combinations for our software product, we could use another feature of
-the *Component Descriptor*, which allows the definition of dependencies to other component versions. 
+the *Component Descriptor*, which allows the aggregation of component versions. 
 
 For our example we could introduce a component for the overall product. A particular version of this product component 
-is again described by a *Component Descriptor*, which contain dependencies to particular *Component Descriptors* for the
-frontend, backend and monitoring.
+is again described by a *Component Descriptor*, which contains references to particular *Component Descriptors* for the
+frontend, backend and monitoring. 
 
 This is only an example how to describe a particular product version with OCM as a component with one 
-*Component Descriptor* with dependencies to other *Component Descriptors*, which itself could have dependencies and so on.
+*Component Descriptor* with references to other *Component Descriptors*, which itself could have such references and so on.
 You are not restricted to this approach, i.e. you could still just maintain a list of component version combinations which
 build a valid product release. But OCM provides you a simple approach to specify what belongs to a product version.
-Starting with the *Component Descriptor* for a product version and following the component dependencies, you could
+Starting with the *Component Descriptor* for a product version and following the component references, you could
 collect all artifacts, belonging to this product version.
 
 **Todo: Perhaps some small example image to make this more clear?**

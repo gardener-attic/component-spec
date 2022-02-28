@@ -27,7 +27,7 @@ The `artifact-descriptor.json` contains a list of all manifests with their tags.
 > Purpose of the `artifact-descriptor.json`: 1. list of entry points or 2. tag assignment?
 > During import one wants to loop over all entry points. But one does not handle maifests twice if index manifest and 
 > (normal) manifest both have tags.
-> How to achieve the order of import (dependent components first)
+> How to achieve the order of import (referenced components first)
 
 #### Example of a transport archive containing two artifacts
 

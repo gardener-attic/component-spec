@@ -5,7 +5,7 @@ version of a software component and how to access it. This includes:
 
 - resources, i.e. technical artefacts like binaries, docker images, ...
 - sources like code in github
-- dependencies to other software component versions
+- references to other software component versions
 
 ## Component Descriptor Format Specification
 
@@ -149,13 +149,11 @@ explained later.
 
 ## Component References
 
-A component version might have dependencies to other component versions. The semantics of component version dependencies
-is not defined here. Such dependencies could be expressed for different relationships between component versions,
-e.g. deploy order, a component version comprise other component versions, a component version uses artefacts of
-another component version etc.
+A component version might have references to other component versions. The semantic of component references
+is, that the referencing component version comprises the referenced component versions, i.e. it is an aggregation or 
+composition semantic.
 
-To express dependencies to other component versions, a *Component Descriptor* has a field to specify dependencies to 
-other *Component Descriptors*.
+A *Component Descriptor* has a field to specify references to other *Component Descriptors*.
 
 ```
 component:
