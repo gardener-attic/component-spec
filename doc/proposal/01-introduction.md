@@ -114,8 +114,8 @@ configuration data etc. Such artifacts are called **resources** in this specific
 
 Resources are usually build from something, e.g. code in a git repo, which we call **sources** in this specification.
 
-The OCM introduces a so called **Component Descriptor** for every component version, to describe the resources and sources 
-belonging to a particular component version and how these could be accessed.
+The OCM introduces a so called **Component Descriptor** for every component version, to describe the resources, sources 
+and other component versions belonging to a particular component version and how these could be accessed.
 
 For the three components in our example software product, one *Component Descriptor* exists for every component version,
 e.g. three *Component Descriptor* for the three versions of the frontend, six for the six versions of the backend etc.

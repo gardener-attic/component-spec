@@ -12,7 +12,7 @@ version of a software component and how to access it. This includes:
 A *Component Descriptor* is a [YAML](https://yaml.org/) or [JSON](https://www.json.org/json-en.html) document
 according to this [schema](component-descriptor-v2-schema.yaml).
 
-In serialised form, Component Descriptors MUST be UTF-8-encoded. Either YAML, or JSON may be used. If YAML is used
+In serialised form, *Component Descriptors* MUST be UTF-8-encoded. Either YAML, or JSON may be used. If YAML is used
 as serialisation format, only the subset of features defined by JSON must be used, thus allowing conversion to a
 JSON representation.
 
@@ -153,7 +153,8 @@ A component version might have references to other component versions. The seman
 is, that the referencing component version comprises the referenced component versions, i.e. it is an aggregation or 
 composition semantic.
 
-A *Component Descriptor* has a field to specify references to other *Component Descriptors*.
+A *Component Descriptor* has a field to specify references to other *Component Descriptors* and thereby to the component
+versions described by them.
 
 ```
 component:
@@ -237,13 +238,15 @@ component:
 ## Repository Contexts
 
 Every *Component Descriptor* has a field *repositoryContexts* containing an array of access information of 
-*Component Descriptor Repositories*, i.e. a stores for *Component Descriptors* which are specified later. 
+*Component Descriptor Repositories*, i.e. stores for *Component Descriptors* which are specified later. 
 
 The array of access information describes the transport chain of a *Component Descriptor* through different
 *Component Descriptor Repositories*, whereby the last entry describes the current *Component Descriptor Repository*,
 in which the *Component Descriptor* is stored.
 
-The *repositoryContexts* are usually not specified manually in the *Component Descriptor*, but are rather set automatically when a component version is uploaded to a *ComponentDescriptor Repository*. More details can be found [here](03-component-repository.md#uploadcomponentdescriptor).
+The *repositoryContexts* are usually not specified manually in the *Component Descriptor*, but are rather set 
+automatically when a component version is uploaded to a *ComponentDescriptor Repository*. More details can be 
+found [here](03-component-repository.md#uploadcomponentdescriptor).
 
 ## Misc
 
