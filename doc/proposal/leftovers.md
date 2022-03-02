@@ -17,6 +17,7 @@
 
 ## Todo
 - change technical artefacts to software artefacts 
+- references in the text to the CD spec for particular entries
 
 ## Probably not needed
 
