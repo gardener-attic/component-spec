@@ -197,7 +197,7 @@ An *extraIdentity* is a map, of key value pairs whereby:
 
 Two *extraIdentities* are equal if they have the same key value pairs whereby the order is not relevant.
 
-Example for twi resource entries with the same name but different extra identities and therefore different identifier:
+Example for two resource entries with the same name but different extra identities and therefore different identifier:
 
 ```
 component:
@@ -222,7 +222,7 @@ optional labels. This allows to express application specific extensions.
 Labels is a map, of key value pairs whereby:
 
 - The keys must adhere to the same restrictions defined for name values (see [above](#identifier-for-sources-resources-and-component-references))
-- The values MUST be UTF-8-encoded strings.
+- The values MUST be JSON compatible YAML or JSON.
 
 Example:
 
