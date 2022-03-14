@@ -7,9 +7,9 @@ operations on *Component Descriptors*.
 
 Usually sources and resources are stored in some external storage, e.g. a docker image is stored in some OCI registry
 and the *Component Descriptor* contains only the information how to access it. As an alternative *Component Repositories* 
-also provide the possibility to store technical artefacts together with the *Component Descriptors* in the 
+also provide the possibility to store technical artifacts together with the *Component Descriptors* in the 
 *Component Repository* itself as so-called *local blobs*. This allows to pack all component versions with their 
-technical artefacts in a *Component Repository* as a completely self-contained package. This is a typical requirement 
+technical artifacts in a *Component Repository* as a completely self-contained package. This is a typical requirement 
 if you need to deliver your product into a fenced landscape. This also allows storing e.g. configuration data together 
 with your *Component Descriptor*.
 
@@ -39,9 +39,11 @@ entry is automatically added.
 
 **Inputs**:
 
-- String componentDescriptor: Json or Yaml representation of the *Component Descriptor*
+- String componentDescriptor: JSON or YAML representation of the *Component Descriptor*
 
 **Outputs**:
+
+- Bool: true if upload was successful 
 
 **Errors**:
 
@@ -53,7 +55,7 @@ entry is automatically added.
 
 ### GetComponentDescriptor
 
-**Description**: Returns the *Component Descriptor* as a Yaml or Json string according the 
+**Description**: Returns the *Component Descriptor* as a YAML or JSON string according the 
 [JSON schema](component-descriptor-v2-schema.yaml).
 
 **Inputs**:
@@ -63,7 +65,7 @@ entry is automatically added.
 
 **Outputs**:
 
-- String: Yaml or Json string of the *Component Descriptor*
+- String: YAML or JSON string of the *Component Descriptor*
 
 **Errors**:
 
@@ -119,7 +121,7 @@ the resource, e.g. if the blob contains the data of an OCI image it could provid
 - String version: Version of the *Component Descriptor*
 - BinaryStream data: Binary stream containing the local blob data.
 - String mediaType: media-type of the uploaded data (optional)
-- map(string,string) annotations: Additional information about the uploaded artefact (optional)
+- map(string,string) annotations: Additional information about the uploaded artifact (optional)
 
 **Outputs**:
 

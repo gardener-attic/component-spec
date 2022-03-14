@@ -8,18 +8,20 @@ toolsets specifically for their products, including those needed for compliance 
 These concepts, process integrations and resulting tools are often still in use today, even though everyone knows:
 They don't fit into today's cloud world.
 
-The result is a fragmented set of homegrown specific tools across products, solutions and services, affecting an enterprises' ability to deliver
-software consistently and compliant to its own or customer operated target environments. These specific, overly complex and thus hard to understand CI/CD pipelines, and the inability to instantly
+The result is a fragmented set of homegrown specific tools across products, solutions and services, affecting an 
+enterprises' ability to deliver software consistently and compliant to its own or customer operated target environments.
+These specific, overly complex and thus hard to understand CI/CD pipelines, and the inability to instantly
 provide a holistic aggregated view of currently running technical artifacts for each and every production environment
-(including both cloud and on-premise), result in the overall management of software at scale becoming tedious, error-prone and
-ineffective.
+(including both cloud and on-premise), result in the overall management of software at scale becoming tedious, error-prone 
+and ineffective.
 
 ## Why is this a huge problem?
 
 Most prominently, with the general unalignment of how software is defined and managed throughout the whole company,
 it is not possible without additional overhead (like setting up even more processes and tools on top) to manage
 the complete lifecycle of all solutions, services or individual deployment artifacts running in any
-given landscape. Even worse, when trying to set up new landscapes, it becomes a nightmare to successfully orchestrate, deploy and configure the needed software components in the new environments.
+given landscape. Even worse, when trying to set up new landscapes, it becomes a nightmare to successfully orchestrate, 
+deploy and configure the needed software components in the new environments.
 
 As long as individual development teams within a company continue to use their own tools and processes to manage the
 lifecycle of the software they are responsible for, this unsatisfying (and finally TCD and TCO affecting) situation can
@@ -29,9 +31,16 @@ not improve and will only get worse over time.
 The major problem at hand here is the absence of one aligned software component model, consistently used across the
 enterprise, to manage compliant software components and their technical artifacts. Such
 a model would help not only with streamlined deployments to public and private cloud environments, but also in various
-other areas of lifecycle management like compliance processes and reporting. This software component model must describe all technical artifacts of a software product, and establish an ID for each component, which should then be used across all lifecycle management tasks.
+other areas of lifecycle management like compliance processes and reporting. This software component model must describe 
+all technical artifacts of a software product, and establish an ID for each component, which should then be used across 
+all lifecycle management tasks.
 
-Here, it is also crucial to understand that setting up local environments often requires the use of local artifacts. This is especially true for resticted or private clouds, in which it is usually not possible to access artifacts from their original source location (due to resticted internet access), leading to the fact that artifacts need to be transported into these environments. This local deployment scenario requires that software components must clearly separate their ID from the location of their technical artifacts, so that this techical location may change,without changing the ID.
+Here, it is also crucial to understand that setting up local environments often requires the use of local artifacts. 
+This is especially true for resticted or private clouds, in which it is usually not possible to access artifacts from 
+their original source location (due to resticted internet access), leading to the fact that artifacts need to be 
+transported into these environments. This local deployment scenario requires that software components must clearly 
+separate their ID from the location of their technical artifacts, so that this techical location may change, without 
+changing the ID.
 
 At its heart, the model has to be technology-agnostic, so that not only modern containerized cloud,
 but also legacy software is supported, out-of-the-box. It simply has to be acknowledged that companies are not able to
@@ -80,7 +89,8 @@ The OCM provides a common interface for
 - other lifecycle-management aspects.
 
 In that sense, the OCM provides the basis to
-- exchange information about software in a controlled manner by defining a location- and technology-agnostic reference framework to identify software artifacts
+- exchange information about software in a controlled manner by defining a location- and technology-agnostic reference 
+framework to identify software artifacts
 - enable access to local technical artifacts via these IDs
 
 If software installations are described using the OCM, e.g. a scanning tool could use this to collect all technical

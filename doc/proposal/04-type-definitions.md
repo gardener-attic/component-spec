@@ -7,9 +7,9 @@ recommended use these formats in all implementations based on OCM.
 
 ## Source and Resource References
 
-### OCI Artefact
+### OCI Artifact
 
-This is the recommended format to reference an OCI artefact in an OCI image registry:
+This is the recommended format to reference an OCI artifact in an OCI image registry:
 
 ```yaml
 resources:

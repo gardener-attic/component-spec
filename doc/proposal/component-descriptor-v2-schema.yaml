@@ -1,6 +1,6 @@
-$id: 'https://gardener.cloud/schemas/component-descriptor-v2'
+$id: 'https://open-component-model.cloud/schemas/component-descriptor-v2'
 $schema: 'https://json-schema.org/draft/2020-12/schema'
-description: 'Gardener Component Descriptor v2 schema'
+description: 'Open Component Model Component Descriptor v2 schema'
 
 definitions:
   meta:
@@ -145,7 +145,7 @@ definitions:
         anyOf:
         - $ref: '#/definitions/access'
         - $ref: '#/definitions/localBlobAccess'
-        - $ref: '#/definitions/localOciArtefactAccess'
+        - $ref: '#/definitions/localOciArtifactAccess'
 
   srcRef:
     type: 'object'
@@ -170,21 +170,21 @@ definitions:
         description: 'identifier of the local blob within the current component descriptor'
         type: 'string'
 
-  localOciArtefactAccess:
+  localOciArtifactAccess:
     type: 'object'
     required:
       - 'type'
-      - 'ociArtefactName'
+      - 'ociArtifactName'
       - 'tag'
     properties:
       type:
         type: 'string'
-        enum: [ 'localOciArtefact' ]
-      ociArtefactName:
-        description: 'name of the local oci artefact within the current repository'
+        enum: [ 'localOciArtifact' ]
+      ociArtifactName:
+        description: 'name of the local oci artifact within the current repository'
         type: 'string'
       tag:
-        description: 'tag of the local oci artefact'
+        description: 'tag of the local oci artifact'
         $ref: '#/definitions/relaxedSemver'
 
   component:

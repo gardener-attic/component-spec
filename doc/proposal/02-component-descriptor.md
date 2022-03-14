@@ -3,7 +3,7 @@
 *Component Descriptors* are the central concept of OCM. A *Component Descriptor* describes what belongs to a particular
 version of a software component and how to access it. This includes:
 
-- resources, i.e. technical artefacts like binaries, docker images, ...
+- resources, i.e. technical artifacts like binaries, docker images, ...
 - sources like code in github
 - references to other software component versions
 
@@ -56,14 +56,6 @@ component:
 
 Component names reside in a global namespace. To avoid name conflicts component names MUST start with a valid domain
 name (as specified by RFC-1034, RFC-1035) with an optional URL path suffix (as specified by RFC-1738).
-
-If no URL path suffix is specified, the domain MUST be possessed by the component proprietor. If a URL path suffix is
-specified, the namespace started by the concatenation of domain and URL path suffix MUST be possessed by the component
-owner.
-
-The component name SHOULD reference a location where the component’s resources (typically source code, and/or
-documentation) are hosted. An example and recommended practise is using GitHub repository names for components on
-GitHub like *github.com/gardener/gardener*.
 
 Component versions refer to specific snapshots of a component. A common scenario being the release of a component.
 Component versions MUST adhere to a loosened variant of [Semver 2.0.0](https://semver.org/).
@@ -127,7 +119,7 @@ component:
 ```
 
 Every resource entry has a *name* and *version* field. The *type* of the resource specifies the content of the
-referenced resource, i.e. if it is a helm chart, a json file etc.
+referenced resource, i.e. if it is a helm chart, a JSON file etc.
 
 Resources have a *relation* field with value “local” if they are derived from a source declared by the same component.
 The value is “external” if they are not derived form a source declared by the same component, e.g. a docker image for
@@ -144,7 +136,7 @@ This is done by declaring an access type (for example an OCI Image Registry), wh
 access is done. Depending on the access type, additional attributes are required (e.g. an OCI Image Reference).
 
 OCM does not specify the format and semantics of particular access types for resources and sources. This can be done 
-in extensions to this specification. An exception are the two access types  *localOciBlob* and *localOciArtefact* 
+in extensions to this specification. An exception are the two access types  *localOciBlob* and *localOciArtifact* 
 explained later.
 
 ## Component References
@@ -183,7 +175,7 @@ for valid names are defined:
 - special characters ([-_+])
 - any other characters are NOT acceptable
 - names SHOULD consist of at least two, and less than 64 characters
-- names MUST start with a lowercase character
+- names MUST start with a lowercase character ([a-z])
 
 Every *source*, *resource* or *componentReference* needs a unique identifier in a *Component Descriptor*.
 In particular situations the name is not sufficient, e.g. if docker images for different platform are included.
