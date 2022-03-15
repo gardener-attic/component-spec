@@ -55,7 +55,15 @@ component:
 ```
 
 Component names reside in a global namespace. To avoid name conflicts component names MUST start with a valid domain
-name (as specified by RFC-1034, RFC-1035) with an optional URL path suffix (as specified by RFC-1738).
+name (as specified by RFC-1034, RFC-1035) followed by an optional URL path suffix (as specified by RFC-1738).
+
+If no URL path suffix is specified, the domain MUST be possessed by the component owner. If a URL path suffix is 
+specified, the namespace started by the concatenation of domain and URL path suffix MUST be controlled by the 
+component owner.
+
+It is recommended that a component name SHOULD reference a location where the component’s resources (typically source 
+code, and/or documentation) are hosted. An example and recommended practise is using GitHub repository names for 
+components on GitHub like *github.com/path-of-your-repo*.
 
 Component versions refer to specific snapshots of a component. A common scenario being the release of a component.
 Component versions MUST adhere to a loosened variant of [Semver 2.0.0](https://semver.org/).
