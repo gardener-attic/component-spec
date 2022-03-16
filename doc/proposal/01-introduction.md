@@ -122,7 +122,7 @@ As a result of the development phase, **component versions** are created, e.g. w
 A component version consists of a set of technical artifacts, e.g. docker images, helm charts, binaries,
 configuration data etc. Such artifacts are called **resources** in this specification. 
 
-Resources are usually build from something, e.g. code in a git repo, which we call **sources** in this specification.
+Resources are usually build from something, e.g. code in a git repo, named **sources** in this specification.
 
 The OCM introduces a so called **Component Descriptor** for every component version, to describe the resources, sources 
 and other component versions belonging to a particular component version and how these could be accessed.

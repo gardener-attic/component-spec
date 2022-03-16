@@ -1,7 +1,7 @@
 # Component Repository Specification
 
 *Component Descriptors* are stored in *Component Repositories*. This chapter describes in a programing language/protocol
-agnostic fashion the functions a *Component Repository* must implement to be OCM conform.
+agnostic fashion the functions a *Component Repository* MUST implement to be OCM conform.
 These functions are also specifying the interface whit which the user can access a *Component Repository* to perform 
 operations on *Component Descriptors*.
 
@@ -24,14 +24,14 @@ is accessible by its name and version (see GetComponentDescriptor). The name and
 is the identifier of a *Component Descriptor*, therefore if there already exists a *Component Descriptor*
 with the same name and version, the upload fails. 
 
-A *Component Repository* must check if all referenced *Component Descriptors* and local blobs are already stored in 
+A *Component Repository* MUST check if all referenced *Component Descriptors* and local blobs are already stored in 
 the *Component Repository*.
 
 If the identifier of entries in *resources*, *sources* or *componentReferences* are not unique, as described before,
-an *invalidArgument* error must be returned.
+an *invalidArgument* error MUST be returned.
 
 If the identifier of *resources* and *sources* (name plus extraIdentity) are not unique, a *Component Repository* might 
-automatically add the version field to the extraIdentity to resolve this problem. Of course, it must still fail, if 
+automatically add the version field to the extraIdentity to resolve this problem. Of course, it MUST still fail, if 
 uniqueness of the resource identifiers could not be achieved this way.
 
 If the last entry in the "repositoryContext" field is not an entry for the current *Component Repository*, such an 
@@ -100,7 +100,7 @@ by another *Component Descriptor*.
 and can be referenced by the component descriptor in its *resources* or *sources* section. 
 *Component Descriptors* are not allowed to reference local blobs of other *Component Descriptors* in their resources. 
 
-When uploading a local blob, it is not required that the corresponding *Component Descriptor* already exists. 
+When uploading a local blob, it is not REQUIRED that the corresponding *Component Descriptor* already exists. 
 Usually local blobs are uploaded first because it is not allowed to upload a *Component Descriptor* if its local 
 blobs not already exist.
 

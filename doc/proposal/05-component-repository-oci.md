@@ -3,7 +3,7 @@
 This chapter describes an implementation of a Component Repository which stores component descriptors in an OCI image 
 registry. We call this implementation *OCI Component Repository*.
 
-An OCI component repository is defined by a *base URL*. This URL must refer to an OCI image registry or a path
+An OCI component repository is defined by a *base URL*. This URL MUST refer to an OCI image registry or a path
 into it. Component descriptors can be stored here as OCI artifacts. The name of the artifact is derived from the 
 base URL, the component name, and component version:
 

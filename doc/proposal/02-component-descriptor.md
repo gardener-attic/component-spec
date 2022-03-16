@@ -12,8 +12,8 @@ version of a software component and how to access it. This includes:
 A *Component Descriptor* is a [YAML](https://yaml.org/) or [JSON](https://www.json.org/json-en.html) document
 according to this [schema](component-descriptor-v2-schema.yaml).
 
-In serialised form, *Component Descriptors* MUST be UTF-8-encoded. Either YAML, or JSON may be used. If YAML is used
-as serialisation format, only the subset of features defined by JSON must be used, thus allowing conversion to a
+In serialised form, *Component Descriptors* MUST be UTF-8-encoded. Either YAML, or JSON MAY be used. If YAML is used
+as serialisation format, only the subset of features defined by JSON MUST be used, thus allowing conversion to a
 JSON representation.
 
 YAML is recommended as preferred serialisation format.
@@ -42,7 +42,7 @@ component:
 
 ## Name and Version
 
-Every *Component Descriptor* has a name (*component.name*) and version (*component.version), also called component
+Every *Component Descriptor* has a name (*component.name*) and version (*component.version*), also called component
 name and component version. Name and version are the identifier for a *Component Descriptor* and the component version 
 described by it.
 
@@ -55,7 +55,13 @@ component:
 ```
 
 Component names reside in a global namespace. To avoid name conflicts component names MUST start with a valid domain
-name (as specified by RFC-1034, RFC-1035) followed by an optional URL path suffix (as specified by RFC-1738).
+name (as specified by [RFC-1034](https://www.rfc-editor.org/info/rfc1034), [RFC-1035](https://www.rfc-editor.org/info/rfc1035)) 
+followed by an optional URL path suffix (as specified by [RFC-1738](https://www.rfc-editor.org/info/rfc1738)).
+
+Examples are:
+
+- *github.com*
+- *github.com/pathToYourRepo*
 
 If no URL path suffix is specified, the domain MUST be possessed by the component owner. If a URL path suffix is 
 specified, the namespace started by the concatenation of domain and URL path suffix MUST be controlled by the 
@@ -71,7 +77,7 @@ Component versions MUST adhere to a loosened variant of [Semver 2.0.0](https://s
 Different to strict semver 2.0.0, component versions MAY:
 
 - have an optional v prefix
-- omit the third component (patch-level); if omitted, path-level is implied to equal 0
+- omit the third level (patch-level); if omitted, path-level is implied to equal 0
 
 ## Sources, Resources
 
@@ -98,7 +104,7 @@ component:
       ...
 ```
 
-Every source entry has a name and version field. Furthermore, it has a type field, specifying the nature of the
+Every source entry MUST have a name and version field. Furthermore, it MUST have a type field, specifying the nature of the
 source code management system, and a type specific access section.
 
 Example for resources:
@@ -133,11 +139,11 @@ Resources have a *relation* field with value “local” if they are derived fro
 The value is “external” if they are not derived form a source declared by the same component, e.g. a docker image for
 a monitoring stack developed in another component. 
 
-If the *relation* field has the value “local”, the *version* field of the resource reference must be the same as the 
+If the *relation* field has the value “local”, the *version* field of the resource reference MUST be the same as the 
 *version* field of the *Component Descriptor*.
 
 The *access* field of a resource entry contains the information how to access the resource. Every *access* entry has a
-required field *type* which specifies the access method.
+REQUIRED field *type* which specifies the access method.
 
 Sources and resources declare through their access attribute a means to access the underlying artifacts.
 This is done by declaring an access type (for example an OCI Image Registry), which defines the protocol through which
@@ -188,12 +194,12 @@ for valid names are defined:
 Every *source*, *resource* or *componentReference* needs a unique identifier in a *Component Descriptor*.
 In particular situations the name is not sufficient, e.g. if docker images for different platform are included.
 Therefore, every entry has an additional optional field *extraIdentity* to resolve this problem, i.e. every entry
-must have a unique combination of *name*, *extraIdentity* and formal type (*source*, *resource* or *componentReference*)
+MUST have a unique combination of *name*, *extraIdentity* and formal type (*source*, *resource* or *componentReference*)
 within a *Component Descriptor*.
 
 An *extraIdentity* is a map, of key value pairs whereby:
 
-- The keys must adhere to the same restrictions defined for name values (see above)
+- The keys MUST adhere to the same restrictions defined for name values (see above)
 - The values MUST be UTF-8-encoded strings.
 
 Two *extraIdentities* are equal if they have the same key value pairs whereby the order is not relevant.
@@ -222,7 +228,7 @@ optional labels. This allows to express application specific extensions.
 
 Labels is a map, of key value pairs whereby:
 
-- The keys must adhere to the same restrictions defined for name values (see [above](#identifier-for-sources-resources-and-component-references))
+- The keys MUST adhere to the same restrictions defined for name values (see [above](#identifier-for-sources-resources-and-component-references))
 - The values MUST be JSON compatible YAML or JSON.
 
 Example:

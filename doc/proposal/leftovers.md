@@ -16,6 +16,7 @@
   - etc.
 
 ## Todo/Discuss
+- complete component descriptor example
 - change technical artifacts to software artifacts 
 - references in the text to the CD spec for particular entries
 - Some chapter with terminology (see https://github.com/openservicebrokerapi/servicebroker/blob/v2.16/spec.md#notations-and-terminology)
@@ -24,3 +25,4 @@
 - Could we use [purl](https://github.com/package-url/purl-spec) for references to sources/resources?
 - Tables for input export params of functions (see https://github.com/openservicebrokerapi/servicebroker/blob/v2.16/spec.md) 
 - List with all errors and their semantics
+- Use-Cases / Scenarios with diagrams for Component Repos

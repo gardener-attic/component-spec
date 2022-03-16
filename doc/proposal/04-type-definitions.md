@@ -1,6 +1,6 @@
 # Type Definitions
 
-A component descriptor may describe references to sources and resources. For every source and resource it must be 
+A component descriptor may describe references to sources and resources. For every source and resource it MUST be 
 defined how to access it. The format of the access data can depend on the type of a resource and the
 repository where it is stored. This chapter defines some formats of access data. It is 
 recommended use these formats in all implementations based on OCM.
@@ -25,7 +25,7 @@ resources:
 
 ### Local Blob
 
-In a component repository, local blobs can be stored together with a component descriptor. Every local blob must have
+In a component repository, local blobs can be stored together with a component descriptor. Every local blob MUST have
 a blob identifier. In the case of an [OCI component repository](05-component-repository-oci.md), this is the digest 
 of the blob.
 
