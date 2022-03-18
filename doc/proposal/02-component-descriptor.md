@@ -12,7 +12,7 @@ version of a software component and how to access it. This includes:
 A *Component Descriptor* is a [YAML](https://yaml.org/) or [JSON](https://www.json.org/json-en.html) document
 according to this [schema](component-descriptor-v2-schema.yaml). Additional fields are not allowed.
 
-In serialised form, *Component Descriptors* MUST be UTF-8-encoded. Either YAML, or JSON MAY be used. If YAML is used
+In serialised form, *Component Descriptors* MUST be UTF-8-encoded. Either YAML, or JSON MUST be used. If YAML is used
 as serialisation format, only the subset of features defined by JSON MUST be used, thus allowing conversion to a
 JSON representation.
 
@@ -200,7 +200,7 @@ within a *Component Descriptor*.
 An *extraIdentity* is a map, of key value pairs whereby:
 
 - The keys MUST adhere to the same restrictions defined for name values (see above)
-- The values MUST be UTF-8-encoded strings.
+- The values MUST be UTF-8-encoded non-empty strings.
 
 Two *extraIdentities* are equal if they have the same key value pairs whereby the order is not relevant.
 
@@ -230,7 +230,7 @@ allowed. This express application specific extensions, every entry in the *sourc
 Labels is a map, of key value pairs whereby:
 
 - The keys MUST adhere to the same restrictions defined for name values (see [above](#identifier-for-sources-resources-and-component-references))
-- The values MUST be JSON compatible YAML or JSON.
+- The values MUST be either JSON or JSON compatible YAML.
 
 Example:
 

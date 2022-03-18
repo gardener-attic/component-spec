@@ -27,3 +27,4 @@
 - Tables for input export params of functions (see https://github.com/openservicebrokerapi/servicebroker/blob/v2.16/spec.md) 
 - List with all errors and their semantics
 - Use-Cases / Scenarios with diagrams for Component Repos
+- Clarify that components are not allowed to have two version with the same number but different formats, e.g. v0.1.0 and 0.1.0
