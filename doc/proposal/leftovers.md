@@ -16,6 +16,7 @@
   - etc.
 
 ## Todo/Discuss
+- Terminology section: beside others must describe landscape, component version, snapshot 
 - complete component descriptor example
 - change technical artifacts to software artifacts 
 - references in the text to the CD spec for particular entries

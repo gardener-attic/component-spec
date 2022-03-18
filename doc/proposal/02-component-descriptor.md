@@ -10,7 +10,7 @@ version of a software component and how to access it. This includes:
 ## Component Descriptor Format Specification
 
 A *Component Descriptor* is a [YAML](https://yaml.org/) or [JSON](https://www.json.org/json-en.html) document
-according to this [schema](component-descriptor-v2-schema.yaml).
+according to this [schema](component-descriptor-v2-schema.yaml). Additional fields are not allowed.
 
 In serialised form, *Component Descriptors* MUST be UTF-8-encoded. Either YAML, or JSON MAY be used. If YAML is used
 as serialisation format, only the subset of features defined by JSON MUST be used, thus allowing conversion to a
@@ -223,8 +223,9 @@ component:
 
 ## Labels for Sources, Resources and Component References
 
-Every entry in the *sources*, *resources* and *componentReferences* fields, and the component itself may declare
-optional labels. This allows to express application specific extensions.
+According to the [schema](component-descriptor-v2-schema.yaml) for the *Component Descriptor*, additional fields are not 
+allowed. This express application specific extensions, every entry in the *sources*, *resources* and 
+*componentReferences* fields, and the component itself may declare optional labels. 
 
 Labels is a map, of key value pairs whereby:
 
