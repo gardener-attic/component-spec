@@ -1,14 +1,30 @@
 # Local Blobs
 
-Usually sources and resources are stored in some external storage, e.g. a docker image is stored in some OCI registry
-and the *Component Descriptor* contains only the information how to access it. As an alternative *Component Repositories*
-MAY provide the possibility to store technical artifacts together with the *Component Descriptors* in the
-*Component Repository* itself as so-called *local blobs*. This allows to pack all component versions with their
-technical artifacts in a *Component Repository* as a completely self-contained package. This is a typical requirement
-if you need to deliver your product into a fenced landscape. This also allows storing e.g. configuration data together
-with your *Component Descriptor*.
+A central problem, which should be resolved by OCM, is to provide a uniform and well-defined possibility to transport 
+component versions from a source to a target location/landscape. Often, transports include additional 
+intermediate locations/landscapes. The situation becomes even more complicated when particular locations are fenced, 
+i.e. have no access to some external systems. Furthermore, often not only the *Component Descriptors* but also the 
+referenced sources and resources must be transported. 
+
+If some intermediate location does not provide a particular store for all of your artifact types (OCI 
+images, helm charts...) and also has no access to the referenced artifacts, you need some mapping of these artifact 
+types to upload them into the provided stores. Such a mapping has to be defined and implemented for all artifact type 
+and store combinations. To reduce this overhead, *Component Repositories* MAY provide a possibility to store blobs in 
+a type agnostic manner. Then you only need to define one blob format for every artifact type, which could be uploaded 
+to every *Component Repository* providing such a functionality.
+
+Another motivation for storing blobs in a *Component Repository* is, that often there are some additional
+configuration data, you just want to store together with the *Component Descriptor* in an easy and uniform manner. 
+
+Therefore, *Component Repositories* MAY provide the possibility to store technical artifacts together with the 
+*Component Descriptors* in the *Component Repository* itself as so-called *local blobs*. This also allows to pack all 
+component versions with their technical artifacts in a *Component Repository* as a completely self-contained package, a 
+typical requirement if you need to deliver your product into a fenced landscape. 
 
 ## Functions for Local Blobs
+
+If a *Component Repository* provides support for *local blobs* it MUST implement the methods for uploading and fetching
+*local blobs*. It MAY implement an additional delete method. 
 
 ### UploadLocalBlob
 
