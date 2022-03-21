@@ -6,6 +6,7 @@ import (
 	"crypto/x509"
 	"encoding/hex"
 	"encoding/pem"
+	"errors"
 	"fmt"
 	"io/ioutil"
 	"strings"
@@ -54,8 +55,9 @@ func (s RsaSigner) Sign(componentDescriptor v2.ComponentDescriptor, digest v2.Di
 		return nil, fmt.Errorf("failed signing hash, %w", err)
 	}
 	return &v2.SignatureSpec{
-		Algorithm: "RSASSA-PKCS1-V1_5-SIGN",
+		Algorithm: v2.SignatureAlgorithmRSAPKCS1v15,
 		Value:     hex.EncodeToString(signature),
+		MediaType: v2.MediaTypeHexEncodedRSASignature,
 	}, nil
 }
 
@@ -73,7 +75,20 @@ type RsaVerifier struct {
 	publicKey rsa.PublicKey
 }
 
-// CreateRsaVerifierFromKeyFile creates an Instance of RsaVerifier with the given rsa public key.
+// CreateRsaVerifier creates an instance of RsaVerifier from a given rsa public key.
+func CreateRsaVerifier(publicKey *rsa.PublicKey) (*RsaVerifier, error) {
+	if publicKey == nil {
+		return nil, errors.New("public key must not be nil")
+	}
+
+	verifier := RsaVerifier{
+		publicKey: *publicKey,
+	}
+
+	return &verifier, nil
+}
+
+// CreateRsaVerifierFromKeyFile creates an instance of RsaVerifier from a rsa public key file.
 // The private key has to be in the PKIX, ASN.1 DER form, see x509.ParsePKIXPublicKey.
 func CreateRsaVerifierFromKeyFile(pathToPublicKey string) (*RsaVerifier, error) {
 	publicKey, err := ioutil.ReadFile(pathToPublicKey)
@@ -90,9 +105,7 @@ func CreateRsaVerifierFromKeyFile(pathToPublicKey string) (*RsaVerifier, error) 
 	}
 	switch key := untypedKey.(type) {
 	case *rsa.PublicKey:
-		return &RsaVerifier{
-			publicKey: *key,
-		}, nil
+		return CreateRsaVerifier(key)
 	default:
 		return nil, fmt.Errorf("public key format is not supported. Only rsa.PublicKey is supported")
 	}
@@ -100,11 +113,23 @@ func CreateRsaVerifierFromKeyFile(pathToPublicKey string) (*RsaVerifier, error) 
 
 // Verify checks the signature, returns an error on verification failure
 func (v RsaVerifier) Verify(componentDescriptor v2.ComponentDescriptor, signature v2.Signature) error {
-	decodedHash, err := hex.DecodeString(signature.Digest.Value)
-	if err != nil {
-		return fmt.Errorf("failed decoding hash %s: %w", signature.Digest.Value, err)
+	var signatureBytes []byte
+	var err error
+	switch signature.Signature.MediaType {
+	case v2.MediaTypeHexEncodedRSASignature:
+		signatureBytes, err = hex.DecodeString(signature.Signature.Value)
+		if err != nil {
+			return fmt.Errorf("unable to get signature value: failed decoding hash %s: %w", signature.Digest.Value, err)
+		}
+	case v2.MediaTypePEM:
+		signaturePemBlock, err := GetSignaturePEMBlock([]byte(signature.Signature.Value))
+		if err != nil {
+			return fmt.Errorf("unable to get signature value: %w", err)
+		}
+		signatureBytes = signaturePemBlock.Bytes
 	}
-	decodedSignature, err := hex.DecodeString(signature.Signature.Value)
+
+	decodedHash, err := hex.DecodeString(signature.Digest.Value)
 	if err != nil {
 		return fmt.Errorf("failed decoding hash %s: %w", signature.Digest.Value, err)
 	}
@@ -112,9 +137,30 @@ func (v RsaVerifier) Verify(componentDescriptor v2.ComponentDescriptor, signatur
 	if err != nil {
 		return fmt.Errorf("failed looking up hash algorithm for %s: %w", signature.Digest.HashAlgorithm, err)
 	}
-	err = rsa.VerifyPKCS1v15(&v.publicKey, algorithm, decodedHash, decodedSignature)
-	if err != nil {
+	if err := rsa.VerifyPKCS1v15(&v.publicKey, algorithm, decodedHash, signatureBytes); err != nil {
 		return fmt.Errorf("signature verification failed, %w", err)
 	}
 	return nil
+}
+
+func GetSignaturePEMBlock(pemData []byte) (*pem.Block, error) {
+	var signatureBlock *pem.Block
+	for {
+		var currentBlock *pem.Block
+		currentBlock, pemData = pem.Decode(pemData)
+		if currentBlock == nil && len(pemData) > 0 {
+			return nil, fmt.Errorf("unable to decode pem block %s", string(pemData))
+		}
+
+		if currentBlock.Type == v2.SignaturePEMBlockType {
+			signatureBlock = currentBlock
+			break
+		}
+	}
+
+	if signatureBlock == nil {
+		return nil, fmt.Errorf("no %s block found in input pem data", v2.SignaturePEMBlockType)
+	}
+
+	return signatureBlock, nil
 }

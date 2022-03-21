@@ -152,6 +152,9 @@ definitions:
         type: string
       value:
         type: string
+      mediaType:
+        description: 'The media type of the signature value'
+        type: string
 
   signature:
     type: 'object'

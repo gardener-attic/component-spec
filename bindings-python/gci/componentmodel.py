@@ -181,6 +181,7 @@ class DigestSpec:
 class SignatureSpec:
     algorithm: str
     value: str
+    mediaType: str
 
 @dc
 class Signature:
