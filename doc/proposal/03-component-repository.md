@@ -1,9 +1,18 @@
 # Component Repository Specification
 
 *Component Descriptors* are stored in *Component Repositories*. This chapter describes in a programing language/protocol
-agnostic fashion the functions a *Component Repository* MUST implement to be OCM conform.
-These functions also specify the interface with which the user can access a *Component Repository* to perform 
-operations on *Component Descriptors*.
+agnostic fashion the functions a *Component Repository* MUST implement to be OCM conform. A *Component Repository* MUST
+implement a method to upload and a method to fetch uploaded *Component Descriptors*. A *Component Repository* MAY
+implement a method to delete uploaded *Component Descriptors*.
+
+This specification makes no assumptions and regulations about how *Component Repositories* will be implemented. Possible
+realizations are:
+
+- The *Component Descriptors* could be stored in different backends like OCI registry, a github repo, a data base etc.
+- A facade/proxy API layer on top of the backend, implementing the upload, fetch and delete methods according to the
+requirements of this specification. This could be a Go/Python client API, some http server... 
+
+![](./images/component-repo.png)
 
 ## Functions for Component Descriptors
 
