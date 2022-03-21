@@ -16,7 +16,7 @@ OCI artifact as the component descriptor. The artifact is the structured as foll
 a config, and an array of layers. The component descriptor is the first layer, and the local OCI blobs are stored in the 
 other layers. 
 
-![images/component-artifact.png](images/component-artifact.png)
+![images/component-artifact.png](../images/component-artifact.png)
 
 The component descriptor and its local OCI blobs can be accessed via the OCI blobs endpoint of the repository.
 To get a layer via the OCI blobs endpoint one needs to know the digest of this layer.

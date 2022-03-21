@@ -7,7 +7,7 @@ as a common basis to exchange this information between different tools and proce
 1. [Introduction](./01-introduction.md)
 2. [Component Descriptor Specification](./02-component-descriptor.md)
 3. [Component Repository Specification](./03-component-repository.md)
-4. [Type Definitions](./04-type-definitions.md)
+4. [Local Blobs](./04-local-blobs.md)
 
 ## Notational Conventions
 The keywords "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY", 
