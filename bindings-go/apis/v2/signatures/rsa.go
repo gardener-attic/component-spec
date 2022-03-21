@@ -14,7 +14,7 @@ import (
 	v2 "github.com/gardener/component-spec/bindings-go/apis/v2"
 )
 
-// RsaSigner is a signatures.Signer compatible struct to sign with RSASSA-PKCS1-V1_5-SIGN.
+// RsaSigner is a signatures.Signer compatible struct to sign with RSASSA-PKCS1-V1_5.
 type RsaSigner struct {
 	privateKey rsa.PrivateKey
 }
@@ -31,10 +31,16 @@ func CreateRsaSignerFromKeyFile(pathToPrivateKey string) (*RsaSigner, error) {
 	if block == nil {
 		return nil, fmt.Errorf("failed decoding PEM formatted block in key %w", err)
 	}
-	key, err := x509.ParsePKCS1PrivateKey(block.Bytes)
+	untypedPrivateKey, err := x509.ParsePKCS8PrivateKey(block.Bytes)
 	if err != nil {
 		return nil, fmt.Errorf("failed parsing key %w", err)
 	}
+
+	key, ok := untypedPrivateKey.(*rsa.PrivateKey)
+	if !ok {
+		return nil, fmt.Errorf("parsed key is not of type *rsa.PrivateKey: %T", untypedPrivateKey)
+	}
+
 	return &RsaSigner{
 		privateKey: *key,
 	}, nil
@@ -70,7 +76,7 @@ func hashAlgorithmLookup(algorithm string) (crypto.Hash, error) {
 	return 0, fmt.Errorf("hash Algorithm %s not found", algorithm)
 }
 
-// RsaVerifier is a signatures.Verifier compatible struct to verify RSASSA-PKCS1-V1_5-SIGN signatures.
+// RsaVerifier is a signatures.Verifier compatible struct to verify RSASSA-PKCS1-V1_5 signatures.
 type RsaVerifier struct {
 	publicKey rsa.PublicKey
 }
