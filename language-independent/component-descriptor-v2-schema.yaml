@@ -147,6 +147,7 @@ definitions:
     required:
       - algorithm
       - value
+      - mediaType
     properties:
       algorithm:
         type: string

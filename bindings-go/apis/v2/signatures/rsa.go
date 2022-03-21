@@ -128,11 +128,16 @@ func (v RsaVerifier) Verify(componentDescriptor v2.ComponentDescriptor, signatur
 			return fmt.Errorf("unable to get signature value: failed decoding hash %s: %w", signature.Digest.Value, err)
 		}
 	case v2.MediaTypePEM:
-		signaturePemBlock, err := GetSignaturePEMBlock([]byte(signature.Signature.Value))
+		signaturePemBlocks, err := GetSignaturePEMBlocks([]byte(signature.Signature.Value))
 		if err != nil {
-			return fmt.Errorf("unable to get signature value: %w", err)
+			return fmt.Errorf("unable to get signature pem blocks: %w", err)
 		}
-		signatureBytes = signaturePemBlock.Bytes
+		if len(signaturePemBlocks) != 1 {
+			return fmt.Errorf("expected 1 signature pem block, found %d", len(signaturePemBlocks))
+		}
+		signatureBytes = signaturePemBlocks[0].Bytes
+	default:
+		return fmt.Errorf("invalid signature mediaType %s", signature.Signature.MediaType)
 	}
 
 	decodedHash, err := hex.DecodeString(signature.Digest.Value)
@@ -149,8 +154,13 @@ func (v RsaVerifier) Verify(componentDescriptor v2.ComponentDescriptor, signatur
 	return nil
 }
 
-func GetSignaturePEMBlock(pemData []byte) (*pem.Block, error) {
-	var signatureBlock *pem.Block
+// GetSignaturePEMBlocks returns all signature pem blocks from a list of pem blocks
+func GetSignaturePEMBlocks(pemData []byte) ([]*pem.Block, error) {
+	if len(pemData) == 0 {
+		return []*pem.Block{}, nil
+	}
+
+	signatureBlocks := []*pem.Block{}
 	for {
 		var currentBlock *pem.Block
 		currentBlock, pemData = pem.Decode(pemData)
@@ -159,14 +169,13 @@ func GetSignaturePEMBlock(pemData []byte) (*pem.Block, error) {
 		}
 
 		if currentBlock.Type == v2.SignaturePEMBlockType {
-			signatureBlock = currentBlock
+			signatureBlocks = append(signatureBlocks, currentBlock)
+		}
+
+		if len(pemData) == 0 {
 			break
 		}
 	}
 
-	if signatureBlock == nil {
-		return nil, fmt.Errorf("no %s block found in input pem data", v2.SignaturePEMBlockType)
-	}
-
-	return signatureBlock, nil
+	return signatureBlocks, nil
 }
