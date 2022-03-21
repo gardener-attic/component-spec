@@ -26,7 +26,8 @@ is the identifier of a *Component Descriptor*, therefore if there already exists
 with the same name and version, the upload fails. 
 
 A *Component Repository* MUST check if all referenced *Component Descriptors* and local blobs are already stored in 
-the *Component Repository*.
+the *Component Repository*. Local blobs are special artifacts stored in a *Component Repository*, described in more 
+detail in the next chapter.
 
 If the identifier of entries in *resources*, *sources* or *componentReferences* are not unique, as described before,
 an *invalidArgument* error MUST be returned.
@@ -98,3 +99,11 @@ by another *Component Descriptor*.
 - existingReference: If the *Component Descriptor* is still referenced
 - invalidArgument: If one of the input parameters is empty
 - repositoryError: If some error occurred in the *Component Repository*
+
+## Concurrency and ACID 
+
+This specification makes no assumptions about the behaviour of a *Component Repository* in case of parallel requests.
+For example if you upload *Component Descriptor* nothing is said about the behaviour in case of the parallel deletion
+of a referenced *Component Descriptor*.
+
+Also, assumptions with respect to atomicity and durability are out of scope of this document.
