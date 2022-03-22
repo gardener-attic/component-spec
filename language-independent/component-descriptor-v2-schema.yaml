@@ -147,10 +147,14 @@ definitions:
     required:
       - algorithm
       - value
+      - mediaType
     properties:
       algorithm:
         type: string
       value:
+        type: string
+      mediaType:
+        description: 'The media type of the signature value'
         type: string
 
   signature:
