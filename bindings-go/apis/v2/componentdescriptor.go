@@ -453,7 +453,7 @@ type DigestSpec struct {
 type SignatureSpec struct {
 	Algorithm string `json:"algorithm"`
 	Value     string `json:"value"`
-	MediaType string `json:"mediaType,omitempty"`
+	MediaType string `json:"mediaType"`
 }
 
 const (
