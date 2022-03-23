@@ -26,9 +26,9 @@ var _ = Describe("RSA Sign/Verify", func() {
 		dir, err = ioutil.TempDir("", "component-spec-test")
 		Expect(err).To(BeNil())
 
-		// openssl genrsa -out private.key 4096
+		// openssl genpkey -out private.key -algorithm RSA
 		pathPrivateKey = path.Join(dir, "private.key")
-		createPrivateKeyCommand := exec.Command("openssl", "genrsa", "-out", pathPrivateKey, "4096")
+		createPrivateKeyCommand := exec.Command("openssl", "genpkey", "-out", pathPrivateKey, "-algorithm", "RSA")
 		err = createPrivateKeyCommand.Run()
 		Expect(err).To(BeNil())
 
