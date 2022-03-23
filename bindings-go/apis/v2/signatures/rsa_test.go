@@ -90,7 +90,7 @@ var _ = Describe("RSA Sign/Verify", func() {
 
 			//generate a wrong key (e.g. from a malicious actor)
 			pathWrongPrivateKey := path.Join(dir, "privateWrong.key")
-			createWrongPrivateKeyCommand := exec.Command("openssl", "genrsa", "-out", pathWrongPrivateKey, "4096")
+			createWrongPrivateKeyCommand := exec.Command("openssl", "genpkey", "-out", pathWrongPrivateKey, "-algorithm", "RSA")
 			err := createWrongPrivateKeyCommand.Run()
 			Expect(err).To(BeNil())
 
