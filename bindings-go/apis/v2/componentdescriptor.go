@@ -466,8 +466,8 @@ const (
 	// MediaTypePEM defines the media type for PEM formatted data.
 	MediaTypePEM = "application/x-pem-file"
 
-	// MediaTypeHexEncodedRSASignature defines the media type for a plain, hex encoded RSA signature.
-	MediaTypeHexEncodedRSASignature = "application/vnd.ocm.signature.rsa+hex"
+	// MediaTypeRSASignature defines the media type for a plain RSA signature.
+	MediaTypeRSASignature = "application/vnd.ocm.signature.rsa"
 
 	// SignatureAlgorithmRSA defines the type for the RSA PKCS #1 v1.5 signature algorithm
 	SignatureAlgorithmRSAPKCS1v15 = "RSASSA-PKCS1-V1_5"
