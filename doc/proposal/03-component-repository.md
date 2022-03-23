@@ -77,6 +77,22 @@ A *Component Repository* MUST provide a method to fetch uploaded *Component Desc
 - doesNotExist: If the *Component Descriptor* does not exist
 - repositoryError: If some error occurred in the *Component Repository*
 
+### ListComponentDescriptors
+
+A *Component Repository* MUST provide a method to list the uploaded *Component Descriptors*.
+
+**Description**: Returns an iterator over all name-version-pairs of all stored *Component Descriptors*.
+
+**Inputs**:
+
+**Outputs**:
+
+- Iterator over name-version pairs: Iterator over name and version pairs
+
+**Errors**:
+
+- repositoryError: If some error occurred in the *Component Repository*
+
 ### DeleteComponentDescriptor
 
 A *Component Descriptor* defines the artefacts of a component version and many processes rely on this information.

@@ -137,6 +137,21 @@ access information you got when you uploaded the local blob.
 - invalidArgument: If one of the input parameters is empty or invalid
 - repositoryError: If some error occurred in the *Component Repository*
 
+### ListLocalBlobs
+
+**Description**: Provides an iterator over all triples *componentName/componentVersion/blobIdentifier* of all
+uploaded blobs. 
+
+**Inputs**:
+
+**Outputs**:
+
+- Iterator over string triple: Triples of *componentName/componentVersion/blobIdentifier*
+
+**Errors**:
+
+- repositoryError: If some error occurred in the *Component Repository*
+
 ### DeleteLocalBlob
 
 **Description**: Deletes a local blob. *blobIdentifier* is the *Component Repository* specific
