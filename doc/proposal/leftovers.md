@@ -23,7 +23,6 @@
 - Some chapter with terminology (see https://github.com/openservicebrokerapi/servicebroker/blob/v2.16/spec.md#notations-and-terminology)
 - Is Component Version Descriptor better than Component Descriptor because it describes a Component Version?
 - Tables for presenting field descriptions (see https://github.com/openservicebrokerapi/servicebroker/blob/v2.16/spec.md)
-- Could we use [purl](https://github.com/package-url/purl-spec) for references to sources/resources?
 - Tables for input export params of functions (see https://github.com/openservicebrokerapi/servicebroker/blob/v2.16/spec.md) 
 - List with all errors and their semantics
 - Use-Cases / Scenarios with diagrams for Component Repos
