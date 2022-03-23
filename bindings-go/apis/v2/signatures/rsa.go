@@ -1,7 +1,7 @@
 package signatures
 
 import (
-	"crypto"
+	"crypto/rand"
 	"crypto/rsa"
 	"crypto/x509"
 	"encoding/hex"
@@ -9,7 +9,6 @@ import (
 	"errors"
 	"fmt"
 	"io/ioutil"
-	"strings"
 
 	v2 "github.com/gardener/component-spec/bindings-go/apis/v2"
 )
@@ -52,28 +51,15 @@ func (s RsaSigner) Sign(componentDescriptor v2.ComponentDescriptor, digest v2.Di
 	if err != nil {
 		return nil, fmt.Errorf("failed decoding hash to bytes")
 	}
-	hashType, err := hashAlgorithmLookup(digest.HashAlgorithm)
-	if err != nil {
-		return nil, fmt.Errorf("failed looking up hash algorithm")
-	}
-	signature, err := rsa.SignPKCS1v15(nil, &s.privateKey, hashType, decodedHash)
+	signature, err := rsa.SignPKCS1v15(rand.Reader, &s.privateKey, 0, decodedHash)
 	if err != nil {
 		return nil, fmt.Errorf("failed signing hash, %w", err)
 	}
 	return &v2.SignatureSpec{
 		Algorithm: v2.SignatureAlgorithmRSAPKCS1v15,
 		Value:     hex.EncodeToString(signature),
-		MediaType: v2.MediaTypeHexEncodedRSASignature,
+		MediaType: v2.MediaTypeRSASignature,
 	}, nil
-}
-
-// maps a hashing algorithm string to crypto.Hash
-func hashAlgorithmLookup(algorithm string) (crypto.Hash, error) {
-	switch strings.ToLower(algorithm) {
-	case SHA256:
-		return crypto.SHA256, nil
-	}
-	return 0, fmt.Errorf("hash Algorithm %s not found", algorithm)
 }
 
 // RsaVerifier is a signatures.Verifier compatible struct to verify RSASSA-PKCS1-V1_5 signatures.
@@ -122,7 +108,7 @@ func (v RsaVerifier) Verify(componentDescriptor v2.ComponentDescriptor, signatur
 	var signatureBytes []byte
 	var err error
 	switch signature.Signature.MediaType {
-	case v2.MediaTypeHexEncodedRSASignature:
+	case v2.MediaTypeRSASignature:
 		signatureBytes, err = hex.DecodeString(signature.Signature.Value)
 		if err != nil {
 			return fmt.Errorf("unable to get signature value: failed decoding hash %s: %w", signature.Digest.Value, err)
@@ -144,11 +130,7 @@ func (v RsaVerifier) Verify(componentDescriptor v2.ComponentDescriptor, signatur
 	if err != nil {
 		return fmt.Errorf("failed decoding hash %s: %w", signature.Digest.Value, err)
 	}
-	algorithm, err := hashAlgorithmLookup(signature.Digest.HashAlgorithm)
-	if err != nil {
-		return fmt.Errorf("failed looking up hash algorithm for %s: %w", signature.Digest.HashAlgorithm, err)
-	}
-	if err := rsa.VerifyPKCS1v15(&v.publicKey, algorithm, decodedHash, signatureBytes); err != nil {
+	if err := rsa.VerifyPKCS1v15(&v.publicKey, 0, decodedHash, signatureBytes); err != nil {
 		return fmt.Errorf("signature verification failed, %w", err)
 	}
 	return nil
