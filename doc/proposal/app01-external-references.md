@@ -1,4 +1,4 @@
-# External Accessible Reference Definitions
+# Appendix 1: External Accessible Reference Definitions
 
 A *Component Descriptor* contains references to sources and resources. This could be either references to local blobs or 
 to some external accessible artifacts. The format of these references depends on the type of the source or 
@@ -8,25 +8,10 @@ accessible sources and resources. This set of predefined formats will be extende
 Predefined reference formats defined in this specification MUST be used if applicable. If there is no matching reference
 format defined in the specification, adopters MAY define their own formats. 
 
-## External References
 
-The general format for external references is 
+## Artifacts stored in OCI Registries
 
-|  | Type | Description |
-| --- | --- | --- |
-| type | string | Logical type of the referenced object, e.g. helm for for a helm chart|
-| access | object | Access information to the location where the object is located |
-
-The access object has the following format:
-
-|  | Type | Description |
-| --- | --- | --- |
-| type | string | type of the repository where the object is stored, e.g. ociRegistry for an OCI registry |
-| ... |  |  other entries describing the location of the object| 
-
-### Types in OCI Registries
-
-For objects stored in an OCI registry the following logical types are defined so far (will be extended):
+For artifacts stored in an OCI registry the following logical types are defined so far (will be extended):
 
 - ociImage: OCI container image ([see](https://github.com/opencontainers/image-spec/blob/main/spec.md))
 - helm.io/chart: helm chart ([see](https://helm.sh/docs/topics/registries/))
@@ -59,8 +44,8 @@ The access section looks as follows:
 |  | Value | Description |
 | --- | --- | --- |
 | type | github | |
-| commit | | the referenced commit hash |
-| ref |  | some reference e.g. refs/tags/v1.30.1 | 
+| commit | | The referenced commit hash |
+| ref |  | Some reference e.g. refs/tags/v1.30.1 | 
 | repoUrl |  | URL of the git repository e.g. github.com/pathToYourRepo | 
 
 An example looks as follows:

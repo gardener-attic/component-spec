@@ -30,8 +30,12 @@ The order of elements in sequences MAY be significant and MUST be retained in ca
 
 A *Component Descriptor* document consists of two top level elements: *meta*, *component*
 
-The *meta* element contains the schema version of the *Component Descriptor* specification. This document defines
-schema version *v2*.
+|  | Description |
+| --- | --- |
+| meta | Contains the schema version of the *Component Descriptor* specification. This document defines schema version *v2*. |
+| component | Definition of the artifacts which belong to the component version. |
+
+Example:
 
 ```
 meta:
@@ -40,11 +44,25 @@ component:
   ...
 ```
 
-## Name and Version
+## Component
 
-Every *Component Descriptor* has a name (*component.name*) and version (*component.version*), also called component
-name and component version. Name and version are the identifier for a *Component Descriptor* and the component version 
-described by it.
+The *component* field of a *Component Descriptor* has the following fields:
+
+|  | Description |
+| --- | --- |
+| name | Component name |
+| version | Component version |
+| repositoryContexts | Locations of the *Component Descriptor* in a transport chain |
+| provider | Provider of the component, e.g. a company, organization,... |
+| sources | Array of references to sources |
+| resources | Array of references to resources |
+| componentReferences | Array of references to other *Component Descriptors* |
+| labels | Optional field to add additional information/extensions |
+
+### Component Name and Version
+
+Every *Component Descriptor* has a name and version, also called component name and component version. Name and version 
+are the identifier for a *Component Descriptor* and the component version described by it.
 
 ```
 meta:
@@ -67,7 +85,7 @@ If no URL path suffix is specified, the domain MUST be possessed by the componen
 specified, the namespace started by the concatenation of domain and URL path suffix MUST be controlled by the 
 component owner.
 
-It is recommended that a component name SHOULD reference a location where the component’s resources (typically source 
+A component name SHOULD reference a location where the component’s resources (typically source 
 code, and/or documentation) are hosted. An example and recommended practise is using GitHub repository names for 
 components on GitHub like *github.com/path-of-your-repo*.
 
@@ -79,7 +97,7 @@ Different to strict semver 2.0.0, component versions MAY:
 - have an optional v prefix
 - omit the third level (patch-level); if omitted, path-level is implied to equal 0
 
-## Sources, Resources
+### References
 
 Components versions are typically built from sources, maintained in source code management systems,
 and transformed into resources (for example by a build), which are used at installation or runtime of the product.
@@ -87,7 +105,27 @@ and transformed into resources (for example by a build), which are used at insta
 Each *Component Descriptor* contains a field for references to the used sources and a field for references
 to the required resources.
 
-Example for sources:
+A component version might have also references to other component versions. The semantic of component references
+is, that the referencing component version comprises the referenced component versions, i.e. it is an aggregation or
+composition semantic.
+
+A *Component Descriptor* has a field to specify references to other *Component Descriptors* and thereby to the component
+versions described by them.
+
+### References to Sources
+
+The fields for references to sources are:
+
+|  | Description |
+| --- | --- |
+| name | Logical name of the reference withing the *Component Descriptor* |
+| extraIdentity | Optional field that in combination with the name uniquely identifies a reference within a *Component Descriptor* |
+| version | Version of the reference in the *Component Descriptor* |
+| type | Logical type. Specifies the content of the referenced sources, e.g. if it is git repository. |
+| access | Access information to the location where the sources are located. MUST contain another type field describing the access method. |
+| labels | Optional field to add additional information/extensions |
+
+Example for a source reference:
 
 ```
 ...
@@ -104,10 +142,22 @@ component:
       ...
 ```
 
-Every source entry MUST have a name and version field. Furthermore, it MUST have a type field, specifying the nature of the
-source code management system, and a type specific access section.
+### References to Resources
 
-Example for resources:
+The fields for references to sources are:
+
+|  | Description |
+| --- | --- |
+| name | Logical name of the reference withing the *Component Descriptor* |
+| extraIdentity | Optional field that in combination with the name uniquely identifies a reference within a *Component Descriptor* |
+| version | Version of the reference in the *Component Descriptor* |
+| relation | “local” if the resource is derived from a source declared by the same component. “external” otherwise. If “local”, the *version* field of the resource reference MUST be the same as the *version* field of the *Component Descriptor*. |
+| type | Logical type. Specifies the content of the referenced resource, e.g. if it is a helm chart, a JSON file etc. |
+| access | Access information to the location of the resource. MUST contain an additional type field describing the access method. |
+| srcRefs | If the corresponding resource was build from "local" sources, these could be listed here by providing their identifier within the *Component Descriptor*, i.e. their names and extraIdentities. |
+| labels | Optional field to add additional information/extensions |
+
+Example for resource references:
 
 ```
 ...
@@ -120,47 +170,29 @@ component:
       access:
         imageReference: example.com/monitoring:v0.8.3
         type: ociRegistry
-    
-    - name: example-chart
-      version: v1.19.4
-      relation: local
-      type: helm.io/chart
-      access:
-        digest: sha256:b5733194756a0a4a99a4b71c4328f1ccf01f866b5c3efcb4a025f02201ccf623
-        type: localOciBlob
-        mediaType: oci.image+tar
-      ...
+...
 ```
-
-Every resource entry has a *name* and *version* field. The *type* of the resource specifies the content of the
-referenced resource, i.e. if it is a helm chart, a JSON file etc.
-
-Resources have a *relation* field with value “local” if they are derived from a source declared by the same component.
-The value is “external” if they are not derived form a source declared by the same component, e.g. a docker image for
-a monitoring stack developed in another component. 
-
-If the *relation* field has the value “local”, the *version* field of the resource reference MUST be the same as the 
-*version* field of the *Component Descriptor*.
-
-The *access* field of a resource entry contains the information how to access the resource. Every *access* entry has a
-REQUIRED field *type* which specifies the access method.
 
 Sources and resources declare through their access attribute a means to access the underlying artifacts.
 This is done by declaring an access type (for example an OCI Image Registry), which defines the protocol through which
 access is done. Depending on the access type, additional attributes are required (e.g. an OCI Image Reference).
 
-OCM does not specify the format and semantics of particular access types for resources and sources. This can be done 
-in extensions to this specification. An exception are the two access types  *localOciBlob* and *localOciArtifact* 
-explained later.
+OCM specifies the format and semantics of particular access types for particular resources and sources later in this 
+specification.
 
-## Component References
+### References to Components
 
-A component version might have references to other component versions. The semantic of component references
-is, that the referencing component version comprises the referenced component versions, i.e. it is an aggregation or 
-composition semantic.
+The fields for references to sources are:
 
-A *Component Descriptor* has a field to specify references to other *Component Descriptors* and thereby to the component
-versions described by them.
+|  | Description |
+| --- | --- |
+| name | Logical name of the reference withing the *Component Descriptor*. |
+| extraIdentity | Optional field that in combination with the name uniquely identifies a reference within a *Component Descriptor* |
+| componentName | Component name of the referenced *Component Descriptor* |
+| version | Component version of the referenced *Component Descriptor* |
+| labels | Optional field to add additional information/extensions |
+
+Example for component references:
 
 ```
 component:
@@ -173,14 +205,10 @@ component:
     version: v0.11.4 
 ```
 
-Every component reference has a *name* field. This name is only the identifier of the component reference within
-the *Component Descriptor*. Furthermore, every entry contains the component name and version of the referenced
-*Component Descriptor*.
+As elaborated later in the context of *Component Repositories*, references to components do not need to declare an 
+access attribute. The lookup is always done by their name and version.
 
-As later elaborated in the context of *Component Repositories*, component references do not need to declare an access
-attribute.
-
-## Identifier for Sources, Resources and Component References
+### Identifier for Sources, Resources and Component References
 
 Every entry in the *sources*, *resources* and *componentReferences* fields has a *name* field. The following restrictions
 for valid names are defined:
@@ -221,10 +249,10 @@ component:
     ...
 ```
 
-## Labels for Sources, Resources and Component References
+### Labels
 
-According to the [schema](component-descriptor-v2-schema.yaml) for the *Component Descriptor*, additional fields are not 
-allowed. This express application specific extensions, every entry in the *sources*, *resources* and 
+According to the [schema](component-descriptor-v2-schema.yaml) for the *Component Descriptor*, additional fields are 
+not allowed. This express application specific extensions, every entry in the *sources*, *resources* and 
 *componentReferences* fields, and the component itself may declare optional labels. 
 
 Labels is a map, of key value pairs whereby:
@@ -242,7 +270,7 @@ component:
   ...
 ```
 
-## Repository Contexts
+### Repository Contexts
 
 Every *Component Descriptor* has a field *repositoryContexts* containing an array of access information of 
 *Component Descriptor Repositories*, i.e. stores for *Component Descriptors* which are specified later. 
@@ -252,15 +280,7 @@ The array of access information describes the transport chain of a *Component De
 in which the *Component Descriptor* is stored.
 
 The *repositoryContexts* are usually not specified manually in the *Component Descriptor*, but are rather set 
-automatically when a component version is uploaded to a *ComponentDescriptor Repository*. More details can be 
-found [here](03-component-repository.md#uploadcomponentdescriptor).
+automatically when a component version is uploaded to a *Component Repository*. 
 
-## Misc
 
-Other fields of a *Component Descriptor* are:
 
-- component.provider: provider of the component,e.g. a company, organization,...
-
-- component.resources.srcRefs: References to resources have another field *srcRefs*. If the corresponding resource was build 
-from "local" sources these could be listed here by providing their identifier within the *Component Descriptor*, i.e. 
-their names and extraIdentities.

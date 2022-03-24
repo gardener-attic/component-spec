@@ -21,12 +21,17 @@ Therefore, *Component Repositories* MAY provide the possibility to store technic
 component versions with their technical artifacts in a *Component Repository* as a completely self-contained package, a 
 typical requirement if you need to deliver your product into a fenced landscape. 
 
+As a short example, assume some component needs additional configuration data stored in some YAML file. If 
+in some landscape of your transport chain there is only an OCI registry available to store content, then you need to 
+define a format how to store such a YAML file in the OCI registry. With *local blobs* you could just upload the file into
+the *Component Repository*. 
+
 ## Functions for Local Blobs
 
-If a *Component Repository* provides support for *local blobs* it MUST implement the methods for uploading and fetching
-*local blobs*. It MAY implement an additional delete method. 
-
 ### UploadLocalBlob
+
+If a *Component Repository* provides support for *local blobs* it MUST implement a method for uploading *local blobs*
+as specified in this chapter.
 
 **Description**: Allows uploading binary data. The binary data belong to a particular *Component Descriptor*
 and can be referenced by the component descriptor in its *resources* or *sources* section.
@@ -82,7 +87,7 @@ provided to the upload function and depends on the use case.
   - name: example-image
     type: oci-image
     access:
-      type: localOciBlob
+      type: localBlob
       mediaType: application/vnd.oci.image.manifest.v1+json
       annotations:
           name: test/monitoring
@@ -105,7 +110,7 @@ An entry to this resource with this information in the *Component Descriptor* lo
   - name: example-image
     type: oci-image
     access:
-      type: localOciBlob
+      type: localBlob
       mediaType: application/vnd.oci.image.manifest.v1+json
       annotations:
         name: test/monitoring
@@ -117,6 +122,9 @@ An entry to this resource with this information in the *Component Descriptor* lo
 ```
 
 ### GetLocalBlob
+
+If a *Component Repository* provides support for *local blobs* it MUST implement a method for fetching *local blobs*
+as specified in this chapter.
 
 **Description**: Fetches the binary data of a local blob. *blobIdentifier* is the *Component Repository* specific
 access information you got when you uploaded the local blob.
@@ -139,6 +147,9 @@ access information you got when you uploaded the local blob.
 
 ### ListLocalBlobs
 
+If a *Component Repository* provides support for *local blobs* it MUST implement a method for listing *local blobs*
+as specified in this chapter.
+
 **Description**: Provides an iterator over all triples *componentName/componentVersion/blobIdentifier* of all
 uploaded blobs. 
 
@@ -154,11 +165,13 @@ uploaded blobs.
 
 ### DeleteLocalBlob
 
+If a *Component Repository* provides support for *local blobs* it SHOULD implement a method for uploading *local blobs*
+as specified in this chapter.
+
 **Description**: Deletes a local blob. *blobIdentifier* is the *Component Repository* specific
 information you got when you uploaded the local blob.
 
 An error occurs if there is still an existing reference to the local blob.
-
 
 **Inputs**:
 

@@ -145,7 +145,6 @@ definitions:
         anyOf:
         - $ref: '#/definitions/access'
         - $ref: '#/definitions/localBlobAccess'
-        - $ref: '#/definitions/localOciArtifactAccess'
 
   srcRef:
     type: 'object'
@@ -165,27 +164,10 @@ definitions:
     properties:
       type:
         type: 'string'
-        enum: [ 'localOciBlob' ]
+        enum: [ 'localBlob' ]
       digest:
         description: 'identifier of the local blob within the current component descriptor'
         type: 'string'
-
-  localOciArtifactAccess:
-    type: 'object'
-    required:
-      - 'type'
-      - 'ociArtifactName'
-      - 'tag'
-    properties:
-      type:
-        type: 'string'
-        enum: [ 'localOciArtifact' ]
-      ociArtifactName:
-        description: 'name of the local oci artifact within the current repository'
-        type: 'string'
-      tag:
-        description: 'tag of the local oci artifact'
-        $ref: '#/definitions/relaxedSemver'
 
   component:
     type: 'object'

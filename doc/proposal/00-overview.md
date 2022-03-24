@@ -8,7 +8,7 @@ as a common basis to exchange this information between different tools and proce
 2. [Component Descriptor Specification](./02-component-descriptor.md)
 3. [Component Repository Specification](./03-component-repository.md)
 4. [Local Blobs](./04-local-blobs.md)
-5. [External Accessible Reference Definitions](./05-external-references.md)
+5. [Appendix 1: External Accessible Reference Definitions](./app01-external-references.md)
 
 ## Notational Conventions
 The keywords "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY", 
