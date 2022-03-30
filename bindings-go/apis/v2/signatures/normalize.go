@@ -79,6 +79,7 @@ func normalizeComponentDescriptor(cd v2.ComponentDescriptor) ([]byte, error) {
 		}
 
 		componentReference := []Entry{
+			{"componentName": ref.ComponentName},
 			{"name": ref.Name},
 			{"version": ref.Version},
 			{"extraIdentity": extraIdentity},
