@@ -14,6 +14,7 @@
   - etc.
 
 ## Todo/Discuss
+- better motivation of flow für upload blobs (usually first blobs then component descriptor)
 - Terminology section: beside others must describe landscape, component version, snapshot 
 - complete component descriptor example
 - change technical artifacts to software artifacts 
