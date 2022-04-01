@@ -126,14 +126,14 @@ An entry to this resource with this information in the *Component Descriptor* lo
 If a *Component Repository* provides support for *local blobs* it MUST implement a method for fetching *local blobs*
 as specified in this chapter.
 
-**Description**: Fetches the binary data of a local blob. *blobIdentifier* is the *Component Repository* specific
+**Description**: Fetches the binary data of a local blob. *localAccessInfo* is the *Component Repository* specific
 access information you got when you uploaded the local blob.
 
 **Inputs**:
 
 - String name: Name of the *Component Descriptor*
 - String version: Version of the *Component Descriptor*
-- String blobIdentifier: Identifier of the local blob
+- String localAccessInfo: Access information of the local blob
 
 **Outputs**:
 
@@ -150,14 +150,14 @@ access information you got when you uploaded the local blob.
 If a *Component Repository* provides support for *local blobs* it MUST implement a method for listing *local blobs*
 as specified in this chapter.
 
-**Description**: Provides an iterator over all triples *componentName/componentVersion/blobIdentifier* of all
+**Description**: Provides an iterator over all triples *componentName/componentVersion/localAccessInfo* of all
 uploaded blobs. 
 
 **Inputs**:
 
 **Outputs**:
 
-- Iterator over string triple: Triples of *componentName/componentVersion/blobIdentifier*
+- Iterator over string triple: Triples of *componentName/componentVersion/localAccessInfo*
 
 **Errors**:
 
@@ -168,7 +168,7 @@ uploaded blobs.
 If a *Component Repository* provides support for *local blobs* it SHOULD implement a method for uploading *local blobs*
 as specified in this chapter.
 
-**Description**: Deletes a local blob. *blobIdentifier* is the *Component Repository* specific
+**Description**: Deletes a local blob. *localAccessInfo* is the *Component Repository* specific
 information you got when you uploaded the local blob.
 
 An error occurs if there is still an existing reference to the local blob.
@@ -177,7 +177,7 @@ An error occurs if there is still an existing reference to the local blob.
 
 - String name: Name of the *Component Descriptor*
 - String version: Version of the *Component Descriptor*
-- String blobIdentifier: Identifier of the local blob
+- String localAccessInfo: Access information of the local blob
 
 **Outputs**:
 

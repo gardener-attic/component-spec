@@ -78,9 +78,9 @@ However, the problem domain can be divided into two disjoint phases:
 
 The produced artifacts must be stored somewhere such that they can be accessed and collected for the deployment.
 The OCM defines a standard to describe which technical artifacts belong to a software installation and how to
-access them. This provides a clear interface between the production and the deployment/lifecycle management phase.
+access them which could be used at the interface between production and the deployment/lifecycle management phase.
 
-The OCM provides a common interface for
+The OCM provides a common standard  for
 - compliance checks
 - security scanning
 - code signing
