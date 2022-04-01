@@ -1,7 +1,5 @@
 ## Topics for Component-Spec-Meeting
 
-- localOciBlob is a bad name, localBlob is much better
-
 - Repository Context in CD
   - current schema only allows OCI-Ref, this needs to be extensible
   - Should OCI ref be part of this spec?

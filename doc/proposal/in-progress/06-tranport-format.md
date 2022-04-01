@@ -67,7 +67,7 @@ Whenever a new resource type is supported, a corresponding transport format must
 We describe a file system structure that represents one or more components.
 A tar file of this file structure will be called the transport archive of the components.
 
-In a first step, all references to external resources are converted to resources of type `localOciBlob`.
+In a first step, all references to external resources are converted to resources of type `localBlob`.
 This means two things: firstly, the resource in the component descriptor must be adjusted, 
 and secondly, a local blob must be added. We use the transport archive of the resource as local blob. 
 

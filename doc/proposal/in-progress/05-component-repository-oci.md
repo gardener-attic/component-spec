@@ -11,7 +11,7 @@ base URL, the component name, and component version:
 <base URL>/component-descriptors/<component name>:<component version>
 ```
 
-A component descriptor can reference resources of type `localOciBlob`. These resources are stored as blobs in the same 
+A component descriptor can reference resources of type `localBlob`. These resources are stored as blobs in the same 
 OCI artifact as the component descriptor. The artifact is the structured as follows. It consists of a manifest, 
 a config, and an array of layers. The component descriptor is the first layer, and the local OCI blobs are stored in the 
 other layers. 
@@ -43,5 +43,5 @@ resources:
     ...
     access:
       digest: <digest of the local OCI blob>
-      type: localOciBlob
+      type: localBlob
 ```

@@ -1,11 +1,29 @@
 # Local Blob Reference Definitions
 
-## Local Blobs
-
-**this is work in progress**
+## General Format
 
 In a *Component Repository*, local blobs can be stored together with a *Component Descriptor*. Local blobs could store
 different data like OCI images, helm charts, configuration data etc. 
+
+The general format for references to local blobs is the same as for external accessible references:
+
+|  | Description |
+| --- | --- |
+| type | Logical type of the referenced object, e.g. *helm.io/chart* for for a helm chart|
+| access | object | Access information to fetch the data |
+
+The access object has the following format:
+
+|  | Value | Description |
+| --- | --- | --- |
+| string | localBlob| |
+| mediaType | | media type of the stored data |
+| annotations | | additional information about the stored data |
+| localAccess | | information how to access the local blob |
+| globalAccess | | information how to access the local blob via a external accessible reference |
+
+
+## OCI Images as Local Blobs
 
 ```
 ...
@@ -13,7 +31,7 @@ different data like OCI images, helm charts, configuration data etc.
   - name: example-image
     type: oci-image
     access:
-      type: localOciBlob
+      type: localBlob
       mediaType: application/vnd.oci.image.manifest.v1+json
       annotations:
         name: test/monitoring
@@ -32,7 +50,7 @@ resources:
     version: v0.1.0
     access:
       digest: <identifier/digest of the local blob>
-      type: localOciBlob
+      type: localBlob
 ```
 
 
