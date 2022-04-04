@@ -132,6 +132,7 @@ func normalizeComponentDescriptor(cd v2.ComponentDescriptor) ([]byte, error) {
 	componentSpec := []Entry{
 		{"name": cd.ComponentSpec.Name},
 		{"version": cd.ComponentSpec.Version},
+		{"provider": cd.ComponentSpec.Provider},
 		{"componentReferences": componentReferences},
 		{"resources": resources},
 	}
@@ -198,6 +199,8 @@ func deepSort(in interface{}) error {
 			}
 		}
 	case string:
+		break
+	case v2.ProviderType:
 		break
 	default:
 		return fmt.Errorf("unknown type in sorting. This should not happen")
