@@ -97,6 +97,8 @@ func normalizeComponentDescriptor(cd v2.ComponentDescriptor) ([]byte, error) {
 			resource := []Entry{
 				{"name": res.Name},
 				{"version": res.Version},
+				{"type": res.Type},
+				{"relation": res.Relation},
 				{"extraIdentity": extraIdentity},
 			}
 			resources = append(resources, resource)
@@ -108,6 +110,8 @@ func normalizeComponentDescriptor(cd v2.ComponentDescriptor) ([]byte, error) {
 			resource := []Entry{
 				{"name": res.Name},
 				{"version": res.Version},
+				{"type": res.Type},
+				{"relation": res.Relation},
 				{"extraIdentity": extraIdentity},
 			}
 			resources = append(resources, resource)
@@ -124,6 +128,7 @@ func normalizeComponentDescriptor(cd v2.ComponentDescriptor) ([]byte, error) {
 			{"name": res.Name},
 			{"version": res.Version},
 			{"type": res.Type},
+			{"relation": res.Relation},
 			{"extraIdentity": extraIdentity},
 			{"digest": digest},
 		}
@@ -202,6 +207,8 @@ func deepSort(in interface{}) error {
 	case string:
 		break
 	case v2.ProviderType:
+		break
+	case v2.ResourceRelation:
 		break
 	default:
 		return fmt.Errorf("unknown type in sorting. This should not happen")
