@@ -14,9 +14,10 @@
   - etc.
 
 ## Todo/Discuss
+- example of local blobs with oci image not good
 - better motivation of flow für upload blobs (usually first blobs then component descriptor)
 - Terminology section: beside others must describe landscape, component version, snapshot 
-- complete component descriptor example
+- add complete component descriptor example
 - change technical artifacts to software artifacts 
 - references in the text to the CD spec for particular entries
 - Some chapter with terminology (see https://github.com/openservicebrokerapi/servicebroker/blob/v2.16/spec.md#notations-and-terminology)
