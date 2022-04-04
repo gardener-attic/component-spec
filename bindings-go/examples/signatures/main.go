@@ -44,7 +44,7 @@ func main() {
 					},
 					Digest: &v2.DigestSpec{
 						HashAlgorithm:          signatures.SHA256,
-						NormalisationAlgorithm: string(v2.ManifestDigestV1),
+						NormalisationAlgorithm: string(v2.OciArtifactDigestV1),
 						Value:                  "00000000000000",
 					},
 				},
@@ -61,7 +61,7 @@ func main() {
 	}, func(ctx context.Context, cd v2.ComponentDescriptor, r v2.Resource) (*v2.DigestSpec, error) {
 		return &v2.DigestSpec{
 			HashAlgorithm:          "testing",
-			NormalisationAlgorithm: string(v2.ManifestDigestV1),
+			NormalisationAlgorithm: string(v2.OciArtifactDigestV1),
 			Value:                  string(r.GetIdentityDigest()),
 		}, nil
 	})

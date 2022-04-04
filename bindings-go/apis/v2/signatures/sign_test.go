@@ -38,7 +38,7 @@ var _ = Describe("Sign/Verify component-descriptor", func() {
 		AlgorithmName: signatures.SHA256,
 	}
 	signatureName := "testSignatureName"
-	correctBaseCdHash := "905a865ce8b6f8a7cfb6d6a95420eca04cda78f9adf59ab61a938a3c301ab2b6"
+	correctBaseCdHash := "6c571bb6e351ae755baa7f26cbd1f600d2968ab8b88e25a3bab277e53afdc3ad"
 
 	BeforeEach(func() {
 		baseCd = v2.ComponentDescriptor{
@@ -76,7 +76,7 @@ var _ = Describe("Sign/Verify component-descriptor", func() {
 						},
 						Digest: &v2.DigestSpec{
 							HashAlgorithm:          signatures.SHA256,
-							NormalisationAlgorithm: string(v2.ManifestDigestV1),
+							NormalisationAlgorithm: string(v2.OciArtifactDigestV1),
 							Value:                  "00000000000000",
 						},
 						Access: v2.NewUnstructuredType(v2.OCIRegistryType, map[string]interface{}{"imageRef": "ref"}),

@@ -10,9 +10,9 @@ import (
 
 var _ = Describe("Normalise/Hash component-descriptor", func() {
 	var baseCd v2.ComponentDescriptor
-	correctBaseCdHash := "905a865ce8b6f8a7cfb6d6a95420eca04cda78f9adf59ab61a938a3c301ab2b6"
+	correctBaseCdHash := "6c571bb6e351ae755baa7f26cbd1f600d2968ab8b88e25a3bab277e53afdc3ad"
 	//corresponding normalised CD:
-	//[{"component":[{"componentReferences":[[{"componentName":"compRefNameComponentName"},{"digest":[{"hashAlgorithm":"sha256"},{"normalisationAlgorithm":"jsonNormalisation/V1"},{"value":"00000000000000"}]},{"extraIdentity":[{"refKey":"refName"}]},{"name":"compRefName"},{"version":"v0.0.2compRef"}]]},{"name":"CD-Name"},{"provider":""},{"resources":[[{"digest":[{"hashAlgorithm":"sha256"},{"normalisationAlgorithm":"manifestDigest/V1"},{"value":"00000000000000"}]},{"extraIdentity":[{"key":"value"}]},{"name":"Resource1"},{"relation": ""},{"type",""},{"version":"v0.0.3resource"}]]},{"version":"v0.0.1"}]},{"meta":[{"schemaVersion":"v2"}]}]
+	//[{"component":[{"componentReferences":[[{"componentName":"compRefNameComponentName"},{"digest":[{"hashAlgorithm":"sha256"},{"normalisationAlgorithm":"jsonNormalisation/v1"},{"value":"00000000000000"}]},{"extraIdentity":[{"refKey":"refName"}]},{"name":"compRefName"},{"version":"v0.0.2compRef"}]]},{"name":"CD-Name"},{"provider":""},{"resources":[[{"digest":[{"hashAlgorithm":"sha256"},{"normalisationAlgorithm":"manifestDigest/v1"},{"value":"00000000000000"}]},{"extraIdentity":[{"key":"value"}]},{"name":"Resource1"},{"relation": ""},{"type",""},{"version":"v0.0.3resource"}]]},{"version":"v0.0.1"}]},{"meta":[{"schemaVersion":"v2"}]}]
 	BeforeEach(func() {
 		baseCd = v2.ComponentDescriptor{
 			Metadata: v2.Metadata{
@@ -49,7 +49,7 @@ var _ = Describe("Normalise/Hash component-descriptor", func() {
 						},
 						Digest: &v2.DigestSpec{
 							HashAlgorithm:          signatures.SHA256,
-							NormalisationAlgorithm: string(v2.ManifestDigestV1),
+							NormalisationAlgorithm: string(v2.OciArtifactDigestV1),
 							Value:                  "00000000000000",
 						},
 						Access: v2.NewUnstructuredType(v2.OCIRegistryType, map[string]interface{}{"imageRef": "ref"}),

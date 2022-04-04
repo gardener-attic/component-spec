@@ -477,9 +477,9 @@ const (
 type NormalisationAlgorithm string
 
 const (
-	JsonNormalisationV1 NormalisationAlgorithm = "jsonNormalisation/V1"
-	ManifestDigestV1    NormalisationAlgorithm = "manifestDigest/V1"
-	GenericBlobDigestV1 NormalisationAlgorithm = "genericBlobDigest/V1"
+	JsonNormalisationV1 NormalisationAlgorithm = "jsonNormalisation/v1"
+	OciArtifactDigestV1 NormalisationAlgorithm = "ociArtifactDigest/v1"
+	GenericBlobDigestV1 NormalisationAlgorithm = "genericBlobDigest/v1"
 )
 
 // Signature defines a digest and corresponding signature, identifyable by name.
