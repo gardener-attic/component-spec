@@ -123,6 +123,7 @@ func normalizeComponentDescriptor(cd v2.ComponentDescriptor) ([]byte, error) {
 		resource := []Entry{
 			{"name": res.Name},
 			{"version": res.Version},
+			{"type": res.Type},
 			{"extraIdentity": extraIdentity},
 			{"digest": digest},
 		}
