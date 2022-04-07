@@ -6,6 +6,7 @@ import (
 	"encoding/hex"
 	"encoding/json"
 	"fmt"
+	"reflect"
 	"sort"
 
 	v2 "github.com/gardener/component-spec/bindings-go/apis/v2"
@@ -14,29 +15,35 @@ import (
 // Entry is used for normalisation and has to contain one key
 type Entry map[string]interface{}
 
-// AddDigestsToComponentDescriptor adds digest to componentReferences and resources as returned in the resolver functions
+// AddDigestsToComponentDescriptor adds digest to componentReferences and resources as returned in the resolver functions. If a digest already exists, a missmatch against the resolved digest will return an error.
 func AddDigestsToComponentDescriptor(ctx context.Context, cd *v2.ComponentDescriptor,
 	compRefResolver func(context.Context, v2.ComponentDescriptor, v2.ComponentReference) (*v2.DigestSpec, error),
 	resResolver func(context.Context, v2.ComponentDescriptor, v2.Resource) (*v2.DigestSpec, error)) error {
 
 	for i, reference := range cd.ComponentReferences {
-		if reference.Digest == nil || reference.Digest.HashAlgorithm == "" || reference.Digest.NormalisationAlgorithm == "" || reference.Digest.Value == "" {
-			digest, err := compRefResolver(ctx, *cd, reference)
-			if err != nil {
-				return fmt.Errorf("failed resolving componentReference for %s:%s: %w", reference.Name, reference.Version, err)
-			}
-			cd.ComponentReferences[i].Digest = digest
+		digest, err := compRefResolver(ctx, *cd, reference)
+		if err != nil {
+			return fmt.Errorf("failed resolving componentReference for %s:%s: %w", reference.Name, reference.Version, err)
 		}
+		if reference.Digest != nil {
+			if !reflect.DeepEqual(reference.Digest, digest) {
+				return fmt.Errorf("calculated cd reference digest missmatches existing digest %s:%s: %w", reference.Name, reference.Version, err)
+			}
+		}
+		cd.ComponentReferences[i].Digest = digest
 	}
 
 	for i, res := range cd.Resources {
-		if res.Digest == nil || res.Digest.HashAlgorithm == "" || res.Digest.NormalisationAlgorithm == "" || res.Digest.Value == "" {
-			digest, err := resResolver(ctx, *cd, res)
-			if err != nil {
-				return fmt.Errorf("failed resolving resource for %s:%s: %w", res.Name, res.Version, err)
-			}
-			cd.Resources[i].Digest = digest
+		digest, err := resResolver(ctx, *cd, res)
+		if err != nil {
+			return fmt.Errorf("failed resolving resource for %s:%s: %w", res.Name, res.Version, err)
 		}
+		if res.Digest != nil {
+			if !reflect.DeepEqual(res.Digest, digest) {
+				return fmt.Errorf("calculated resource digest missmatches existing digest %s:%s: %w", res.Name, res.Version, err)
+			}
+		}
+		cd.Resources[i].Digest = digest
 	}
 	return nil
 }
