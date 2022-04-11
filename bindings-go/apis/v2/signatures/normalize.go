@@ -15,7 +15,7 @@ import (
 // Entry is used for normalisation and has to contain one key
 type Entry map[string]interface{}
 
-// AddDigestsToComponentDescriptor adds digest to componentReferences and resources as returned in the resolver functions. If a digest already exists, a missmatch against the resolved digest will return an error.
+// AddDigestsToComponentDescriptor adds digest to componentReferences and resources as returned in the resolver functions. If a digest already exists, a mismatch against the resolved digest will return an error.
 func AddDigestsToComponentDescriptor(ctx context.Context, cd *v2.ComponentDescriptor,
 	compRefResolver func(context.Context, v2.ComponentDescriptor, v2.ComponentReference) (*v2.DigestSpec, error),
 	resResolver func(context.Context, v2.ComponentDescriptor, v2.Resource) (*v2.DigestSpec, error)) error {
@@ -25,10 +25,8 @@ func AddDigestsToComponentDescriptor(ctx context.Context, cd *v2.ComponentDescri
 		if err != nil {
 			return fmt.Errorf("failed resolving componentReference for %s:%s: %w", reference.Name, reference.Version, err)
 		}
-		if reference.Digest != nil {
-			if !reflect.DeepEqual(reference.Digest, digest) {
-				return fmt.Errorf("calculated cd reference digest missmatches existing digest %s:%s: %w", reference.Name, reference.Version, err)
-			}
+		if reference.Digest != nil && !reflect.DeepEqual(reference.Digest, digest) {
+			return fmt.Errorf("calculated cd reference digest mismatches existing digest %s:%s: %w", reference.Name, reference.Version, err)
 		}
 		cd.ComponentReferences[i].Digest = digest
 	}
@@ -43,10 +41,8 @@ func AddDigestsToComponentDescriptor(ctx context.Context, cd *v2.ComponentDescri
 		if err != nil {
 			return fmt.Errorf("failed resolving resource for %s:%s: %w", res.Name, res.Version, err)
 		}
-		if res.Digest != nil {
-			if !reflect.DeepEqual(res.Digest, digest) {
-				return fmt.Errorf("calculated resource digest missmatches existing digest %s:%s: %w", res.Name, res.Version, err)
-			}
+		if res.Digest != nil && !reflect.DeepEqual(res.Digest, digest) {
+			return fmt.Errorf("calculated resource digest mismatches existing digest %s:%s: %w", res.Name, res.Version, err)
 		}
 		cd.Resources[i].Digest = digest
 	}
