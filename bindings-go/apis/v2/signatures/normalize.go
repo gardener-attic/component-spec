@@ -34,6 +34,11 @@ func AddDigestsToComponentDescriptor(ctx context.Context, cd *v2.ComponentDescri
 	}
 
 	for i, res := range cd.Resources {
+		// special digest notation indicates to not digest the content
+		if res.Digest != nil && res.Digest.HashAlgorithm == v2.NoDigest && res.Digest.NormalisationAlgorithm == v2.ExcludeFromSignature && res.Digest.Value == v2.NoDigest {
+			continue
+		}
+
 		digest, err := resResolver(ctx, *cd, res)
 		if err != nil {
 			return fmt.Errorf("failed resolving resource for %s:%s: %w", res.Name, res.Version, err)

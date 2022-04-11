@@ -471,6 +471,14 @@ const (
 
 	// SignatureAlgorithmRSA defines the type for the RSA PKCS #1 v1.5 signature algorithm
 	SignatureAlgorithmRSAPKCS1v15 = "RSASSA-PKCS1-V1_5"
+
+	// ExcludeFromSignature used in digest field for normalisationAlgorithm (in combination with NoDigest for hashAlgorithm and value)
+	// to indicate the resource content should not be part of the signature
+	ExcludeFromSignature = "EXCLUDE-FROM-SIGNATURE"
+
+	// NoDigest used in digest field for hashAlgorithm and value (in combination with ExcludeFromSignature for normalisationAlgorithm)
+	// to indicate the resource content should not be part of the signature
+	NoDigest = "NO-DIGEST"
 )
 
 // NormalisationAlgorithm types and versions the algorithm used for digest generation.
