@@ -20,6 +20,12 @@ func init() {
 func main() {
 	flag.Parse()
 
+	resAccess, err := v2.NewUnstructured(v2.NewGitHubAccess("url2", "ref", "commit"))
+	if err != nil {
+		fmt.Printf("ERROR: %s", err)
+		return
+	}
+
 	cd := v2.ComponentDescriptor{
 		Metadata: v2.Metadata{
 			Version: "v2",
@@ -40,7 +46,7 @@ func main() {
 					Digest: &v2.DigestSpec{
 						HashAlgorithm:          signatures.SHA256,
 						NormalisationAlgorithm: string(v2.JsonNormalisationV1),
-						Value:                  "00000000000000",
+						Value:                  "value",
 					},
 				},
 			},
@@ -53,36 +59,39 @@ func main() {
 							"key": "value",
 						},
 					},
+					Access: &resAccess,
 					Digest: &v2.DigestSpec{
 						HashAlgorithm:          signatures.SHA256,
 						NormalisationAlgorithm: string(v2.OciArtifactDigestV1),
-						Value:                  "00000000000000",
+						Value:                  "value",
 					},
 				},
 			},
 		},
 	}
 	ctx := context.TODO()
-	err := signatures.AddDigestsToComponentDescriptor(ctx, &cd, func(ctx context.Context, cd v2.ComponentDescriptor, cr v2.ComponentReference) (*v2.DigestSpec, error) {
+	err = signatures.AddDigestsToComponentDescriptor(ctx, &cd, func(ctx context.Context, cd v2.ComponentDescriptor, cr v2.ComponentReference) (*v2.DigestSpec, error) {
 		return &v2.DigestSpec{
-			HashAlgorithm:          "testing",
+			HashAlgorithm:          signatures.SHA256,
 			NormalisationAlgorithm: string(v2.JsonNormalisationV1),
-			Value:                  string(cr.GetIdentityDigest()),
+			Value:                  "value",
 		}, nil
 	}, func(ctx context.Context, cd v2.ComponentDescriptor, r v2.Resource) (*v2.DigestSpec, error) {
 		return &v2.DigestSpec{
-			HashAlgorithm:          "testing",
+			HashAlgorithm:          signatures.SHA256,
 			NormalisationAlgorithm: string(v2.OciArtifactDigestV1),
-			Value:                  string(r.GetIdentityDigest()),
+			Value:                  "value",
 		}, nil
 	})
 	if err != nil {
 		fmt.Printf("ERROR addingDigestsToComponentDescriptor %s", err)
+		return
 	}
 
 	hasher, err := signatures.HasherForName(signatures.SHA256)
 	if err != nil {
 		fmt.Printf("ERROR: %s", err)
+		return
 	}
 
 	norm, err := signatures.HashForComponentDescriptor(cd, *hasher)
@@ -103,7 +112,6 @@ func main() {
 		fmt.Printf("ERROR sign: %s", err)
 		return
 	}
-	fmt.Println(cd)
 
 	verifier, err := signatures.CreateRsaVerifierFromKeyFile(*publicKeyPath)
 	if err != nil {
