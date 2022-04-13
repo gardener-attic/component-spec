@@ -33,7 +33,7 @@ func AddDigestsToComponentDescriptor(ctx context.Context, cd *v2.ComponentDescri
 
 	for i, res := range cd.Resources {
 		// special digest notation indicates to not digest the content
-		if res.Digest != nil && res.Digest.HashAlgorithm == v2.NoDigest && res.Digest.NormalisationAlgorithm == v2.ExcludeFromSignature && res.Digest.Value == v2.NoDigest {
+		if res.Digest != nil && reflect.DeepEqual(res.Digest, v2.NewExcludeFromSignatureDigest()) {
 			continue
 		}
 

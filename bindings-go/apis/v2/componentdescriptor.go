@@ -481,6 +481,15 @@ const (
 	NoDigest = "NO-DIGEST"
 )
 
+//NewExcludeFromSignatureDigest returns the special digest notation to indicate the resource content should not be part of the signature
+func NewExcludeFromSignatureDigest() *DigestSpec {
+	return &DigestSpec{
+		HashAlgorithm:          NoDigest,
+		NormalisationAlgorithm: ExcludeFromSignature,
+		Value:                  NoDigest,
+	}
+}
+
 // NormalisationAlgorithm types and versions the algorithm used for digest generation.
 type NormalisationAlgorithm string
 
