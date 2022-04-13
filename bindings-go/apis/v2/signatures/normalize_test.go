@@ -121,5 +121,90 @@ var _ = Describe("Normalise/Hash component-descriptor", func() {
 			Expect(err).To(BeNil())
 			Expect(hash.Value).To(Equal(correctBaseCdHash))
 		})
+
+	})
+	Describe("should correctly handle empty access and digest", func() {
+		It("should be equal hash for access.type == None and access == nil", func() {
+			baseCd.Resources[0].Access = nil
+			baseCd.Resources[0].Digest = nil
+
+			hasher, err := signatures.HasherForName(signatures.SHA256)
+			Expect(err).To(BeNil())
+			hash, err := signatures.HashForComponentDescriptor(baseCd, *hasher)
+			Expect(err).To(BeNil())
+
+			//add access to resource
+			access := v2.NewEmptyUnstructured("None")
+			Expect(err).To(BeNil())
+			baseCd.Resources[0].Access = access
+			hash2, err := signatures.HashForComponentDescriptor(baseCd, *hasher)
+			Expect(err).To(BeNil())
+			Expect(hash).To(Equal(hash2))
+		})
+		It("should fail if digest is empty", func() {
+			baseCd.Resources[0].Digest = nil
+
+			hasher, err := signatures.HasherForName(signatures.SHA256)
+			Expect(err).To(BeNil())
+			_, err = signatures.HashForComponentDescriptor(baseCd, *hasher)
+			Expect(err).To(HaveOccurred())
+		})
+		It("should succed if digest is empty and access is nil", func() {
+			baseCd.Resources[0].Access = nil
+			baseCd.Resources[0].Digest = nil
+
+			hasher, err := signatures.HasherForName(signatures.SHA256)
+			Expect(err).To(BeNil())
+			_, err = signatures.HashForComponentDescriptor(baseCd, *hasher)
+			Expect(err).To(BeNil())
+		})
+		It("should fail if first is nil access and an access is added but a digest is missing", func() {
+			baseCd.Resources[0].Access = nil
+			baseCd.Resources[0].Digest = nil
+
+			hasher, err := signatures.HasherForName(signatures.SHA256)
+			Expect(err).To(BeNil())
+			_, err = signatures.HashForComponentDescriptor(baseCd, *hasher)
+			Expect(err).To(BeNil())
+
+			//add ociRegistryAccess
+			access, err := v2.NewUnstructured(v2.NewOCIRegistryAccess("ociRef/path/to/image"))
+			Expect(err).To(BeNil())
+			baseCd.Resources[0].Access = &access
+			_, err = signatures.HashForComponentDescriptor(baseCd, *hasher)
+			Expect(err).To(HaveOccurred())
+		})
+		It("should fail if first is none access.type and an access is added but a digest is missing", func() {
+			baseCd.Resources[0].Access = v2.NewEmptyUnstructured("None")
+			baseCd.Resources[0].Digest = nil
+
+			hasher, err := signatures.HasherForName(signatures.SHA256)
+			Expect(err).To(BeNil())
+			_, err = signatures.HashForComponentDescriptor(baseCd, *hasher)
+			Expect(err).To(BeNil())
+
+			//add ociRegistryAccess
+			access, err := v2.NewUnstructured(v2.NewOCIRegistryAccess("ociRef/path/to/image"))
+			Expect(err).To(BeNil())
+			baseCd.Resources[0].Access = &access
+			_, err = signatures.HashForComponentDescriptor(baseCd, *hasher)
+			Expect(err).To(HaveOccurred())
+		})
+		It("should fail if access is nil and digest is set", func() {
+			baseCd.Resources[0].Access = nil
+
+			hasher, err := signatures.HasherForName(signatures.SHA256)
+			Expect(err).To(BeNil())
+			_, err = signatures.HashForComponentDescriptor(baseCd, *hasher)
+			Expect(err).To(HaveOccurred())
+		})
+		It("should fail if access.type is None and digest is set", func() {
+			baseCd.Resources[0].Access = v2.NewEmptyUnstructured("None")
+
+			hasher, err := signatures.HasherForName(signatures.SHA256)
+			Expect(err).To(BeNil())
+			_, err = signatures.HashForComponentDescriptor(baseCd, *hasher)
+			Expect(err).To(HaveOccurred())
+		})
 	})
 })

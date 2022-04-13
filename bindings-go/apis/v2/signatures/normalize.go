@@ -68,7 +68,7 @@ func HashForComponentDescriptor(cd v2.ComponentDescriptor, hash Hasher) (*v2.Dig
 }
 
 func normalizeComponentDescriptor(cd v2.ComponentDescriptor) ([]byte, error) {
-	if err := isNormaliseableUnsafe(cd); err != nil {
+	if err := isNormaliseable(cd); err != nil {
 		return nil, fmt.Errorf("can not normalise component-descriptor %s:%s: %w", cd.Name, cd.Version, err)
 	}
 
@@ -102,19 +102,6 @@ func normalizeComponentDescriptor(cd v2.ComponentDescriptor) ([]byte, error) {
 
 		//ignore access.type=None for normalisation and hash calculation
 		if res.Access == nil || res.Access.Type == "None" {
-			resource := []Entry{
-				{"name": res.Name},
-				{"version": res.Version},
-				{"type": res.Type},
-				{"relation": res.Relation},
-				{"extraIdentity": extraIdentity},
-			}
-			resources = append(resources, resource)
-			continue
-		}
-
-		//ignore a resource without digests
-		if res.Digest == nil {
 			resource := []Entry{
 				{"name": res.Name},
 				{"version": res.Version},
@@ -240,13 +227,22 @@ func getOnlyValueInEntry(entry Entry) interface{} {
 	return value
 }
 
-// isNormaliseableUnsafe checks if componentReferences contain digest. It does not check resources for containing digests.
+// isNormaliseable checks if componentReferences and resources contain digest.
+// Resources are allowed to omit the digest, if res.access.type == None or res.access == nil.
 // Does NOT verify if the digests are correct
-func isNormaliseableUnsafe(cd v2.ComponentDescriptor) error {
+func isNormaliseable(cd v2.ComponentDescriptor) error {
 	// check for digests on component references
 	for _, reference := range cd.ComponentReferences {
 		if reference.Digest == nil || reference.Digest.HashAlgorithm == "" || reference.Digest.NormalisationAlgorithm == "" || reference.Digest.Value == "" {
 			return fmt.Errorf("missing digest in componentReference for %s:%s", reference.Name, reference.Version)
+		}
+	}
+	for _, res := range cd.Resources {
+		if (res.Access != nil && res.Access.Type != "None") && res.Digest == nil {
+			return fmt.Errorf("missing digest in resource for %s:%s", res.Name, res.Version)
+		}
+		if (res.Access == nil || res.Access.Type == "None") && res.Digest != nil {
+			return fmt.Errorf("digest for resource with emtpy (None) access not allowed %s:%s", res.Name, res.Version)
 		}
 	}
 	return nil
