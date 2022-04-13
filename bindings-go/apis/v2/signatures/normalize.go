@@ -26,7 +26,7 @@ func AddDigestsToComponentDescriptor(ctx context.Context, cd *v2.ComponentDescri
 			return fmt.Errorf("failed resolving componentReference for %s:%s: %w", reference.Name, reference.Version, err)
 		}
 		if reference.Digest != nil && !reflect.DeepEqual(reference.Digest, digest) {
-			return fmt.Errorf("calculated cd reference digest mismatches existing digest %s:%s: %w", reference.Name, reference.Version, err)
+			return fmt.Errorf("calculated cd reference digest mismatches existing digest %s:%s", reference.ComponentName, reference.Version)
 		}
 		cd.ComponentReferences[i].Digest = digest
 	}
@@ -42,7 +42,7 @@ func AddDigestsToComponentDescriptor(ctx context.Context, cd *v2.ComponentDescri
 			return fmt.Errorf("failed resolving resource for %s:%s: %w", res.Name, res.Version, err)
 		}
 		if res.Digest != nil && !reflect.DeepEqual(res.Digest, digest) {
-			return fmt.Errorf("calculated resource digest mismatches existing digest %s:%s: %w", res.Name, res.Version, err)
+			return fmt.Errorf("calculated resource digest mismatches existing digest %s:%s", res.Name, res.Version)
 		}
 		cd.Resources[i].Digest = digest
 	}
