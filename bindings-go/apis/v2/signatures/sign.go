@@ -2,6 +2,7 @@ package signatures
 
 import (
 	"fmt"
+	"reflect"
 
 	v2 "github.com/gardener/component-spec/bindings-go/apis/v2"
 )
@@ -27,6 +28,7 @@ func SignComponentDescriptor(cd *v2.ComponentDescriptor, signer Signer, hasher H
 }
 
 // VerifySignedComponentDescriptor verifies the signature (selected by signatureName) and hash of the component-descriptor (as specified in the signature).
+// Does NOT resolve resources or referenced component-descriptors.
 // Returns error if verification fails.
 func VerifySignedComponentDescriptor(cd *v2.ComponentDescriptor, verifier Verifier, signatureName string) error {
 	//find matching signature
@@ -51,10 +53,11 @@ func VerifySignedComponentDescriptor(cd *v2.ComponentDescriptor, verifier Verifi
 	//Verify normalised cd to given (and verified) hash
 	hashCd, err := HashForComponentDescriptor(*cd, *hasher)
 	if err != nil {
-		return fmt.Errorf("failed getting hash for cd: %w", err)
+		return fmt.Errorf("failed hashing cd %s:%s: %w", cd.Name, cd.Version, err)
 	}
-	if hashCd.Value != matchingSignature.Digest.Value {
-		return fmt.Errorf("normalised component-descriptor does not match signed hash")
+
+	if !reflect.DeepEqual(*hashCd, matchingSignature.Digest) {
+		return fmt.Errorf("normalised component-descriptor does not match hash from signature")
 	}
 
 	return nil
