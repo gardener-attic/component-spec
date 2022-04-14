@@ -1,6 +1,8 @@
 package signatures_test
 
 import (
+	"context"
+
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
 
@@ -10,9 +12,9 @@ import (
 
 var _ = Describe("Normalise/Hash component-descriptor", func() {
 	var baseCd v2.ComponentDescriptor
-	correctBaseCdHash := "5995a530e81af5e974fe377f1079991c4e6a762bcff2cb92334f80d3a1da5a8a"
+	correctBaseCdHash := "6c571bb6e351ae755baa7f26cbd1f600d2968ab8b88e25a3bab277e53afdc3ad"
 	//corresponding normalised CD:
-	//[{"component":[{"componentReferences":[[{"digest":[{"hashAlgorithm":"sha256"},{"normalisationAlgorithm":"jsonNormalisation/V1"},{"value":"00000000000000"}]},{"extraIdentity":[{"refKey":"refName"}]},{"name":"compRefName"},{"version":"v0.0.2compRef"}]]},{"name":"CD-Name"},{"resources":[[{"digest":[{"hashAlgorithm":"sha256"},{"normalisationAlgorithm":"manifestDigest/V1"},{"value":"00000000000000"}]},{"extraIdentity":[{"key":"value"}]},{"name":"Resource1"},{"version":"v0.0.3resource"}]]},{"version":"v0.0.1"}]},{"meta":[{"schemaVersion":"v2"}]}]
+	//[{"component":[{"componentReferences":[[{"componentName":"compRefNameComponentName"},{"digest":[{"hashAlgorithm":"sha256"},{"normalisationAlgorithm":"jsonNormalisation/v1"},{"value":"00000000000000"}]},{"extraIdentity":[{"refKey":"refName"}]},{"name":"compRefName"},{"version":"v0.0.2compRef"}]]},{"name":"CD-Name"},{"provider":""},{"resources":[[{"digest":[{"hashAlgorithm":"sha256"},{"normalisationAlgorithm":"ociArtifactDigest/v1"},{"value":"00000000000000"}]},{"extraIdentity":[{"key":"value"}]},{"name":"Resource1"},{"relation": ""},{"type",""},{"version":"v0.0.3resource"}]]},{"version":"v0.0.1"}]},{"meta":[{"schemaVersion":"v2"}]}]
 	BeforeEach(func() {
 		baseCd = v2.ComponentDescriptor{
 			Metadata: v2.Metadata{
@@ -49,7 +51,7 @@ var _ = Describe("Normalise/Hash component-descriptor", func() {
 						},
 						Digest: &v2.DigestSpec{
 							HashAlgorithm:          signatures.SHA256,
-							NormalisationAlgorithm: string(v2.ManifestDigestV1),
+							NormalisationAlgorithm: string(v2.OciArtifactDigestV1),
 							Value:                  "00000000000000",
 						},
 						Access: v2.NewUnstructuredType(v2.OCIRegistryType, map[string]interface{}{"imageRef": "ref"}),
@@ -120,6 +122,196 @@ var _ = Describe("Normalise/Hash component-descriptor", func() {
 			hash, err := signatures.HashForComponentDescriptor(baseCd, *hasher)
 			Expect(err).To(BeNil())
 			Expect(hash.Value).To(Equal(correctBaseCdHash))
+		})
+
+	})
+	Describe("should correctly handle empty access and digest", func() {
+		It("should be equal hash for access.type == None and access == nil", func() {
+			baseCd.Resources[0].Access = nil
+			baseCd.Resources[0].Digest = nil
+
+			hasher, err := signatures.HasherForName(signatures.SHA256)
+			Expect(err).To(BeNil())
+			hash, err := signatures.HashForComponentDescriptor(baseCd, *hasher)
+			Expect(err).To(BeNil())
+
+			//add access to resource
+			access := v2.NewEmptyUnstructured("None")
+			Expect(err).To(BeNil())
+			baseCd.Resources[0].Access = access
+			hash2, err := signatures.HashForComponentDescriptor(baseCd, *hasher)
+			Expect(err).To(BeNil())
+			Expect(hash).To(Equal(hash2))
+		})
+		It("should fail if digest is empty", func() {
+			baseCd.Resources[0].Digest = nil
+
+			hasher, err := signatures.HasherForName(signatures.SHA256)
+			Expect(err).To(BeNil())
+			_, err = signatures.HashForComponentDescriptor(baseCd, *hasher)
+			Expect(err).To(HaveOccurred())
+		})
+		It("should succed if digest is empty and access is nil", func() {
+			baseCd.Resources[0].Access = nil
+			baseCd.Resources[0].Digest = nil
+
+			hasher, err := signatures.HasherForName(signatures.SHA256)
+			Expect(err).To(BeNil())
+			_, err = signatures.HashForComponentDescriptor(baseCd, *hasher)
+			Expect(err).To(BeNil())
+		})
+		It("should fail if first is nil access and an access is added but a digest is missing", func() {
+			baseCd.Resources[0].Access = nil
+			baseCd.Resources[0].Digest = nil
+
+			hasher, err := signatures.HasherForName(signatures.SHA256)
+			Expect(err).To(BeNil())
+			_, err = signatures.HashForComponentDescriptor(baseCd, *hasher)
+			Expect(err).To(BeNil())
+
+			//add ociRegistryAccess
+			access, err := v2.NewUnstructured(v2.NewOCIRegistryAccess("ociRef/path/to/image"))
+			Expect(err).To(BeNil())
+			baseCd.Resources[0].Access = &access
+			_, err = signatures.HashForComponentDescriptor(baseCd, *hasher)
+			Expect(err).To(HaveOccurred())
+		})
+		It("should fail if first is none access.type and an access is added but a digest is missing", func() {
+			baseCd.Resources[0].Access = v2.NewEmptyUnstructured("None")
+			baseCd.Resources[0].Digest = nil
+
+			hasher, err := signatures.HasherForName(signatures.SHA256)
+			Expect(err).To(BeNil())
+			_, err = signatures.HashForComponentDescriptor(baseCd, *hasher)
+			Expect(err).To(BeNil())
+
+			//add ociRegistryAccess
+			access, err := v2.NewUnstructured(v2.NewOCIRegistryAccess("ociRef/path/to/image"))
+			Expect(err).To(BeNil())
+			baseCd.Resources[0].Access = &access
+			_, err = signatures.HashForComponentDescriptor(baseCd, *hasher)
+			Expect(err).To(HaveOccurred())
+		})
+		It("should fail if access is nil and digest is set", func() {
+			baseCd.Resources[0].Access = nil
+
+			hasher, err := signatures.HasherForName(signatures.SHA256)
+			Expect(err).To(BeNil())
+			_, err = signatures.HashForComponentDescriptor(baseCd, *hasher)
+			Expect(err).To(HaveOccurred())
+		})
+		It("should fail if access.type is None and digest is set", func() {
+			baseCd.Resources[0].Access = v2.NewEmptyUnstructured("None")
+
+			hasher, err := signatures.HasherForName(signatures.SHA256)
+			Expect(err).To(BeNil())
+			_, err = signatures.HashForComponentDescriptor(baseCd, *hasher)
+			Expect(err).To(HaveOccurred())
+		})
+	})
+	Describe("add digest to cd", func() {
+		It("should succed if existing digest match calculated", func() {
+			err := signatures.AddDigestsToComponentDescriptor(context.TODO(), &baseCd, func(ctx context.Context, cd v2.ComponentDescriptor, cr v2.ComponentReference) (*v2.DigestSpec, error) {
+				return &v2.DigestSpec{
+					HashAlgorithm:          signatures.SHA256,
+					NormalisationAlgorithm: string(v2.JsonNormalisationV1),
+					Value:                  "00000000000000",
+				}, nil
+			}, func(ctx context.Context, cd v2.ComponentDescriptor, r v2.Resource) (*v2.DigestSpec, error) {
+				return &v2.DigestSpec{
+					HashAlgorithm:          signatures.SHA256,
+					NormalisationAlgorithm: string(v2.OciArtifactDigestV1),
+					Value:                  "00000000000000",
+				}, nil
+			})
+			Expect(err).To(BeNil())
+		})
+		It("should fail if calcuated componentReference digest is different", func() {
+			err := signatures.AddDigestsToComponentDescriptor(context.TODO(), &baseCd, func(ctx context.Context, cd v2.ComponentDescriptor, cr v2.ComponentReference) (*v2.DigestSpec, error) {
+				return &v2.DigestSpec{
+					HashAlgorithm:          signatures.SHA256,
+					NormalisationAlgorithm: string(v2.JsonNormalisationV1),
+					Value:                  "00000000000000-different",
+				}, nil
+			}, func(ctx context.Context, cd v2.ComponentDescriptor, r v2.Resource) (*v2.DigestSpec, error) {
+				return &v2.DigestSpec{
+					HashAlgorithm:          signatures.SHA256,
+					NormalisationAlgorithm: string(v2.OciArtifactDigestV1),
+					Value:                  "00000000000000",
+				}, nil
+			})
+			Expect(err).To(HaveOccurred())
+		})
+		It("should fail if calcuated resource digest is different", func() {
+			err := signatures.AddDigestsToComponentDescriptor(context.TODO(), &baseCd, func(ctx context.Context, cd v2.ComponentDescriptor, cr v2.ComponentReference) (*v2.DigestSpec, error) {
+				return &v2.DigestSpec{
+					HashAlgorithm:          signatures.SHA256,
+					NormalisationAlgorithm: string(v2.JsonNormalisationV1),
+					Value:                  "00000000000000",
+				}, nil
+			}, func(ctx context.Context, cd v2.ComponentDescriptor, r v2.Resource) (*v2.DigestSpec, error) {
+				return &v2.DigestSpec{
+					HashAlgorithm:          signatures.SHA256,
+					NormalisationAlgorithm: string(v2.OciArtifactDigestV1),
+					Value:                  "00000000000000-different",
+				}, nil
+			})
+			Expect(err).To(HaveOccurred())
+		})
+		It("should add digest if missing", func() {
+			baseCd.ComponentReferences[0].Digest = nil
+			baseCd.Resources[0].Digest = nil
+
+			err := signatures.AddDigestsToComponentDescriptor(context.TODO(), &baseCd, func(ctx context.Context, cd v2.ComponentDescriptor, cr v2.ComponentReference) (*v2.DigestSpec, error) {
+				return &v2.DigestSpec{
+					HashAlgorithm:          signatures.SHA256,
+					NormalisationAlgorithm: string(v2.JsonNormalisationV1),
+					Value:                  "00000000000000",
+				}, nil
+			}, func(ctx context.Context, cd v2.ComponentDescriptor, r v2.Resource) (*v2.DigestSpec, error) {
+				return &v2.DigestSpec{
+					HashAlgorithm:          signatures.SHA256,
+					NormalisationAlgorithm: string(v2.OciArtifactDigestV1),
+					Value:                  "00000000000000",
+				}, nil
+			})
+			Expect(err).To(BeNil())
+
+			Expect(baseCd.ComponentReferences[0].Digest).To(Equal(&v2.DigestSpec{
+				HashAlgorithm:          signatures.SHA256,
+				NormalisationAlgorithm: string(v2.JsonNormalisationV1),
+				Value:                  "00000000000000",
+			}))
+			Expect(baseCd.Resources[0].Digest).To(Equal(&v2.DigestSpec{
+				HashAlgorithm:          signatures.SHA256,
+				NormalisationAlgorithm: string(v2.OciArtifactDigestV1),
+				Value:                  "00000000000000",
+			}))
+		})
+		It("should preserve the EXCLUDE-FROM-SIGNATURE digest", func() {
+			baseCd.Resources[0].Digest = v2.NewExcludeFromSignatureDigest()
+
+			err := signatures.AddDigestsToComponentDescriptor(context.TODO(), &baseCd, func(ctx context.Context, cd v2.ComponentDescriptor, cr v2.ComponentReference) (*v2.DigestSpec, error) {
+				return &v2.DigestSpec{
+					HashAlgorithm:          signatures.SHA256,
+					NormalisationAlgorithm: string(v2.JsonNormalisationV1),
+					Value:                  "00000000000000",
+				}, nil
+			}, func(ctx context.Context, cd v2.ComponentDescriptor, r v2.Resource) (*v2.DigestSpec, error) {
+				return &v2.DigestSpec{
+					HashAlgorithm:          signatures.SHA256,
+					NormalisationAlgorithm: string(v2.OciArtifactDigestV1),
+					Value:                  "00000000000000",
+				}, nil
+			})
+			Expect(err).To(BeNil())
+
+			Expect(baseCd.ComponentReferences[0].Digest).To(Equal(&v2.DigestSpec{
+				HashAlgorithm:          signatures.SHA256,
+				NormalisationAlgorithm: string(v2.JsonNormalisationV1),
+				Value:                  "00000000000000",
+			}))
+			Expect(baseCd.Resources[0].Digest).To(Equal(v2.NewExcludeFromSignatureDigest()))
 		})
 	})
 })
