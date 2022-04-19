@@ -32,13 +32,12 @@ func SignComponentDescriptor(cd *v2.ComponentDescriptor, signer Signer, hasher H
 // Returns error if verification fails.
 func VerifySignedComponentDescriptor(cd *v2.ComponentDescriptor, verifier Verifier, signatureName string) error {
 	//find matching signature
-
 	matchingSignature, err := SelectSignatureByName(cd, signatureName)
 	if err != nil {
 		return fmt.Errorf("failed checking signature: %w", err)
 	}
 
-	//Verify hash with signature
+	//Verify author of signature
 	err = verifier.Verify(*cd, *matchingSignature)
 	if err != nil {
 		return fmt.Errorf("failed verifying: %w", err)
