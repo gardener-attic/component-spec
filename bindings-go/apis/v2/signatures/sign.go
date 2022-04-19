@@ -50,12 +50,12 @@ func VerifySignedComponentDescriptor(cd *v2.ComponentDescriptor, verifier Verifi
 	}
 
 	//Verify normalised cd to given (and verified) hash
-	hashCd, err := HashForComponentDescriptor(*cd, *hasher)
+	calculatedDigest, err := HashForComponentDescriptor(*cd, *hasher)
 	if err != nil {
 		return fmt.Errorf("failed hashing cd %s:%s: %w", cd.Name, cd.Version, err)
 	}
 
-	if !reflect.DeepEqual(*hashCd, matchingSignature.Digest) {
+	if !reflect.DeepEqual(*calculatedDigest, matchingSignature.Digest) {
 		return fmt.Errorf("normalised component-descriptor does not match hash from signature")
 	}
 
