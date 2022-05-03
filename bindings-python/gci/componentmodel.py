@@ -45,6 +45,7 @@ class SourceType(enum.Enum):
 
 class ResourceType(enum.Enum):
     OCI_IMAGE = 'ociImage'
+    COSIGN_SIGNATURE = 'cosignSignature'
     GENERIC = 'generic'
 
 
