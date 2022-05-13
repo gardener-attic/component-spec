@@ -119,7 +119,7 @@ The fields for references to sources are:
 |  | Description |
 | --- | --- |
 | name | Logical name of the reference withing the *Component Descriptor* |
-| extraIdentity | Optional field that in combination with the name uniquely identifies a reference within a *Component Descriptor* |
+| extraIdentity | Optional field that in combination with the name and version uniquely identifies a reference within a *Component Descriptor* |
 | version | Version of the reference in the *Component Descriptor* |
 | type | Logical type. Specifies the content of the referenced sources, e.g. if it is git repository. |
 | access | Access information to the location where the sources are located. MUST contain another type field describing the access method. |
@@ -149,7 +149,7 @@ The fields for references to sources are:
 |  | Description |
 | --- | --- |
 | name | Logical name of the reference withing the *Component Descriptor* |
-| extraIdentity | Optional field that in combination with the name uniquely identifies a reference within a *Component Descriptor* |
+| extraIdentity | Optional field that in combination with the name and version uniquely identifies a reference within a *Component Descriptor* |
 | version | Version of the reference in the *Component Descriptor* |
 | relation | “local” if the resource is derived from a source declared by the same component. “external” otherwise. If “local”, the *version* field of the resource reference MUST be the same as the *version* field of the *Component Descriptor*. |
 | type | Logical type. Specifies the content of the referenced resource, e.g. if it is a helm chart, a JSON file etc. |
@@ -187,7 +187,7 @@ The fields for references to sources are:
 |  | Description |
 | --- | --- |
 | name | Logical name of the reference withing the *Component Descriptor*. |
-| extraIdentity | Optional field that in combination with the name uniquely identifies a reference within a *Component Descriptor* |
+| extraIdentity | Optional field that in combination with the name and version uniquely identifies a reference within a *Component Descriptor* |
 | componentName | Component name of the referenced *Component Descriptor* |
 | version | Component version of the referenced *Component Descriptor* |
 | labels | Optional field to add additional information/extensions |
@@ -220,10 +220,10 @@ for valid names are defined:
 - names MUST start with a lowercase character ([a-z])
 
 Every *source*, *resource* or *componentReference* needs a unique identifier in a *Component Descriptor*.
-In particular situations the name is not sufficient, e.g. if docker images for different platform are included.
+In particular situations the name and version are not sufficient, e.g. if docker images for different platform are included.
 Therefore, every entry has an additional optional field *extraIdentity* to resolve this problem, i.e. every entry
-MUST have a unique combination of *name*, *extraIdentity* and formal type (*source*, *resource* or *componentReference*)
-within a *Component Descriptor*.
+MUST have a unique combination of *name*, *version*, *extraIdentity* and formal type (*source*, *resource* or 
+*componentReference*) within a *Component Descriptor*.
 
 An *extraIdentity* is a map, of key value pairs whereby:
 
@@ -232,17 +232,19 @@ An *extraIdentity* is a map, of key value pairs whereby:
 
 Two *extraIdentities* are equal if they have the same key value pairs whereby the order is not relevant.
 
-Example for two resource entries with the same name but different extra identities and therefore different identifier:
+Example for two resource entries with the same name and version but different extra identities and therefore different identifier:
 
 ```
 component:
   resources:
   - name: name-1
+    version: 1.0.0
     extraIdentity:
       platform: "arm64"
       country: "us"
     ...
   - name: name-1
+    version: 1.0.0
     extraIdentity:
       platform: "x86_64"
       country: "de"
