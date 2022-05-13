@@ -63,6 +63,49 @@ definitions:
       type:
         type: 'string'
 
+  digestSpec:
+    type: 'object'
+    required:
+      - hashAlgorithm
+      - normalisationAlgorithm
+      - value
+    properties:
+      hashAlgorithm:
+        type: string
+      normalisationAlgorithm:
+        type: string
+      value:
+        type: string
+
+  signatureSpec:
+    type: 'object'
+    required:
+      - algorithm
+      - value
+      - mediaType
+    properties:
+      algorithm:
+        type: string
+      value:
+        type: string
+      mediaType:
+        description: 'The media type of the signature value'
+        type: string
+
+  signature:
+    type: 'object'
+    required:
+      - name
+      - digest
+      - signature
+    properties:
+      name:
+        type: string
+      digest:
+        $ref: '#/definitions/digestSpec'
+      signature:
+        $ref: '#/definitions/signatureSpec'
+
   source:
     type: 'object'
     required:
@@ -110,6 +153,10 @@ definitions:
         type: 'array'
         items:
           $ref: '#/definitions/label'
+      digest:
+        oneOf:
+          - type: 'null'
+          - $ref: '#/definitions/digestSpec'
 
   resource:
     type: 'object'
@@ -145,6 +192,10 @@ definitions:
         anyOf:
         - $ref: '#/definitions/access'
         - $ref: '#/definitions/localBlobAccess'
+      digest:
+        oneOf:
+          - type: 'null'
+          - $ref: '#/definitions/digestSpec'
 
   srcRef:
     type: 'object'
@@ -218,3 +269,7 @@ properties:
     $ref: '#/definitions/meta'
   component:
     $ref: '#/definitions/component'
+  signatures:
+    type: 'array'
+    items:
+      $ref: '#/definitions/signature'
