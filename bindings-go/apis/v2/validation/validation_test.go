@@ -133,7 +133,8 @@ var _ = Describe("Validation", func() {
 	Context("#ObjectMeta", func() {
 		It("should forbid invalid component name as specified in json schema", func() {
 			comp.Name = "http://example.org/org/name"
-			v2.DefaultComponent(comp)
+			err := v2.DefaultComponent(comp)
+			Expect(err).ToNot(HaveOccurred())
 			errs := Validate(comp)
 			Expect(errs).To(HaveOccurred())
 			Expect(errs.Error()).To(ContainSubstring("component.name: Does not match pattern"))
