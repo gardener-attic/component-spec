@@ -11,7 +11,7 @@ Fields:
 digest:
   - hashAlgorithm: Hash algorithm used
   - normalisationAlgorithm: normalisation Algorithm, defines which subset of the data is used as normalised representation
-  - value: the digest value for the normalised data as defined by normalisationAlgorithm with the hash algorithm defined by normalisationAlgorithm
+  - value: the digest value for the normalised data as defined by normalisationAlgorithm with the hash algorithm defined by hashAlgorithm
 
 ## Signatures
 
