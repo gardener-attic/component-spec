@@ -78,6 +78,7 @@ Exceptions:
 
 ### Properties **NOT** part of normalisation:
 
+```
 component
     repositoryContexts
     labels
@@ -88,12 +89,13 @@ component
         labels
         access
 signatures
+```
 
 ### Representation
 
 In order to hash a normalised component-descriptor, it has to be transformed into a hashable representation.
 
-Attributes *MUST* be transformed into list of single attributes (key-value pairs) and ordered alphabetically. This list *MUST* be JSON encoded with disabled HTML Escaping. It *MUST NOT* end with a newline character. A hash algorithm of choice can then be applied on the string 
+Attributes *MUST* be transformed into list of single attributes (key-value pairs) and ordered alphabetically. This list *MUST* be JSON encoded with disabled HTML Escaping and disabled pretty printing. It *MUST NOT* end with a newline character. A hash algorithm of choice can then be applied on the string 
 
 Example (pretty printed for readability): *TODO*: update
 ```
