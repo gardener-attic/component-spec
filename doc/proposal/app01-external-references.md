@@ -57,7 +57,7 @@ sources:
     access:
       type: github
       commit: 403ae4bf90c7d75c86b3584fd5e0a289abce5603
-      ref: efs/tags/v1.30.1
+      ref: refs/tags/v1.30.1
       repoUrl: github.com/examplePath/exampleRepo
 ```
 
