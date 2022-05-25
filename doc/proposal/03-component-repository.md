@@ -25,7 +25,7 @@ is accessible by its name and version (see GetComponentDescriptor). The name and
 is the identifier of a *Component Descriptor*, therefore if there already exists a *Component Descriptor*
 with the same name and version, the upload fails. 
 
-A *Component Repository* MUST check if all referenced *Component Descriptors* and local blobs are already stored in 
+A *Component Repository* SHOULD check if all referenced *Component Descriptors* and local blobs are already stored in 
 the *Component Repository*. Local blobs are special artifacts stored in a *Component Repository*, described in more 
 detail in the next chapter.
 

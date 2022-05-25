@@ -9,14 +9,14 @@ referenced sources and resources must be transported.
 If some intermediate location does not provide a particular store for all of your artifact types (OCI 
 images, helm charts...) and also has no access to the referenced artifacts, you need some mapping of these artifact 
 types to upload them into the provided stores. Such a mapping has to be defined and implemented for all artifact type 
-and store combinations. To reduce this overhead, *Component Repositories* MAY provide a possibility to store blobs in 
+and store combinations. To reduce this overhead, *Component Repositories* MUST provide a possibility to store blobs in 
 a type agnostic manner. Then you only need to define one blob format for every artifact type, which could be uploaded 
-to every *Component Repository* providing such a functionality.
+to every *Component Repository*.
 
 Another motivation for storing blobs in a *Component Repository* is, that often there are some additional
 configuration data, you just want to store together with the *Component Descriptor* in an easy and uniform manner. 
 
-Therefore, *Component Repositories* MAY provide the possibility to store technical artifacts together with the 
+Therefore, *Component Repositories* MUST provide the possibility to store technical artifacts together with the 
 *Component Descriptors* in the *Component Repository* itself as so-called *local blobs*. This also allows to pack all 
 component versions with their technical artifacts in a *Component Repository* as a completely self-contained package, a 
 typical requirement if you need to deliver your product into a fenced landscape. 
@@ -30,7 +30,7 @@ the *Component Repository*.
 
 ### UploadLocalBlob
 
-If a *Component Repository* provides support for *local blobs* it MUST implement a method for uploading *local blobs*
+A *Component Repository* MUST implement a method for uploading *local blobs*
 as specified in this chapter.
 
 **Description**: Allows uploading binary data. The binary data belong to a particular *Component Descriptor*
@@ -123,8 +123,7 @@ An entry to this resource with this information in the *Component Descriptor* lo
 
 ### GetLocalBlob
 
-If a *Component Repository* provides support for *local blobs* it MUST implement a method for fetching *local blobs*
-as specified in this chapter.
+A *Component Repository* MUST implement a method for fetching *local blobs* as specified in this chapter.
 
 **Description**: Fetches the binary data of a local blob. *localAccessInfo* is the *Component Repository* specific
 access information you got when you uploaded the local blob.
@@ -147,8 +146,7 @@ access information you got when you uploaded the local blob.
 
 ### ListLocalBlobs
 
-If a *Component Repository* provides support for *local blobs* it MUST implement a method for listing *local blobs*
-as specified in this chapter.
+A *Component Repository* MAY implement a method for listing *local blobs* as specified in this chapter.
 
 **Description**: Provides an iterator over all triples *componentName/componentVersion/localAccessInfo* of all
 uploaded blobs. 
@@ -165,8 +163,7 @@ uploaded blobs.
 
 ### DeleteLocalBlob
 
-If a *Component Repository* provides support for *local blobs* it SHOULD implement a method for uploading *local blobs*
-as specified in this chapter.
+A *Component Repository* SHOULD implement a method for deleting *local blobs* as specified in this chapter.
 
 **Description**: Deletes a local blob. *localAccessInfo* is the *Component Repository* specific
 information you got when you uploaded the local blob.

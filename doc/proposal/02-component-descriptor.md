@@ -1,5 +1,39 @@
 # Component Descriptor Specification
 
+Usually, complex software products are divided into logical units, which are called **components** in this specification.
+For example, a software product might consist of three components, a frontend, a backend and some monitoring stack.
+Of course, the software product itself could be seen as a component comprising the other three components.
+
+As a result of the development phase, **component versions** are created, e.g. when you make a new release of a component.
+
+A component version consists of a set of technical artifacts, e.g. docker images, helm charts, binaries,
+configuration data etc. Such artifacts are called **resources** in this specification.
+
+Resources are usually build from something, e.g. code in a git repo, named **sources** in this specification.
+
+The OCM introduces a so called **Component Descriptor** for every component version, to describe the resources, sources
+and other component versions belonging to a particular component version and how these could be accessed.
+
+For the three components in our example software product, one *Component Descriptor* exists for every component version,
+e.g. three *Component Descriptor* for the three versions of the frontend, six for the six versions of the backend etc.
+
+Not all component version combinations of frontend, backend and monitoring are compatible and build a valid product version.
+In order to define reasonable version combinations for our software product, we could use another feature of
+the *Component Descriptor*, which allows the aggregation of component versions.
+
+For our example we could introduce a component for the overall product. A particular version of this product component
+is again described by a *Component Descriptor*, which contains references to particular *Component Descriptors* for the
+frontend, backend and monitoring.
+
+This is only an example how to describe a particular product version with OCM as a component with one
+*Component Descriptor* with references to other *Component Descriptors*, which itself could have such references and so on.
+You are not restricted to this approach, i.e. you could still just maintain a list of component version combinations which
+build a valid product release. But OCM provides you a simple approach to specify what belongs to a product version.
+Starting with the *Component Descriptor* for a product version and following the component references, you could
+collect all artifacts, belonging to this product version.
+
+**Todo: Perhaps some small example image to make this more clear?**
+
 *Component Descriptors* are the central concept of OCM. A *Component Descriptor* describes what belongs to a particular
 version of a software component and how to access it. This includes:
 
@@ -56,7 +90,7 @@ The *component* field of a *Component Descriptor* has the following fields:
 | provider | Provider of the component, e.g. a company, organization,... |
 | sources | Array of references to sources |
 | resources | Array of references to resources |
-| componentReferences | Array of references to other *Component Descriptors* |
+| componentReferences | Array of references to other *component versions* described by *Component Descriptors* |
 | labels | Optional field to add additional information/extensions |
 
 ### Component Name and Version
@@ -151,7 +185,7 @@ The fields for references to sources are:
 | name | Logical name of the reference withing the *Component Descriptor* |
 | extraIdentity | Optional field that in combination with the name and version uniquely identifies a reference within a *Component Descriptor* |
 | version | Version of the reference in the *Component Descriptor* |
-| relation | “local” if the resource is derived from a source declared by the same component. “external” otherwise. If “local”, the *version* field of the resource reference MUST be the same as the *version* field of the *Component Descriptor*. |
+| relation | “local” if the resource is derived from a source declared by the same component. “external” otherwise. |
 | type | Logical type. Specifies the content of the referenced resource, e.g. if it is a helm chart, a JSON file etc. |
 | access | Access information to the location of the resource. MUST contain an additional type field describing the access method. |
 | srcRefs | If the corresponding resource was build from "local" sources, these could be listed here by providing their identifier within the *Component Descriptor*, i.e. their names and extraIdentities. |

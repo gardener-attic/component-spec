@@ -1,7 +1,11 @@
 # Open Component Model Specification
 
-The *Open Component Model (OCM)* is an open standard to describe the software bill of material of all kinds of 
-software products. It could be used in the whole software lifecycle management, from build to compliance, to deployment
+The *Open Component Model (OCM)* is an open standard to describe the software artefacts which have to be delivered  
+for a software products. It is explicitly not meant to describe the complete bill of material of a software product.
+Compared with other standards like [CyclonDX](https://cyclonedx.org/), this makes OCM a simpler model with more detailed 
+and unambiguous specifications with respect to delivery and deployment related aspects like signing. 
+
+OCM could be used in the whole software lifecycle management, from build to compliance, to deployment
 as a common basis to exchange this information between different tools and processes.
 
 1. [Introduction](./01-introduction.md)
