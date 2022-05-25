@@ -163,7 +163,7 @@ uploaded blobs.
 
 ### DeleteLocalBlob
 
-A *Component Repository* SHOULD implement a method for uploading *local blobs* as specified in this chapter.
+A *Component Repository* SHOULD implement a method for deleting *local blobs* as specified in this chapter.
 
 **Description**: Deletes a local blob. *localAccessInfo* is the *Component Repository* specific
 information you got when you uploaded the local blob.
