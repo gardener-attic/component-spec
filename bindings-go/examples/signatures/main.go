@@ -5,7 +5,7 @@ import (
 	"flag"
 	"fmt"
 
-	v2 "github.com/gardener/component-spec/bindings-go/apis/v2"
+	cdv2 "github.com/gardener/component-spec/bindings-go/apis/v2"
 	"github.com/gardener/component-spec/bindings-go/apis/v2/signatures"
 )
 
@@ -20,49 +20,49 @@ func init() {
 func main() {
 	flag.Parse()
 
-	resAccess, err := v2.NewUnstructured(v2.NewGitHubAccess("url2", "ref", "commit"))
+	resAccess, err := cdv2.NewUnstructured(cdv2.NewGitHubAccess("url2", "ref", "commit"))
 	if err != nil {
 		fmt.Printf("ERROR: %s", err)
 		return
 	}
 
-	cd := v2.ComponentDescriptor{
-		Metadata: v2.Metadata{
+	cd := cdv2.ComponentDescriptor{
+		Metadata: cdv2.Metadata{
 			Version: "v2",
 		},
-		ComponentSpec: v2.ComponentSpec{
-			ObjectMeta: v2.ObjectMeta{
+		ComponentSpec: cdv2.ComponentSpec{
+			ObjectMeta: cdv2.ObjectMeta{
 				Name:    "CD-Name<html>cool</html> Unicode ♥ unprintable characters \u0007 \u0031",
 				Version: "v0.0.1",
 			},
-			ComponentReferences: []v2.ComponentReference{
+			ComponentReferences: []cdv2.ComponentReference{
 				{
 					Name:          "compRefName",
 					ComponentName: "compRefNameComponentName",
 					Version:       "v0.0.2compRef",
-					ExtraIdentity: v2.Identity{
+					ExtraIdentity: cdv2.Identity{
 						"refKey": "refName",
 					},
-					Digest: &v2.DigestSpec{
+					Digest: &cdv2.DigestSpec{
 						HashAlgorithm:          signatures.SHA256,
-						NormalisationAlgorithm: string(v2.JsonNormalisationV1),
+						NormalisationAlgorithm: string(cdv2.JsonNormalisationV1),
 						Value:                  "value",
 					},
 				},
 			},
-			Resources: []v2.Resource{
+			Resources: []cdv2.Resource{
 				{
-					IdentityObjectMeta: v2.IdentityObjectMeta{
+					IdentityObjectMeta: cdv2.IdentityObjectMeta{
 						Name:    "Resource1",
 						Version: "v0.0.3resource",
-						ExtraIdentity: v2.Identity{
+						ExtraIdentity: cdv2.Identity{
 							"key": "value",
 						},
 					},
 					Access: &resAccess,
-					Digest: &v2.DigestSpec{
+					Digest: &cdv2.DigestSpec{
 						HashAlgorithm:          signatures.SHA256,
-						NormalisationAlgorithm: string(v2.OciArtifactDigestV1),
+						NormalisationAlgorithm: string(cdv2.OciArtifactDigestV1),
 						Value:                  "value",
 					},
 				},
@@ -70,16 +70,16 @@ func main() {
 		},
 	}
 	ctx := context.TODO()
-	err = signatures.AddDigestsToComponentDescriptor(ctx, &cd, func(ctx context.Context, cd v2.ComponentDescriptor, cr v2.ComponentReference) (*v2.DigestSpec, error) {
-		return &v2.DigestSpec{
+	err = signatures.AddDigestsToComponentDescriptor(ctx, &cd, func(ctx context.Context, cd cdv2.ComponentDescriptor, cr cdv2.ComponentReference) (*cdv2.DigestSpec, error) {
+		return &cdv2.DigestSpec{
 			HashAlgorithm:          signatures.SHA256,
-			NormalisationAlgorithm: string(v2.JsonNormalisationV1),
+			NormalisationAlgorithm: string(cdv2.JsonNormalisationV1),
 			Value:                  "value",
 		}, nil
-	}, func(ctx context.Context, cd v2.ComponentDescriptor, r v2.Resource) (*v2.DigestSpec, error) {
-		return &v2.DigestSpec{
+	}, func(ctx context.Context, cd cdv2.ComponentDescriptor, r cdv2.Resource) (*cdv2.DigestSpec, error) {
+		return &cdv2.DigestSpec{
 			HashAlgorithm:          signatures.SHA256,
-			NormalisationAlgorithm: string(v2.OciArtifactDigestV1),
+			NormalisationAlgorithm: string(cdv2.OciArtifactDigestV1),
 			Value:                  "value",
 		}, nil
 	})
@@ -101,7 +101,7 @@ func main() {
 	}
 	fmt.Println(norm.Value)
 
-	signer, err := signatures.CreateRsaSignerFromKeyFile(*privateKeyPath)
+	signer, err := signatures.CreateRSASignerFromKeyFile(*privateKeyPath, cdv2.MediaTypePEM)
 	if err != nil {
 		fmt.Printf("ERROR create signer: %s", err)
 		return
@@ -113,7 +113,7 @@ func main() {
 		return
 	}
 
-	verifier, err := signatures.CreateRsaVerifierFromKeyFile(*publicKeyPath)
+	verifier, err := signatures.CreateRSAVerifierFromKeyFile(*publicKeyPath)
 	if err != nil {
 		fmt.Printf("ERROR create verifier: %s", err)
 		return
