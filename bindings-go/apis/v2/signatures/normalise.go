@@ -23,10 +23,10 @@ func AddDigestsToComponentDescriptor(ctx context.Context, cd *cdv2.ComponentDesc
 	for i, reference := range cd.ComponentReferences {
 		digest, err := compRefResolver(ctx, *cd, reference)
 		if err != nil {
-			return fmt.Errorf("failed resolving componentReference for %s:%s: %w", reference.Name, reference.Version, err)
+			return fmt.Errorf("unable to resolve component reference for %s:%s: %w", reference.Name, reference.Version, err)
 		}
 		if reference.Digest != nil && !reflect.DeepEqual(reference.Digest, digest) {
-			return fmt.Errorf("calculated cd reference digest mismatches existing digest %s:%s", reference.ComponentName, reference.Version)
+			return fmt.Errorf("calculated digest mismatches existing digest for component reference %s:%s", reference.ComponentName, reference.Version)
 		}
 		cd.ComponentReferences[i].Digest = digest
 	}
@@ -39,10 +39,10 @@ func AddDigestsToComponentDescriptor(ctx context.Context, cd *cdv2.ComponentDesc
 
 		digest, err := resResolver(ctx, *cd, res)
 		if err != nil {
-			return fmt.Errorf("failed resolving resource for %s:%s: %w", res.Name, res.Version, err)
+			return fmt.Errorf("unable to resolve resource %s:%s: %w", res.Name, res.Version, err)
 		}
 		if res.Digest != nil && !reflect.DeepEqual(res.Digest, digest) {
-			return fmt.Errorf("calculated resource digest mismatches existing digest %s:%s", res.Name, res.Version)
+			return fmt.Errorf("calculated digest mismatches existing digest for resource %s:%s", res.Name, res.Version)
 		}
 		cd.Resources[i].Digest = digest
 	}
@@ -54,11 +54,11 @@ func AddDigestsToComponentDescriptor(ctx context.Context, cd *cdv2.ComponentDesc
 func HashForComponentDescriptor(cd cdv2.ComponentDescriptor, hash Hasher) (*cdv2.DigestSpec, error) {
 	normalisedComponentDescriptor, err := normaliseComponentDescriptor(cd)
 	if err != nil {
-		return nil, fmt.Errorf("failed normalising component descriptor %w", err)
+		return nil, fmt.Errorf("unable to normalise component descriptor: %w", err)
 	}
 	hash.HashFunction.Reset()
 	if _, err = hash.HashFunction.Write(normalisedComponentDescriptor); err != nil {
-		return nil, fmt.Errorf("failed hashing the normalisedComponentDescriptorJson: %w", err)
+		return nil, fmt.Errorf("unable to hash normalised component descriptor: %w", err)
 	}
 	return &cdv2.DigestSpec{
 		HashAlgorithm:          hash.AlgorithmName,
@@ -69,7 +69,7 @@ func HashForComponentDescriptor(cd cdv2.ComponentDescriptor, hash Hasher) (*cdv2
 
 func normaliseComponentDescriptor(cd cdv2.ComponentDescriptor) ([]byte, error) {
 	if err := isNormaliseable(cd); err != nil {
-		return nil, fmt.Errorf("can not normalise component-descriptor %s:%s: %w", cd.Name, cd.Version, err)
+		return nil, fmt.Errorf("component descriptor %s:%s is not normaliseable: %w", cd.Name, cd.Version, err)
 	}
 
 	meta := []Entry{
@@ -144,7 +144,7 @@ func normaliseComponentDescriptor(cd cdv2.ComponentDescriptor) ([]byte, error) {
 	}
 
 	if err := deepSort(normalisedComponentDescriptor); err != nil {
-		return nil, fmt.Errorf("failed sorting during normalisation: %w", err)
+		return nil, fmt.Errorf("unable to sort normalised component descriptor: %w", err)
 	}
 
 	byteBuffer := bytes.NewBuffer([]byte{})
@@ -206,7 +206,7 @@ func deepSort(in interface{}) error {
 	case cdv2.ResourceRelation:
 		break
 	default:
-		return fmt.Errorf("unknown type in sorting. This should not happen")
+		return fmt.Errorf("unknown type in sorting: %T", in)
 	}
 	return nil
 }
@@ -234,15 +234,15 @@ func isNormaliseable(cd cdv2.ComponentDescriptor) error {
 	// check for digests on component references
 	for _, reference := range cd.ComponentReferences {
 		if reference.Digest == nil || reference.Digest.HashAlgorithm == "" || reference.Digest.NormalisationAlgorithm == "" || reference.Digest.Value == "" {
-			return fmt.Errorf("missing digest in componentReference for %s:%s", reference.Name, reference.Version)
+			return fmt.Errorf("missing digest in component reference %s:%s", reference.Name, reference.Version)
 		}
 	}
 	for _, res := range cd.Resources {
 		if (res.Access != nil && res.Access.Type != "None") && res.Digest == nil {
-			return fmt.Errorf("missing digest in resource for %s:%s", res.Name, res.Version)
+			return fmt.Errorf("missing digest in resource %s:%s", res.Name, res.Version)
 		}
 		if (res.Access == nil || res.Access.Type == "None") && res.Digest != nil {
-			return fmt.Errorf("digest for resource with emtpy (None) access not allowed %s:%s", res.Name, res.Version)
+			return fmt.Errorf("digest with emtpy (None) access not allowed in resource %s:%s", res.Name, res.Version)
 		}
 	}
 	return nil
