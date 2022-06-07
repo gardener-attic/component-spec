@@ -111,7 +111,7 @@ The request to store the local blob the looks as follows:
 ... 
 ```
 
-The *Component Repository* (in case it supports directs OCI access) could also provide some derived *globalAccessInfo* containing the location in an OCI registry:
+The *Component Repository* (in case it supports direct OCI access) could also provide some derived *globalAccessInfo* additionally containing the location in an OCI registry:
 
 ```
 imageReference: <repository prefix>/gardener/specialimage@sha:...
@@ -136,7 +136,7 @@ An entry to this resource with this information in the *Component Descriptor* th
 ... 
 ```
 
-Optionally the repoitory could even omit the storage as local blob, and just provide a global type specific access specification
+Optionally the repository could even omit the storage as local blob, and just provide a global type specific access specification
 (depending of the given media type), which would result in the following resource specification:
 
 ```
