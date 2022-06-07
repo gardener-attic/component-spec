@@ -4,12 +4,12 @@ import (
 	"fmt"
 	"reflect"
 
-	v2 "github.com/gardener/component-spec/bindings-go/apis/v2"
+	cdv2 "github.com/gardener/component-spec/bindings-go/apis/v2"
 )
 
 // SignComponentDescriptor signs the given component-descriptor with the signer.
 // The component-descriptor has to contain digests for componentReferences and resources.
-func SignComponentDescriptor(cd *v2.ComponentDescriptor, signer Signer, hasher Hasher, signatureName string) error {
+func SignComponentDescriptor(cd *cdv2.ComponentDescriptor, signer Signer, hasher Hasher, signatureName string) error {
 	hashedDigest, err := HashForComponentDescriptor(*cd, hasher)
 	if err != nil {
 		return fmt.Errorf("failed getting hash for cd: %w", err)
@@ -19,7 +19,7 @@ func SignComponentDescriptor(cd *v2.ComponentDescriptor, signer Signer, hasher H
 	if err != nil {
 		return fmt.Errorf("failed signing hash of normalised component descriptor, %w", err)
 	}
-	cd.Signatures = append(cd.Signatures, v2.Signature{
+	cd.Signatures = append(cd.Signatures, cdv2.Signature{
 		Name:      signatureName,
 		Digest:    *hashedDigest,
 		Signature: *signature,
@@ -30,7 +30,7 @@ func SignComponentDescriptor(cd *v2.ComponentDescriptor, signer Signer, hasher H
 // VerifySignedComponentDescriptor verifies the signature (selected by signatureName) and hash of the component-descriptor (as specified in the signature).
 // Does NOT resolve resources or referenced component-descriptors.
 // Returns error if verification fails.
-func VerifySignedComponentDescriptor(cd *v2.ComponentDescriptor, verifier Verifier, signatureName string) error {
+func VerifySignedComponentDescriptor(cd *cdv2.ComponentDescriptor, verifier Verifier, signatureName string) error {
 	//find matching signature
 	matchingSignature, err := SelectSignatureByName(cd, signatureName)
 	if err != nil {
@@ -63,7 +63,7 @@ func VerifySignedComponentDescriptor(cd *v2.ComponentDescriptor, verifier Verifi
 }
 
 // SelectSignatureByName returns the Signature (Digest and SigantureSpec) matching the given name
-func SelectSignatureByName(cd *v2.ComponentDescriptor, signatureName string) (*v2.Signature, error) {
+func SelectSignatureByName(cd *cdv2.ComponentDescriptor, signatureName string) (*cdv2.Signature, error) {
 	for _, signature := range cd.Signatures {
 		if signature.Name == signatureName {
 			return &signature, nil

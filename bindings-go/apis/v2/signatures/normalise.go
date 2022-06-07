@@ -9,16 +9,16 @@ import (
 	"reflect"
 	"sort"
 
-	v2 "github.com/gardener/component-spec/bindings-go/apis/v2"
+	cdv2 "github.com/gardener/component-spec/bindings-go/apis/v2"
 )
 
 // Entry is used for normalisation and has to contain one key
 type Entry map[string]interface{}
 
 // AddDigestsToComponentDescriptor adds digest to componentReferences and resources as returned in the resolver functions. If a digest already exists, a mismatch against the resolved digest will return an error.
-func AddDigestsToComponentDescriptor(ctx context.Context, cd *v2.ComponentDescriptor,
-	compRefResolver func(context.Context, v2.ComponentDescriptor, v2.ComponentReference) (*v2.DigestSpec, error),
-	resResolver func(context.Context, v2.ComponentDescriptor, v2.Resource) (*v2.DigestSpec, error)) error {
+func AddDigestsToComponentDescriptor(ctx context.Context, cd *cdv2.ComponentDescriptor,
+	compRefResolver func(context.Context, cdv2.ComponentDescriptor, cdv2.ComponentReference) (*cdv2.DigestSpec, error),
+	resResolver func(context.Context, cdv2.ComponentDescriptor, cdv2.Resource) (*cdv2.DigestSpec, error)) error {
 
 	for i, reference := range cd.ComponentReferences {
 		digest, err := compRefResolver(ctx, *cd, reference)
@@ -33,7 +33,7 @@ func AddDigestsToComponentDescriptor(ctx context.Context, cd *v2.ComponentDescri
 
 	for i, res := range cd.Resources {
 		// special digest notation indicates to not digest the content
-		if res.Digest != nil && reflect.DeepEqual(res.Digest, v2.NewExcludeFromSignatureDigest()) {
+		if res.Digest != nil && reflect.DeepEqual(res.Digest, cdv2.NewExcludeFromSignatureDigest()) {
 			continue
 		}
 
@@ -51,7 +51,7 @@ func AddDigestsToComponentDescriptor(ctx context.Context, cd *v2.ComponentDescri
 
 // HashForComponentDescriptor return the hash for the component-descriptor, if it is normaliseable
 // (= componentReferences and resources contain digest field)
-func HashForComponentDescriptor(cd v2.ComponentDescriptor, hash Hasher) (*v2.DigestSpec, error) {
+func HashForComponentDescriptor(cd cdv2.ComponentDescriptor, hash Hasher) (*cdv2.DigestSpec, error) {
 	normalisedComponentDescriptor, err := normaliseComponentDescriptor(cd)
 	if err != nil {
 		return nil, fmt.Errorf("failed normalising component descriptor %w", err)
@@ -60,14 +60,14 @@ func HashForComponentDescriptor(cd v2.ComponentDescriptor, hash Hasher) (*v2.Dig
 	if _, err = hash.HashFunction.Write(normalisedComponentDescriptor); err != nil {
 		return nil, fmt.Errorf("failed hashing the normalisedComponentDescriptorJson: %w", err)
 	}
-	return &v2.DigestSpec{
+	return &cdv2.DigestSpec{
 		HashAlgorithm:          hash.AlgorithmName,
-		NormalisationAlgorithm: string(v2.JsonNormalisationV1),
+		NormalisationAlgorithm: string(cdv2.JsonNormalisationV1),
 		Value:                  hex.EncodeToString(hash.HashFunction.Sum(nil)),
 	}, nil
 }
 
-func normaliseComponentDescriptor(cd v2.ComponentDescriptor) ([]byte, error) {
+func normaliseComponentDescriptor(cd cdv2.ComponentDescriptor) ([]byte, error) {
 	if err := isNormaliseable(cd); err != nil {
 		return nil, fmt.Errorf("can not normalise component-descriptor %s:%s: %w", cd.Name, cd.Version, err)
 	}
@@ -165,7 +165,7 @@ func normaliseComponentDescriptor(cd v2.ComponentDescriptor) ([]byte, error) {
 	return normalisedJson, nil
 }
 
-func buildExtraIdentity(identity v2.Identity) []Entry {
+func buildExtraIdentity(identity cdv2.Identity) []Entry {
 	var extraIdentities []Entry
 	for k, v := range identity {
 		extraIdentities = append(extraIdentities, Entry{k: v})
@@ -201,9 +201,9 @@ func deepSort(in interface{}) error {
 		}
 	case string:
 		break
-	case v2.ProviderType:
+	case cdv2.ProviderType:
 		break
-	case v2.ResourceRelation:
+	case cdv2.ResourceRelation:
 		break
 	default:
 		return fmt.Errorf("unknown type in sorting. This should not happen")
@@ -230,7 +230,7 @@ func getOnlyValueInEntry(entry Entry) interface{} {
 // isNormaliseable checks if componentReferences and resources contain digest.
 // Resources are allowed to omit the digest, if res.access.type == None or res.access == nil.
 // Does NOT verify if the digests are correct
-func isNormaliseable(cd v2.ComponentDescriptor) error {
+func isNormaliseable(cd cdv2.ComponentDescriptor) error {
 	// check for digests on component references
 	for _, reference := range cd.ComponentReferences {
 		if reference.Digest == nil || reference.Digest.HashAlgorithm == "" || reference.Digest.NormalisationAlgorithm == "" || reference.Digest.Value == "" {
