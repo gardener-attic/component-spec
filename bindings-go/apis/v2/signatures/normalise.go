@@ -52,7 +52,7 @@ func AddDigestsToComponentDescriptor(ctx context.Context, cd *v2.ComponentDescri
 // HashForComponentDescriptor return the hash for the component-descriptor, if it is normaliseable
 // (= componentReferences and resources contain digest field)
 func HashForComponentDescriptor(cd v2.ComponentDescriptor, hash Hasher) (*v2.DigestSpec, error) {
-	normalisedComponentDescriptor, err := normalizeComponentDescriptor(cd)
+	normalisedComponentDescriptor, err := normaliseComponentDescriptor(cd)
 	if err != nil {
 		return nil, fmt.Errorf("failed normalising component descriptor %w", err)
 	}
@@ -67,7 +67,7 @@ func HashForComponentDescriptor(cd v2.ComponentDescriptor, hash Hasher) (*v2.Dig
 	}, nil
 }
 
-func normalizeComponentDescriptor(cd v2.ComponentDescriptor) ([]byte, error) {
+func normaliseComponentDescriptor(cd v2.ComponentDescriptor) ([]byte, error) {
 	if err := isNormaliseable(cd); err != nil {
 		return nil, fmt.Errorf("can not normalise component-descriptor %s:%s: %w", cd.Name, cd.Version, err)
 	}
@@ -138,12 +138,12 @@ func normalizeComponentDescriptor(cd v2.ComponentDescriptor) ([]byte, error) {
 		{"resources": resources},
 	}
 
-	normalizedComponentDescriptor := []Entry{
+	normalisedComponentDescriptor := []Entry{
 		{"meta": meta},
 		{"component": componentSpec},
 	}
 
-	if err := deepSort(normalizedComponentDescriptor); err != nil {
+	if err := deepSort(normalisedComponentDescriptor); err != nil {
 		return nil, fmt.Errorf("failed sorting during normalisation: %w", err)
 	}
 
@@ -151,18 +151,18 @@ func normalizeComponentDescriptor(cd v2.ComponentDescriptor) ([]byte, error) {
 	encoder := json.NewEncoder(byteBuffer)
 	encoder.SetEscapeHTML(false)
 
-	if err := encoder.Encode(normalizedComponentDescriptor); err != nil {
+	if err := encoder.Encode(normalisedComponentDescriptor); err != nil {
 		return nil, err
 	}
 
-	normalizedJson := byteBuffer.Bytes()
+	normalisedJson := byteBuffer.Bytes()
 
 	// encoder.Encode appends a newline that we do not want
-	if normalizedJson[len(normalizedJson)-1] == 10 {
-		normalizedJson = normalizedJson[:len(normalizedJson)-1]
+	if normalisedJson[len(normalisedJson)-1] == 10 {
+		normalisedJson = normalisedJson[:len(normalisedJson)-1]
 	}
 
-	return normalizedJson, nil
+	return normalisedJson, nil
 }
 
 func buildExtraIdentity(identity v2.Identity) []Entry {
