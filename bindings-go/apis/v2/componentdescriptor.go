@@ -463,7 +463,6 @@ const (
 	// SignatureAlgorithmHeader defines a pem header where the signature algorithm is defined.
 	SignatureAlgorithmHeader = "Signature Algorithm"
 
-
 	// MediaTypePEM defines the media type for pem formatted data.
 	MediaTypePEM = "application/x-pem-file"
 
