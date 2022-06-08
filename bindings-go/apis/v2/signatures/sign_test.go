@@ -7,14 +7,14 @@ import (
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
 
-	v2 "github.com/gardener/component-spec/bindings-go/apis/v2"
+	cdv2 "github.com/gardener/component-spec/bindings-go/apis/v2"
 	"github.com/gardener/component-spec/bindings-go/apis/v2/signatures"
 )
 
 type TestSigner struct{}
 
-func (s TestSigner) Sign(componentDescriptor v2.ComponentDescriptor, digest v2.DigestSpec) (*v2.SignatureSpec, error) {
-	return &v2.SignatureSpec{
+func (s TestSigner) Sign(componentDescriptor cdv2.ComponentDescriptor, digest cdv2.DigestSpec) (*cdv2.SignatureSpec, error) {
+	return &cdv2.SignatureSpec{
 		Algorithm: "testSignAlgorithm",
 		Value:     fmt.Sprintf("%s:%s-signed", digest.HashAlgorithm, digest.Value),
 	}, nil
@@ -22,7 +22,7 @@ func (s TestSigner) Sign(componentDescriptor v2.ComponentDescriptor, digest v2.D
 
 type TestVerifier struct{}
 
-func (v TestVerifier) Verify(componentDescriptor v2.ComponentDescriptor, signature v2.Signature) error {
+func (v TestVerifier) Verify(componentDescriptor cdv2.ComponentDescriptor, signature cdv2.Signature) error {
 	if signature.Signature.Value != fmt.Sprintf("%s:%s-signed", signature.Digest.HashAlgorithm, signature.Digest.Value) {
 		return fmt.Errorf("signature verification failed: Invalid signature")
 	}
@@ -32,7 +32,7 @@ func (v TestVerifier) Verify(componentDescriptor v2.ComponentDescriptor, signatu
 type TestSHA256Hasher signatures.Hasher
 
 var _ = Describe("Sign/Verify component-descriptor", func() {
-	var baseCd v2.ComponentDescriptor
+	var baseCd cdv2.ComponentDescriptor
 	testSHA256Hasher := signatures.Hasher{
 		HashFunction:  sha256.New(),
 		AlgorithmName: signatures.SHA256,
@@ -41,45 +41,45 @@ var _ = Describe("Sign/Verify component-descriptor", func() {
 	correctBaseCdHash := "6c571bb6e351ae755baa7f26cbd1f600d2968ab8b88e25a3bab277e53afdc3ad"
 
 	BeforeEach(func() {
-		baseCd = v2.ComponentDescriptor{
-			Metadata: v2.Metadata{
+		baseCd = cdv2.ComponentDescriptor{
+			Metadata: cdv2.Metadata{
 				Version: "v2",
 			},
-			ComponentSpec: v2.ComponentSpec{
-				ObjectMeta: v2.ObjectMeta{
+			ComponentSpec: cdv2.ComponentSpec{
+				ObjectMeta: cdv2.ObjectMeta{
 					Name:    "CD-Name",
 					Version: "v0.0.1",
 				},
-				ComponentReferences: []v2.ComponentReference{
+				ComponentReferences: []cdv2.ComponentReference{
 					{
 						Name:          "compRefName",
 						ComponentName: "compRefNameComponentName",
 						Version:       "v0.0.2compRef",
-						ExtraIdentity: v2.Identity{
+						ExtraIdentity: cdv2.Identity{
 							"refKey": "refName",
 						},
-						Digest: &v2.DigestSpec{
+						Digest: &cdv2.DigestSpec{
 							HashAlgorithm:          signatures.SHA256,
-							NormalisationAlgorithm: string(v2.JsonNormalisationV1),
+							NormalisationAlgorithm: string(cdv2.JsonNormalisationV1),
 							Value:                  "00000000000000",
 						},
 					},
 				},
-				Resources: []v2.Resource{
+				Resources: []cdv2.Resource{
 					{
-						IdentityObjectMeta: v2.IdentityObjectMeta{
+						IdentityObjectMeta: cdv2.IdentityObjectMeta{
 							Name:    "Resource1",
 							Version: "v0.0.3resource",
-							ExtraIdentity: v2.Identity{
+							ExtraIdentity: cdv2.Identity{
 								"key": "value",
 							},
 						},
-						Digest: &v2.DigestSpec{
+						Digest: &cdv2.DigestSpec{
 							HashAlgorithm:          signatures.SHA256,
-							NormalisationAlgorithm: string(v2.OciArtifactDigestV1),
+							NormalisationAlgorithm: string(cdv2.OciArtifactDigestV1),
 							Value:                  "00000000000000",
 						},
-						Access: v2.NewUnstructuredType(v2.OCIRegistryType, map[string]interface{}{"imageRef": "ref"}),
+						Access: cdv2.NewUnstructuredType(cdv2.OCIRegistryType, map[string]interface{}{"imageRef": "ref"}),
 					},
 				},
 			},
@@ -92,7 +92,7 @@ var _ = Describe("Sign/Verify component-descriptor", func() {
 			Expect(err).To(BeNil())
 			Expect(len(baseCd.Signatures)).To(BeIdenticalTo(1))
 			Expect(baseCd.Signatures[0].Name).To(BeIdenticalTo(signatureName))
-			Expect(baseCd.Signatures[0].Digest.NormalisationAlgorithm).To(BeIdenticalTo(string(v2.JsonNormalisationV1)))
+			Expect(baseCd.Signatures[0].Digest.NormalisationAlgorithm).To(BeIdenticalTo(string(cdv2.JsonNormalisationV1)))
 			Expect(baseCd.Signatures[0].Digest.HashAlgorithm).To(BeIdenticalTo(signatures.SHA256))
 			Expect(baseCd.Signatures[0].Digest.Value).To(BeIdenticalTo(correctBaseCdHash))
 			Expect(baseCd.Signatures[0].Signature.Algorithm).To(BeIdenticalTo("testSignAlgorithm"))
@@ -125,14 +125,14 @@ var _ = Describe("Sign/Verify component-descriptor", func() {
 			Expect(err).To(BeNil())
 			Expect(len(baseCd.Signatures)).To(BeIdenticalTo(1))
 
-			baseCd.Signatures = append(baseCd.Signatures, v2.Signature{
+			baseCd.Signatures = append(baseCd.Signatures, cdv2.Signature{
 				Name: "testSignAlgorithmNOTRight",
-				Digest: v2.DigestSpec{
+				Digest: cdv2.DigestSpec{
 					HashAlgorithm:          "testAlgorithm",
-					NormalisationAlgorithm: string(v2.JsonNormalisationV1),
+					NormalisationAlgorithm: string(cdv2.JsonNormalisationV1),
 					Value:                  "testValue",
 				},
-				Signature: v2.SignatureSpec{
+				Signature: cdv2.SignatureSpec{
 					Algorithm: "testSigning",
 					Value:     "AdditionalSignature",
 				},
@@ -155,7 +155,7 @@ var _ = Describe("Sign/Verify component-descriptor", func() {
 			err := signatures.SignComponentDescriptor(&baseCd, TestSigner{}, testSHA256Hasher, signatureName)
 			Expect(err).To(BeNil())
 			Expect(len(baseCd.Signatures)).To(BeIdenticalTo(1))
-			baseCd.Signatures[0].Digest = v2.DigestSpec{}
+			baseCd.Signatures[0].Digest = cdv2.DigestSpec{}
 			err = signatures.VerifySignedComponentDescriptor(&baseCd, TestVerifier{}, signatureName)
 			Expect(err).ToNot(BeNil())
 		})

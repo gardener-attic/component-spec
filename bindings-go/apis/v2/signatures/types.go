@@ -7,21 +7,21 @@ import (
 	"hash"
 	"strings"
 
-	v2 "github.com/gardener/component-spec/bindings-go/apis/v2"
+	cdv2 "github.com/gardener/component-spec/bindings-go/apis/v2"
 )
 
 // Signer interface is used to implement different signing algorithms.
 // Each Signer should have a matching Verifier.
 type Signer interface {
 	// Sign returns the signature for the data for the component-descriptor
-	Sign(componentDescriptor v2.ComponentDescriptor, digest v2.DigestSpec) (*v2.SignatureSpec, error)
+	Sign(componentDescriptor cdv2.ComponentDescriptor, digest cdv2.DigestSpec) (*cdv2.SignatureSpec, error)
 }
 
 // Verifier interface is used to implement different verification algorithms.
 // Each Verifier should have a matching Signer.
 type Verifier interface {
 	// Verify checks the signature, returns an error on verification failure
-	Verify(componentDescriptor v2.ComponentDescriptor, signature v2.Signature) error
+	Verify(componentDescriptor cdv2.ComponentDescriptor, signature cdv2.Signature) error
 }
 
 // Hasher encapsulates a hash.Hash interface with an algorithm name.
@@ -40,15 +40,15 @@ func HasherForName(algorithmName string) (*Hasher, error) {
 			HashFunction:  sha256.New(),
 			AlgorithmName: SHA256,
 		}, nil
-	case strings.ToLower(v2.NoDigest):
+	case strings.ToLower(cdv2.NoDigest):
 		return &Hasher{
 			HashFunction:  nil,
-			AlgorithmName: v2.NoDigest,
+			AlgorithmName: cdv2.NoDigest,
 		}, nil
 	}
 	return nil, fmt.Errorf("hash algorithm %s not found/implemented", algorithmName)
 }
 
 type ResourceDigester interface {
-	DigestForResource(ctx context.Context, componentDescriptor v2.ComponentDescriptor, resource v2.Resource, hasher Hasher) (*v2.DigestSpec, error)
+	DigestForResource(ctx context.Context, componentDescriptor cdv2.ComponentDescriptor, resource cdv2.Resource, hasher Hasher) (*cdv2.DigestSpec, error)
 }

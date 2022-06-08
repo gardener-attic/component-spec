@@ -3,6 +3,7 @@ package signatures_test
 import (
 	"crypto/sha256"
 	"encoding/hex"
+	"encoding/pem"
 	"io/ioutil"
 	"os"
 	"os/exec"
@@ -11,11 +12,11 @@ import (
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
 
-	v2 "github.com/gardener/component-spec/bindings-go/apis/v2"
+	cdv2 "github.com/gardener/component-spec/bindings-go/apis/v2"
 	"github.com/gardener/component-spec/bindings-go/apis/v2/signatures"
 )
 
-var _ = Describe("RSA Sign/Verify", func() {
+var _ = Describe("RSA sign/verify", func() {
 	var pathPrivateKey string
 	var pathPublicKey string
 	var stringToHashAndSign string
@@ -45,46 +46,80 @@ var _ = Describe("RSA Sign/Verify", func() {
 		os.RemoveAll(dir)
 	})
 
-	Describe("RSA Sign with private key", func() {
+	Describe("RSA sign with private key", func() {
 		It("should create a signature", func() {
 			hashOfString := sha256.Sum256([]byte(stringToHashAndSign))
 
-			signer, err := signatures.CreateRsaSignerFromKeyFile(pathPrivateKey)
+			signer, err := signatures.CreateRSASignerFromKeyFile(pathPrivateKey, cdv2.MediaTypeRSASignature)
 			Expect(err).To(BeNil())
-			signature, err := signer.Sign(v2.ComponentDescriptor{}, v2.DigestSpec{
+
+			signature, err := signer.Sign(cdv2.ComponentDescriptor{}, cdv2.DigestSpec{
 				HashAlgorithm:          signatures.SHA256,
-				NormalisationAlgorithm: string(v2.JsonNormalisationV1),
+				NormalisationAlgorithm: string(cdv2.JsonNormalisationV1),
 				Value:                  hex.EncodeToString(hashOfString[:]),
 			})
 			Expect(err).To(BeNil())
-			Expect(signature.Algorithm).To(BeIdenticalTo(v2.SignatureAlgorithmRSAPKCS1v15))
+
+			Expect(signature.MediaType).To(Equal(cdv2.MediaTypeRSASignature))
+			Expect(signature.Algorithm).To(BeIdenticalTo(cdv2.RSAPKCS1v15))
 			Expect(signature.Value).NotTo(BeNil())
 		})
+
+		It("should create a signature in pem format", func() {
+			hashOfString := sha256.Sum256([]byte(stringToHashAndSign))
+
+			signer, err := signatures.CreateRSASignerFromKeyFile(pathPrivateKey, cdv2.MediaTypePEM)
+			Expect(err).To(BeNil())
+
+			signature, err := signer.Sign(cdv2.ComponentDescriptor{}, cdv2.DigestSpec{
+				HashAlgorithm:          signatures.SHA256,
+				NormalisationAlgorithm: string(cdv2.JsonNormalisationV1),
+				Value:                  hex.EncodeToString(hashOfString[:]),
+			})
+			Expect(err).To(BeNil())
+
+			Expect(signature.MediaType).To(Equal(cdv2.MediaTypePEM))
+			Expect(signature.Algorithm).To(BeIdenticalTo(cdv2.RSAPKCS1v15))
+			Expect(signature.Value).NotTo(BeNil())
+
+			pemBlock, rest := pem.Decode([]byte(signature.Value))
+			Expect(pemBlock).ToNot(BeNil())
+			Expect(len(rest)).To(BeZero())
+
+			Expect(pemBlock.Type).To(Equal(cdv2.SignaturePEMBlockType))
+			Expect(pemBlock.Headers[cdv2.SignatureAlgorithmHeader]).To(Equal(cdv2.RSAPKCS1v15))
+			Expect(len(pemBlock.Bytes)).ToNot(BeZero())
+		})
 	})
-	Describe("RSA Sign verify public key", func() {
+
+	Describe("RSA sign and verify with public key", func() {
 		It("should verify a signature", func() {
 			hashOfString := sha256.Sum256([]byte(stringToHashAndSign))
 
-			signer, err := signatures.CreateRsaSignerFromKeyFile(pathPrivateKey)
+			signer, err := signatures.CreateRSASignerFromKeyFile(pathPrivateKey, cdv2.MediaTypeRSASignature)
 			Expect(err).To(BeNil())
-			digest := v2.DigestSpec{
+
+			digest := cdv2.DigestSpec{
 				HashAlgorithm:          signatures.SHA256,
-				NormalisationAlgorithm: string(v2.JsonNormalisationV1),
+				NormalisationAlgorithm: string(cdv2.JsonNormalisationV1),
 				Value:                  hex.EncodeToString(hashOfString[:]),
 			}
-			signature, err := signer.Sign(v2.ComponentDescriptor{}, digest)
+			signature, err := signer.Sign(cdv2.ComponentDescriptor{}, digest)
 			Expect(err).To(BeNil())
-			Expect(signature.Algorithm).To(BeIdenticalTo(v2.SignatureAlgorithmRSAPKCS1v15))
+
+			Expect(signature.Algorithm).To(BeIdenticalTo(cdv2.RSAPKCS1v15))
 			Expect(signature.Value).NotTo(BeNil())
 
-			verifier, err := signatures.CreateRsaVerifierFromKeyFile(pathPublicKey)
+			verifier, err := signatures.CreateRSAVerifierFromKeyFile(pathPublicKey)
 			Expect(err).To(BeNil())
-			err = verifier.Verify(v2.ComponentDescriptor{}, v2.Signature{
+
+			err = verifier.Verify(cdv2.ComponentDescriptor{}, cdv2.Signature{
 				Digest:    digest,
 				Signature: *signature,
 			})
 			Expect(err).To(BeNil())
 		})
+
 		It("should deny a signature from a wrong actor", func() {
 			hashOfString := sha256.Sum256([]byte(stringToHashAndSign))
 
@@ -94,25 +129,28 @@ var _ = Describe("RSA Sign/Verify", func() {
 			err := createWrongPrivateKeyCommand.Run()
 			Expect(err).To(BeNil())
 
-			signer, err := signatures.CreateRsaSignerFromKeyFile(pathWrongPrivateKey)
+			signer, err := signatures.CreateRSASignerFromKeyFile(pathWrongPrivateKey, cdv2.MediaTypeRSASignature)
 			Expect(err).To(BeNil())
-			digest := v2.DigestSpec{
+
+			digest := cdv2.DigestSpec{
 				HashAlgorithm:          signatures.SHA256,
-				NormalisationAlgorithm: string(v2.JsonNormalisationV1),
+				NormalisationAlgorithm: string(cdv2.JsonNormalisationV1),
 				Value:                  hex.EncodeToString(hashOfString[:]),
 			}
-			signature, err := signer.Sign(v2.ComponentDescriptor{}, digest)
+			signature, err := signer.Sign(cdv2.ComponentDescriptor{}, digest)
 			Expect(err).To(BeNil())
-			Expect(signature.Algorithm).To(BeIdenticalTo(v2.SignatureAlgorithmRSAPKCS1v15))
+
+			Expect(signature.Algorithm).To(BeIdenticalTo(cdv2.RSAPKCS1v15))
 			Expect(signature.Value).NotTo(BeNil())
 
-			verifier, err := signatures.CreateRsaVerifierFromKeyFile(pathPublicKey)
+			verifier, err := signatures.CreateRSAVerifierFromKeyFile(pathPublicKey)
 			Expect(err).To(BeNil())
-			err = verifier.Verify(v2.ComponentDescriptor{}, v2.Signature{
+
+			err = verifier.Verify(cdv2.ComponentDescriptor{}, cdv2.Signature{
 				Digest:    digest,
 				Signature: *signature,
 			})
-			Expect(err.Error()).To(BeIdenticalTo("signature verification failed, crypto/rsa: verification error"))
+			Expect(err.Error()).To(BeIdenticalTo("unable to verify signature: crypto/rsa: verification error"))
 		})
 	})
 })
