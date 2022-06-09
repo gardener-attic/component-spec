@@ -30,8 +30,9 @@ signatures:
 
 The normalisation of the component-descriptor describes the process of generating a normalised component-descriptor. A normalised component-descriptor is a subset of the component-descriptor of signing-relevant properties. 
 
-### Requirements
-All component-references have a digest. Resources are required to have digest, except their access is null or the access.type is 'None'. If a digest-containing entry (= component reference or resource) already contain a digest during signing, the normalisation process must be aborted if the digest mismatches the calcuated digest for the entry.
+### Digests in Normalisation
+In the process of normalisation, all component-references and resources must be filled with a digest (excpet resources with access null or access.type = 'None').
+If a digest-containing entry (= component reference or resource) already contain a digest before the normalisation, the process must be aborted if the digest mismatches the calcuated digest for the entry. Such preexisting digest entries can NOT be trusted and they have to be calculated in the process.
 
 ### Exclude Resource from Normalisation/Signing
 If a resource should not be part of the normalisation and later signing, the resource needs a special digest in the following format:
