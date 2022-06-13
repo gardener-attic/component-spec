@@ -216,6 +216,19 @@ After the digest for the normalised component-descriptor is calculated, it can b
 Verifying a component-descriptor consits of three steps. Failing any step **MUST** fail the validation.
 
 1. Verify the digest of all resources and component references. Recursively follow component references and create an in-memory representation of the referenced component-descriptor by accessing and digesting all resources and references. Do not trust any digest data in child component-descriptors. The digest of the normalised in-memory representation of a component-reference **MUST** match the digest in the root component-descriptor (that contains a signature we verify in the next step).
+```
+func digestForComponentDescriptor(cd) -> digest:
+  for reference in cd.component.componentReferences:
+    referencedCd = loadCdForReference(reference)
+    reference.Digest = digestForComponentDescriptor(referencedCd)
+
+  for resource in cd.component.Resource:
+    resource.Digest = loadAndDigestResource(resource)
+
+  normalisedCd = normaliseComponentDescriptor(cd)
+  digest = createDigestForNormalisedCd
+  return digest
+```
 2. verify the signature, identified by signatureName.
 3. check if calcluated digest of the normalised compponent-descriptor matches the digest in signatures.digest with hashAlgorithm, NormalisationAlgorithm and Value
 
