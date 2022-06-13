@@ -1,6 +1,6 @@
 # Signing
 
-Signing the component-descriptor allows to ensure that a part of the descriptor and referenced resources are identical to the authors component-descriptor.
+Signing the component-descriptor allows to ensure that a part of the descriptor and referenced resources are identical to the authors component-descriptor. I.a., this does not include the sources field.
 In order to add a signature to a component-descriptor, a digest is required at every resource and component reference as described in the next sections.
 
 ## Digests
