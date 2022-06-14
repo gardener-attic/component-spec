@@ -17,12 +17,9 @@ package signatures
 import "crypto"
 
 const (
-	NO_HASH = ""
-	SHA256  = "sha256"
+	SHA256 = "sha256"
 )
 
 var HashFunctions = map[string]crypto.Hash{
-	// NO_HASH defines 0 as hash function for signing directly without defining the hash algorithm
-	NO_HASH: crypto.Hash(0),
-	SHA256:  crypto.SHA256,
+	SHA256: crypto.SHA256,
 }
