@@ -44,8 +44,6 @@ type Hasher struct {
 	AlgorithmName string
 }
 
-const SHA256 = "sha256"
-
 // HasherForName creates a Hasher instance for the algorithmName.
 func HasherForName(algorithmName string) (*Hasher, error) {
 	switch strings.ToLower(algorithmName) {
