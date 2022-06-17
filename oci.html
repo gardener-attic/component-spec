@@ -34,6 +34,7 @@
         <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
         <script src="_static/jquery.js"></script>
         <script src="_static/underscore.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="_static/doctools.js"></script>
     
     <script type="text/javascript" src="_static/js/theme.js"></script>
@@ -173,14 +174,14 @@
            <div itemprop="articleBody">
             
   <div class="section" id="component-content-in-an-oci-registry">
-<h1>Component Content in an OCI Registry<a class="headerlink" href="#component-content-in-an-oci-registry" title="Permalink to this headline">¶</a></h1>
+<h1>Component Content in an OCI Registry<a class="headerlink" href="#component-content-in-an-oci-registry" title="Permalink to this heading">¶</a></h1>
 <p>Component descriptors and local content delivered with a component are stored
 in an OCI registry as OCI artefact. The component descriptor may describe
 references to to other artefacts in any repository what type is supported
 by an access type, regardless of the type of the artefact. There are dedicated
 access types to refer to artefacts stored in an OCI registry.</p>
 <div class="section" id="storing-components">
-<h2>Storing Components<a class="headerlink" href="#storing-components" title="Permalink to this headline">¶</a></h2>
+<h2>Storing Components<a class="headerlink" href="#storing-components" title="Permalink to this heading">¶</a></h2>
 <p>The content of a component is stored in the OCI registry as OCI artefact of the
 media type <code class="docutils literal notranslate"><span class="pre">application/vnd.gardener.cloud.cnudie.component.config.v1+json</span></code>.
 Hereby the content consists at least of the component descriptor itself, which
@@ -197,7 +198,7 @@ artefacts local to the component the component descriptor supports a dedicated
 access type <code class="docutils literal notranslate"><span class="pre">LocalBlob</span></code> with the blob digest as reference name.</p>
 </div>
 <div class="section" id="creating-components-during-the-build">
-<h2>Creating Components during the Build<a class="headerlink" href="#creating-components-during-the-build" title="Permalink to this headline">¶</a></h2>
+<h2>Creating Components during the Build<a class="headerlink" href="#creating-components-during-the-build" title="Permalink to this heading">¶</a></h2>
 <p>Typically versions for components are provided by builds.
 To support this scenario thers is a contract between a build and a
 component uploader tool.</p>
@@ -223,7 +224,7 @@ regular transports.</p>
 <img alt="_images/Build.png" src="_images/Build.png" />
 </div>
 <div class="section" id="cnudie-transport-format">
-<h2>CNUDIE Transport Format<a class="headerlink" href="#cnudie-transport-format" title="Permalink to this headline">¶</a></h2>
+<h2>CNUDIE Transport Format<a class="headerlink" href="#cnudie-transport-format" title="Permalink to this heading">¶</a></h2>
 <p>The transport format is based on tar archives (.tar or .tgz). There is one
 archive per OCI artefact that should be included in the transport.</p>
 <p>There will be two similar file system structures, one to describe component
@@ -231,7 +232,7 @@ artefact and one for describing regular standard OCI artefacts.</p>
 <p>The final transport file is then just an archive (tar, tgz) containing the
 artefact archives.</p>
 <div class="section" id="component-archive">
-<h3>Component Archive<a class="headerlink" href="#component-archive" title="Permalink to this headline">¶</a></h3>
+<h3>Component Archive<a class="headerlink" href="#component-archive" title="Permalink to this heading">¶</a></h3>
 <p>So far there is only a specification for the format for a component artefact.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>├── component-descriptor.yaml
 └── blobs
@@ -246,7 +247,7 @@ local access type in the component descriptor.</p>
 support streaming.</p>
 </div>
 <div class="section" id="oci-artefact">
-<h3>OCI Artefact<a class="headerlink" href="#oci-artefact" title="Permalink to this headline">¶</a></h3>
+<h3>OCI Artefact<a class="headerlink" href="#oci-artefact" title="Permalink to this heading">¶</a></h3>
 <p>A similar format for standard OCI Artefacts (including OCI Images as special case)
 could look like this</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>├── artefact-descriptor.yaml
@@ -266,7 +267,7 @@ support streaming, followed by the oci manifest.</p>
 </div>
 </div>
 <div class="section" id="oci-related-access-types">
-<h2>OCI related Access Types<a class="headerlink" href="#oci-related-access-types" title="Permalink to this headline">¶</a></h2>
+<h2>OCI related Access Types<a class="headerlink" href="#oci-related-access-types" title="Permalink to this heading">¶</a></h2>
 <p>To be able to describe access to artefacts stored in an OCU repository the
 component descriptor supports several dedicated access types.
 There are two ways to reference OCI stored artefacts:</p>

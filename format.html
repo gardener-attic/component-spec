@@ -34,6 +34,7 @@
         <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
         <script src="_static/jquery.js"></script>
         <script src="_static/underscore.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="_static/doctools.js"></script>
     
     <script type="text/javascript" src="_static/js/theme.js"></script>
@@ -172,12 +173,12 @@
            <div itemprop="articleBody">
             
   <div class="section" id="gardener-component-descriptor-format-specification">
-<h1>Gardener Component Descriptor Format Specification<a class="headerlink" href="#gardener-component-descriptor-format-specification" title="Permalink to this headline">¶</a></h1>
+<h1>Gardener Component Descriptor Format Specification<a class="headerlink" href="#gardener-component-descriptor-format-specification" title="Permalink to this heading">¶</a></h1>
 <p><cite>Gardener Component Descriptors</cite> are associative arrays adhering to a versioned schema. As they are
 intended to be a language-independent data format, also (de-)serialisation, publishing, discovery and
 retrieval needs to be defined.</p>
 <div class="section" id="data-format-serialisation-and-deserialisation">
-<h2>Data Format, Serialisation and Deserialisation<a class="headerlink" href="#data-format-serialisation-and-deserialisation" title="Permalink to this headline">¶</a></h2>
+<h2>Data Format, Serialisation and Deserialisation<a class="headerlink" href="#data-format-serialisation-and-deserialisation" title="Permalink to this heading">¶</a></h2>
 <p>In serialised form, <cite>Component Descriptors</cite> <em>MUST</em> be UTF-8-encoded. Either <a class="reference external" href="https://yaml.org">YAML</a>, or
 <a class="reference external" href="https://json.org">JSON</a> may be used. If <cite>YAML</cite> is used as serialisation format, only the subset of
 features defined by <cite>JSON</cite> must be used, thus allowing conversion to a <cite>JSON</cite> representation.</p>
@@ -190,14 +191,14 @@ to retain or not retain comments or formatting options.</p>
 is significant.</p>
 </div>
 <div class="section" id="publishing-and-discovery-context-repositories">
-<h2>Publishing and Discovery, Context Repositories<a class="headerlink" href="#publishing-and-discovery-context-repositories" title="Permalink to this headline">¶</a></h2>
+<h2>Publishing and Discovery, Context Repositories<a class="headerlink" href="#publishing-and-discovery-context-repositories" title="Permalink to this heading">¶</a></h2>
 <p>Each <cite>Component Version</cite> is unambiguously identified by a two-tuple of:</p>
 <ul class="simple">
 <li><p>component name</p></li>
 <li><p>component version</p></li>
 </ul>
 <div class="section" id="component-names">
-<h3>Component Names<a class="headerlink" href="#component-names" title="Permalink to this headline">¶</a></h3>
+<h3>Component Names<a class="headerlink" href="#component-names" title="Permalink to this heading">¶</a></h3>
 <p>Component Names reside in a global namespace. To avoid name conflicts <cite>Component Names</cite> <em>MUST</em>
 start with a valid domain name (as specified by RFC-1034, RFC-1035) with an optional URL path
 suffix (as specified by RFC-1738).</p>
@@ -210,7 +211,7 @@ code, and/or documentation) are hosted.</p>
 <p>For example <cite>github.com/gardener/gardener</cite>.</p>
 </div>
 <div class="section" id="component-versions">
-<h3>Component Versions<a class="headerlink" href="#component-versions" title="Permalink to this headline">¶</a></h3>
+<h3>Component Versions<a class="headerlink" href="#component-versions" title="Permalink to this heading">¶</a></h3>
 <p>Component Versions refer to specific snapshots of a component. A common scenario being the release
 of a component, thus offering it for consumption.</p>
 <p>Component Versions <em>MUST</em> adhere to a loosened variant of <a class="reference external" href="https://semver.org">Semver 2.0.0</a>.</p>
@@ -221,7 +222,7 @@ of a component, thus offering it for consumption.</p>
 </ul>
 </div>
 <div class="section" id="context-repositories">
-<h3>Context Repositories<a class="headerlink" href="#context-repositories" title="Permalink to this headline">¶</a></h3>
+<h3>Context Repositories<a class="headerlink" href="#context-repositories" title="Permalink to this heading">¶</a></h3>
 <p><cite>Component Descriptors</cite> are published to <cite>Context Repositories</cite>. Context repositories <em>MUST</em>
 always contain the transitive closure of all <cite>Component Descriptors</cite>, referenced by contained
 <cite>Comonent Descriptor</cite> versions.</p>

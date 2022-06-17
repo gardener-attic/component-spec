@@ -34,6 +34,7 @@
         <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
         <script src="_static/jquery.js"></script>
         <script src="_static/underscore.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="_static/doctools.js"></script>
     
     <script type="text/javascript" src="_static/js/theme.js"></script>
@@ -173,7 +174,7 @@
            <div itemprop="articleBody">
             
   <div class="section" id="component-descriptor-registries">
-<h1>Component Descriptor Registries<a class="headerlink" href="#component-descriptor-registries" title="Permalink to this headline">¶</a></h1>
+<h1>Component Descriptor Registries<a class="headerlink" href="#component-descriptor-registries" title="Permalink to this heading">¶</a></h1>
 <p>Component Descriptor Registries are used to store <cite>Component Descriptors</cite>. Using a
 <cite>Repository Context</cite> configuration, and a <cite>Component Name</cite> and <cite>Component Version</cite>, it is possible
 to unambiguously reference a <cite>Component Descriptor</cite> for the given component version.</p>
@@ -181,7 +182,7 @@ to unambiguously reference a <cite>Component Descriptor</cite> for the given com
 <p>There can potentially be many different technical implementations. However, for the time being,
 there is only one, using an OCI Image Registry.</p>
 <div class="section" id="component-descriptor-registries-backed-by-oci-image-registry">
-<h2>Component Descriptor Registries backed by OCI Image Registry<a class="headerlink" href="#component-descriptor-registries-backed-by-oci-image-registry" title="Permalink to this headline">¶</a></h2>
+<h2>Component Descriptor Registries backed by OCI Image Registry<a class="headerlink" href="#component-descriptor-registries-backed-by-oci-image-registry" title="Permalink to this heading">¶</a></h2>
 <p>Component Descriptor Registries backed by an OCI Image Registry <em>MUST</em> specify a <cite>baseUrl</cite>. Said
 URL <em>MUST</em> refer to an OCI Image Registry (for example <cite>eu.gcr.io/gardener-project</cite>).</p>
 <p>The base URL <em>MAY</em> refer to sub-path on a OCI Image Registry.</p>
@@ -200,7 +201,7 @@ the <cite>Component Descriptor</cite></p></li>
 <li><p>the octet-sequence of the serialised <cite>Component Descriptor</cite></p></li>
 </ul>
 <div class="section" id="component-name-mapping">
-<h3>Component Name Mapping<a class="headerlink" href="#component-name-mapping" title="Permalink to this headline">¶</a></h3>
+<h3>Component Name Mapping<a class="headerlink" href="#component-name-mapping" title="Permalink to this heading">¶</a></h3>
 <p>Any OCI Image Registry used as a Component Descriptor registry <em>MUST</em> define an unambiguous
 mapping of <cite>Component Name</cite>, <cite>Component Version</cite>-tuples to OCI Image References.</p>
 <p>The following Component Name mappings are known:</p>
@@ -209,7 +210,7 @@ mapping of <cite>Component Name</cite>, <cite>Component Version</cite>-tuples to
 <li><p>sha256-digest</p></li>
 </ul>
 <div class="section" id="component-name-mapping-urlpath">
-<h4>Component Name Mapping <cite>urlPath</cite><a class="headerlink" href="#component-name-mapping-urlpath" title="Permalink to this headline">¶</a></h4>
+<h4>Component Name Mapping <cite>urlPath</cite><a class="headerlink" href="#component-name-mapping-urlpath" title="Permalink to this heading">¶</a></h4>
 <p>Component Descriptor OCI Names are constructed like so:</p>
 <p><cite>&lt;baseUrl&gt;/componentDescriptors/&lt;componentName&gt;:&lt;versionTag&gt;</cite></p>
 <p>Where:</p>
@@ -220,7 +221,7 @@ mapping of <cite>Component Name</cite>, <cite>Component Version</cite>-tuples to
 </ul>
 </div>
 <div class="section" id="component-name-mapping-sha256-digest">
-<h4>Component Name Mapping <cite>sha256-digest</cite><a class="headerlink" href="#component-name-mapping-sha256-digest" title="Permalink to this headline">¶</a></h4>
+<h4>Component Name Mapping <cite>sha256-digest</cite><a class="headerlink" href="#component-name-mapping-sha256-digest" title="Permalink to this heading">¶</a></h4>
 <p>Component Descriptor OCI Names are constructed like so:</p>
 <p><cite>&lt;baseUrl&gt;/&lt;componentNameDigest&gt;:&lt;versionTag&gt;</cite></p>
 <p>Where:</p>
