@@ -269,11 +269,8 @@ class SourceIdentity(ArtifactIdentity):
     pass
 
 
-@dc(frozen=True)
-class ComponentIdentity:
-    name: str
-    version: str
-
+class ComponentIdentity(ArtifactIdentity):
+    pass
 
 class Artifact:
     '''
