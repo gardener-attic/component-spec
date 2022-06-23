@@ -250,6 +250,12 @@ class ArtifactIdentity:
             return False
         return self._id_attrs.__ge__(other._id_attrs)
 
+    def __getattr__(self, name):
+        for attr, val in self._id_attrs:
+            if attr == name:
+                return val
+        raise AttributeError(name)
+
 
 class ComponentReferenceIdentity(ArtifactIdentity):
     pass
