@@ -416,6 +416,14 @@ class Component(LabelMethodsMixin):
     def identity(self):
         return ComponentIdentity(name=self.name, version=self.version)
 
+    def __eq__(self, other) -> bool:
+        if not isinstance(other, Component):
+            return False
+        return self.identity() == other.identity()
+
+    def __hash__(self):
+        return hash(self.identity())
+
 
 @functools.lru_cache
 def _read_schema_file(schema_file_path: str):
