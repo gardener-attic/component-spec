@@ -86,10 +86,6 @@ func normaliseComponentDescriptor(cd cdv2.ComponentDescriptor) ([]byte, error) {
 		return nil, fmt.Errorf("component descriptor %s:%s is not normaliseable: %w", cd.Name, cd.Version, err)
 	}
 
-	meta := []Entry{
-		{"schemaVersion": cd.Metadata.Version},
-	}
-
 	componentReferences := []interface{}{}
 	for _, ref := range cd.ComponentSpec.ComponentReferences {
 		extraIdentity := buildExtraIdentity(ref.ExtraIdentity)
@@ -148,12 +144,17 @@ func normaliseComponentDescriptor(cd cdv2.ComponentDescriptor) ([]byte, error) {
 		{"name": cd.ComponentSpec.Name},
 		{"version": cd.ComponentSpec.Version},
 		{"provider": cd.ComponentSpec.Provider},
-		{"componentReferences": componentReferences},
-		{"resources": resources},
+	}
+
+	if len(componentReferences) > 0 {
+		componentSpec = append(componentSpec, Entry{"componentReferences": componentReferences})
+	}
+
+	if len(resources) > 0 {
+		componentSpec = append(componentSpec, Entry{"resources": resources})
 	}
 
 	normalisedComponentDescriptor := []Entry{
-		{"meta": meta},
 		{"component": componentSpec},
 	}
 
