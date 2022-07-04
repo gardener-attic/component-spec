@@ -9,7 +9,7 @@ require (
 	github.com/onsi/ginkgo v1.14.0
 	github.com/onsi/gomega v1.10.1
 	github.com/opencontainers/go-digest v1.0.0
-	github.com/opencontainers/image-spec v1.0.1
+	github.com/opencontainers/image-spec v1.0.2
 	github.com/xeipuuv/gojsonschema v1.2.0
 	golang.org/x/lint v0.0.0-20201208152925-83fdc39ff7b5
 	k8s.io/apimachinery v0.18.6
