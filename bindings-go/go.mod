@@ -4,7 +4,7 @@ go 1.18
 
 require (
 	github.com/ghodss/yaml v1.0.0
-	github.com/go-logr/logr v0.4.0
+	github.com/go-logr/logr v1.2.3
 	github.com/mandelsoft/vfs v0.0.0-20210530103237-5249dc39ce91
 	github.com/onsi/ginkgo v1.14.0
 	github.com/onsi/gomega v1.10.1
