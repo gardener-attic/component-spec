@@ -29,6 +29,13 @@ class OciBlobRef:
     digest: str
     size: int
     mediaType: str
+    annotations: typing.Optional[typing.Dict] = None
+
+    def as_dict(self) -> dict:
+        raw = dataclasses.asdict(self)
+        # fields that are None should not be included in the output
+        raw = {k:v for k,v in raw.items() if v is not None}
+        return raw
 
 
 @dc
