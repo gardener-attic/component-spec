@@ -237,10 +237,4 @@ func digestForComponentDescriptor(cd) -> digest:
 Signature verification with RSASSA-PKCS1-V1_5 requires a Public Key. This is used in step 2 of the verification algorithm.
 
 ### Verify with X509
-
-- Command in component cli to verify a signature with a x509 cert
-
-- high level steps:
-  1) verify the validity of the "signing" certificate
-     - possible to hand over certs for rootCA and intermediateCAs to the command
-  2) verify the CD signature with the rsa public key of the "signing" certificate
+Signature verification with X509 certificates require a validation of the "signing" certificate and the signature itself. First, the validity of the "signing" certificate is checked with a root CA and a chain of intermediate certificates. Afterwards, the CD signature is verified with the public key in the "signing" certificate.
