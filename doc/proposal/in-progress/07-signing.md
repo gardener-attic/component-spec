@@ -9,7 +9,7 @@ Digests are used for componentReferences and resources to indicate a hash for th
 
 Fields:
 digest:
-  - hashAlgorithm: Hash algorithm used
+  - hashAlgorithm: Hash algorithm used, e.g. 'sha256'
   - normalisationAlgorithm: normalisation Algorithm, defines which subset of the data is used as normalised representation
   - value: the digest value for the normalised data as defined by normalisationAlgorithm with the hash algorithm defined by hashAlgorithm
 
