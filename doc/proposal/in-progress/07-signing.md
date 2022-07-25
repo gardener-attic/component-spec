@@ -205,12 +205,6 @@ The digest fields *MUST* be calculated during normalisation and already existing
 
 After the digest for the normalised component-descriptor is calculated, it can be signed using RSASSA-PKCS1-V1_5 as signature.algorithm. The corresponding signature is stored hex encoded in signature.value with a mediaType of application/vnd.ocm.signature.rsa.
 
-### Signing Server
-
-- Signing Server provides 1 endpoint "/sign" which directly signs the bytes of the request body with RSA
-
-- Component CLI sends Digest of CD to Signing Server and adds the returned signature in PEM format to the CD
-
 ## Verification Algorithm
 
 Verifying a component-descriptor consits of three steps. Failing any step **MUST** fail the validation.
