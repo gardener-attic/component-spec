@@ -178,6 +178,29 @@ class DigestSpec:
     normalisationAlgorithm: str
     value: str
 
+
+# EXCLUDE_FROM_SIGNATURE used in digest field for normalisationAlgorithm
+# (in combination with NO_DIGEST for hashAlgorithm and value) to indicate
+# the resource content should not be part of the signature
+EXCLUDE_FROM_SIGNATURE = "EXCLUDE-FROM-SIGNATURE"
+
+# NO_DIGEST used in digest field for hashAlgorithm and value
+# (in combination with EXCLUDE_FROM_SIGNATURE for normalisationAlgorithm)
+# to indicate the resource content should not be part of the signature
+NO_DIGEST = "NO-DIGEST"
+
+
+@dc
+class ExcludeFromSignatureDigest(DigestSpec):
+    '''
+    ExcludeFromSignatureDigest is a special digest notation to indicate the resource
+    content should not be part of the signature
+    '''
+    hashAlgorithm: str = NO_DIGEST
+    normalisationAlgorithm: str = EXCLUDE_FROM_SIGNATURE
+    value: str = NO_DIGEST
+
+
 @dc
 class SignatureSpec:
     algorithm: str
