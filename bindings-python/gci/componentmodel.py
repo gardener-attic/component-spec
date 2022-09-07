@@ -292,7 +292,7 @@ class ComponentIdentity:
     version: str
 
 
-class Artifact:
+class Artifact(LabelMethodsMixin):
     '''
     base class for ComponentReference, Resource, Source
     '''
