@@ -55,7 +55,7 @@ func OCIRef(repoCtx v2.OCIRegistryRepository, name, version string) (string, err
 		baseUrl = "http://" + baseUrl
 	}
 
-	if len(baseUrl) > 1024 {
+	if len(baseUrl) > 2048 {
 		return "", fmt.Errorf("baseUrl too long (>1024)")
 	}
 	u, err := url.Parse(baseUrl)
