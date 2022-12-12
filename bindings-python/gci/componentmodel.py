@@ -10,7 +10,7 @@ import dacite
 import jsonschema
 import yaml
 
-from . import path_to_json_schema
+from . import default_json_schema_path
 
 dc = dataclasses.dataclass
 
@@ -465,7 +465,7 @@ class ComponentDescriptor:
         if validation_mode is ValidationMode.NONE:
             return
 
-        json_schema_file_path = json_schema_file_path or path_to_json_schema()
+        json_schema_file_path = json_schema_file_path or default_json_schema_path
         schema_dict = _read_schema_file(json_schema_file_path)
 
         try:
