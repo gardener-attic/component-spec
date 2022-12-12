@@ -337,7 +337,6 @@ definitions:
         oneOf:
         - type: 'null'
         - $ref: '#/definitions/digestSpec'
-      
 
   httpAccess:
     type: 'object'
