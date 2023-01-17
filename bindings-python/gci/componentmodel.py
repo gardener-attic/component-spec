@@ -60,7 +60,7 @@ AccessTypeOrStr = typing.Union[AccessType, str]
 
 @dc(frozen=True, kw_only=True)
 class ResourceAccess:
-    type: AccessTypeOrStr
+    type: typing.Optional[AccessTypeOrStr] = AccessType.NONE
 
 
 @dc(frozen=True, kw_only=True)
