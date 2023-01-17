@@ -32,8 +32,8 @@ class AccessType(enum.Enum):
     GITHUB = 'github' # XXX: new: gitHub/v1
     LOCAL_BLOB = 'localBlob/v1'
     NONE = 'None'  # the resource is only declared informally (e.g. generic)
-    OCI_REGISTRY = 'ociRegistry' # XXX: new: ociArtifact/v1
     OCI_BLOB = 'ociBlob/v1'
+    OCI_REGISTRY = 'ociRegistry' # XXX: new: ociArtifact/v1
     RELATIVE_OCI_REFERENCE = 'relativeOciReference'
     S3 = 's3' # XXX: new: s3/v1
 
