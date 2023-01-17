@@ -249,6 +249,7 @@ var _ = Describe("Validation", func() {
 				"Field": Equal("component.componentReferences[0].version"),
 			}))))
 		})
+
 	})
 
 
