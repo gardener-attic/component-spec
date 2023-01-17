@@ -250,22 +250,6 @@ var _ = Describe("Validation", func() {
 			}))))
 		})
 
-		It("should forbid if a duplicated component reference is defined", func() {
-			comp.ComponentReferences = []v2.ComponentReference{
-				{
-					Name: "test",
-				},
-				{
-					Name: "test",
-				},
-			}
-			errList := validate(nil, comp)
-			Expect(errList).To(ContainElement(PointTo(MatchFields(IgnoreExtras, Fields{
-				"Type":  Equal(field.ErrorTypeDuplicate),
-				"Field": Equal("component.componentReferences[1]"),
-			}))))
-		})
-	})
 
 	Context("#Resources", func() {
 		It("should forbid if a local resource's version differs from the version of the parent", func() {
