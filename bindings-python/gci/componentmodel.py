@@ -386,8 +386,8 @@ class Resource(Artifact, LabelMethodsMixin):
         OciAccess,
         RelativeOciAccess,
         S3Access,
+        ResourceAccess,
         None,
-        dict,
     ]
     digest: typing.Optional[DigestSpec] = None
     extraIdentity: typing.Dict[str, str] = dataclasses.field(default_factory=dict)

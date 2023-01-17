@@ -31,9 +31,9 @@ def test_deserialisation_of_custom_resources():
     component_descriptor = cm.ComponentDescriptor.from_dict(
         component_descriptor_dict=component_descriptor_dict,
     )
-    assert isinstance(component_descriptor.component.resources[0].access, dict)
+    assert isinstance(component_descriptor.component.resources[0].access, cm.ResourceAccess)
     assert component_descriptor.component.resources[1].access is None
-    assert isinstance(component_descriptor.component.resources[2].access, dict)
+    assert isinstance(component_descriptor.component.resources[2].access, cm.ResourceAccess)
     assert isinstance(component_descriptor.component.resources[3].access, cm.RelativeOciAccess)
 
 
