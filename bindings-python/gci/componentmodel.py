@@ -38,40 +38,64 @@ class AccessType(enum.Enum):
     S3 = 's3' # XXX: new: s3/v1
 
 
-class SourceType(enum.Enum):
-    GIT = 'git'
+# hack: patch enum to accept "aliases"
+# -> the values defined in enum above will be  used for serialisation; the aliases are also
+# accepted for deserialisation
+# note: the `/v1` suffix is _always_ optional (if absent, /v1 is implied)
+AccessType._value2member_map_ |= {
+    'github/v1': AccessType.GITHUB,
+    'localBlob': AccessType.LOCAL_BLOB,
+    'none': AccessType.NONE,
+    'OCIRegistry': AccessType.OCI_REGISTRY,
+    'OCIRegistry/v1': AccessType.OCI_REGISTRY,
+    'ociArtefact': AccessType.OCI_REGISTRY,
+    'ociArtifact': AccessType.OCI_REGISTRY,
+    'ociArtifact/v1': AccessType.OCI_REGISTRY,
+    's3/v1': AccessType.S3,
+}
 
 
-class ResourceType(enum.Enum):
-    OCI_IMAGE = 'ociImage'
-    COSIGN_SIGNATURE = 'cosignSignature'
-    GENERIC = 'generic'
-
-
-class ResourceRelation(enum.Enum):
-    LOCAL = 'local'
-    EXTERNAL = 'external'
-
-
-@dc(frozen=True)
+@dc(frozen=True, kw_only=True)
 class ResourceAccess:
-    type: typing.Union[AccessType, str]
+    type: typing.Union[AccessType, str] = AccessType.NONE
 
 
-@dc(frozen=True)
+@dc(frozen=True, kw_only=True)
+class LocalBlobAccess(ResourceAccess):
+    '''
+    a blob that is accessible locally to the component-descriptor
+
+    see: https://github.com/open-component-model/ocm-spec/blob/main/doc/appendix/B/localBlob.md
+    '''
+    type: AccessType = AccessType.LOCAL_BLOB
+    localReference: str
+    mediaType: str = 'application/data'
+    referenceName: typing.Optional[str] = None
+    globalAccess: typing.Optional[str] = None
+
+
+@dc(frozen=True, kw_only=True)
 class OciAccess(ResourceAccess):
+    type: AccessType = AccessType.OCI_REGISTRY
     imageReference: str
 
 
-@dc(frozen=True)
+@dc(frozen=True, kw_only=True)
+class OciBlobAccess(OciAccess):
+    type: AccessType = AccessType.OCI_BLOB
+    mediaType: str
+    digest: str
+    size: int
+
+@dc(frozen=True, kw_only=True)
 class RelativeOciAccess(ResourceAccess):
     reference: str
 
 
-@dc(frozen=True)
+@dc(frozen=True, kw_only=True)
 class GithubAccess(ResourceAccess):
     repoUrl: str
-    ref: str
+    ref: typing.Optional[str] = None
     commit: typing.Optional[str] = None
 
     def __post_init__(self):
@@ -85,15 +109,7 @@ class GithubAccess(ResourceAccess):
         if not parsed.scheme:
             # prepend dummy-schema to properly parse hostname and path (and rm it again later)
             parsed = urllib.parse.urlparse('dummy://' + self.repoUrl)
-            parsed = urllib.parse.urlunparse((
-                '',
-                parsed.netloc,
-                parsed.path,
-                '',
-                '',
-                '',
-            ))
-            parsed = urllib.parse.urlparse(parsed)
+            parsed = urllib.parse.urlparse(f'{parsed.netloc}{parsed.path}')
 
         return parsed
 
@@ -107,26 +123,26 @@ class GithubAccess(ResourceAccess):
         return self._normalise_and_parse_url().hostname
 
 
-@dc(frozen=True)
-class HttpAccess(ResourceAccess):
-    url: str
-
-
-@dc(frozen=True)
+@dc(frozen=True, kw_only=True)
 class S3Access(ResourceAccess):
     bucketName: str
     objectKey: str
+    region: typing.Optional[str] = None
 
 
-@dc(frozen=True)
-class LocalOCIBlobAccess(ResourceAccess):
-    digest: str
+class SourceType(enum.Enum):
+    GIT = 'git'
 
 
-@dc(frozen=True)
-class LocalFilesystemBlobAccess(ResourceAccess):
-    filename: str
-    mediaType: typing.Optional[str] = None
+class ResourceType(enum.Enum):
+    OCI_IMAGE = 'ociImage'
+    COSIGN_SIGNATURE = 'cosignSignature'
+    GENERIC = 'generic'
+
+
+class ResourceRelation(enum.Enum):
+    LOCAL = 'local'
+    EXTERNAL = 'external'
 
 
 @dc(frozen=True)
@@ -211,14 +227,6 @@ class Signature:
     name: str
     digest: DigestSpec
     signature: SignatureSpec
-
-class Provider(enum.Enum):
-    '''
-    internal: from repositoryContext-owner
-    external: from 3rd-party (not repositoryContext-owner)
-    '''
-    INTERNAL = 'internal'
-    EXTERNAL = 'external'
 
 
 @dc(frozen=True)
@@ -371,9 +379,7 @@ class Resource(Artifact, LabelMethodsMixin):
         # Order of types is important for deserialization. The first matching type will be taken,
         # i.e. keep generic accesses at the bottom of the list
         GithubAccess,
-        HttpAccess,
-        LocalFilesystemBlobAccess,
-        LocalOCIBlobAccess,
+        OciBlobAccess,
         OciAccess,
         RelativeOciAccess,
         S3Access,
@@ -386,21 +392,50 @@ class Resource(Artifact, LabelMethodsMixin):
     labels: typing.List[Label] = dataclasses.field(default_factory=tuple)
     srcRefs: typing.List[SourceReference] = dataclasses.field(default_factory=tuple)
 
-@dc(frozen=True)
+
+@dc(frozen=True, kw_only=True)
 class RepositoryContext:
-    pass  # actually, must have attr `type`
+    type: AccessType
 
 
-class OciComponentNameMapping(enum.Enum):
-    URL_PATH = 'urlPath'
-    SHA256_DIGEST = 'sha256-digest'
-
-
-@dc(frozen=True)
+@dc(frozen=True, kw_only=True)
 class OciRepositoryContext(RepositoryContext):
     baseUrl: str
-    componentNameMapping: OciComponentNameMapping = OciComponentNameMapping.URL_PATH
+    subPath: typing.Optional[str] = None
     type: AccessType = AccessType.OCI_REGISTRY
+
+    @property
+    def oci_ref(self):
+        if not self.subPath:
+            return self.baseUrl
+        return f'{self.baseUrl.rstrip("/")}/{self.subPath.lstrip("/")}'
+
+    def component_oci_ref(self, name: typing.Union[str, 'Component', 'ComponentIdentity'], /):
+        if isinstance(name, Component):
+            name = name.name
+        elif isinstance(name, ComponentIdentity):
+            name = name.name
+
+        return '/'.join((
+            self.oci_ref,
+            'component-descriptors',
+            name.lstrip('/').lower(), # oci-spec only allows lowercase
+        ))
+
+    def component_version_oci_ref(
+        self,
+        name: typing.Union[str, 'Component', 'ComponentIdentity'],
+        version: str=None,
+    ):
+        if isinstance(name, Component):
+            name = name.name
+        elif isinstance(name, ComponentIdentity):
+            name = name.name
+
+        if not version:
+            name, version = name.rsplit(':', 1)
+
+        return f'{self.component_oci_ref(name)}:{version}'
 
 
 @dc
@@ -409,7 +444,7 @@ class ComponentSource(Artifact, LabelMethodsMixin):
     access: GithubAccess
     version: typing.Optional[str] = None  # introduce this backwards-compatible for now
     extraIdentity: typing.Dict[str, str] = dataclasses.field(default_factory=dict)
-    type: SourceType = SourceType.GIT
+    type: typing.Union[SourceType, str] = SourceType.GIT
     labels: typing.List[Label] = dataclasses.field(default_factory=list)
 
 
@@ -419,7 +454,7 @@ class Component(LabelMethodsMixin):
     version: str  # relaxed semver
 
     repositoryContexts: typing.List[OciRepositoryContext]
-    provider: Provider
+    provider: typing.Union[str, dict]
 
     sources: typing.List[ComponentSource]
     componentReferences: typing.List[ComponentReference]
@@ -490,9 +525,7 @@ class ComponentDescriptor:
             data=component_descriptor_dict,
             config=dacite.Config(
                 cast=[
-                    OciComponentNameMapping,
                     AccessType,
-                    Provider,
                     ResourceType,
                     SchemaVersion,
                     SourceType,
@@ -501,7 +534,6 @@ class ComponentDescriptor:
                 type_hooks={
                     typing.Union[AccessType, str]: functools.partial(enum_or_string, enum_type=AccessType),
                     typing.Union[ResourceType, str]: functools.partial(enum_or_string, enum_type=ResourceType),
-                    typing.Union[OciComponentNameMapping, str]: functools.partial(enum_or_string, enum_type=OciComponentNameMapping),
                 },
             )
         )
