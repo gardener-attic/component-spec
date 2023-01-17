@@ -11,9 +11,13 @@ import gci.componentmodel
 logger = logging.getLogger(__name__)
 
 component_descriptor_fname = 'component-descriptor.yaml'
-# mimetype for component-descriptor-blobs
+# mimetype for component-descriptor-blobs (deprecated)
 component_descriptor_mimetype = \
     'application/vnd.gardener.cloud.cnudie.component-descriptor.v2+yaml+tar'
+component_descriptor_mimetypes = (
+    component_descriptor_mimetype,
+    'application/vnd.ocm.software.component-descriptor.v2+yaml+tar'
+)
 # mimetype for component-descriptor-oci-cfg-blobs
 component_descriptor_cfg_mimetype = \
     'application/vnd.gardener.cloud.cnudie.component.config.v1+json'
