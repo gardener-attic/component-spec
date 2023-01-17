@@ -252,7 +252,6 @@ var _ = Describe("Validation", func() {
 
 	})
 
-
 	Context("#Resources", func() {
 		It("should forbid if a local resource's version differs from the version of the parent", func() {
 			comp.Resources = []v2.Resource{
