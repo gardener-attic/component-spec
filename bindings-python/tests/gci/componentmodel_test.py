@@ -31,9 +31,9 @@ def test_deserialisation_of_custom_resources():
     component_descriptor = cm.ComponentDescriptor.from_dict(
         component_descriptor_dict=component_descriptor_dict,
     )
-    assert isinstance(component_descriptor.component.resources[0].access, cm.LocalFilesystemBlobAccess)
+    assert isinstance(component_descriptor.component.resources[0].access, dict)
     assert component_descriptor.component.resources[1].access is None
-    assert isinstance(component_descriptor.component.resources[2].access, cm.ResourceAccess)
+    assert isinstance(component_descriptor.component.resources[2].access, dict)
     assert isinstance(component_descriptor.component.resources[3].access, cm.RelativeOciAccess)
 
 
@@ -292,7 +292,6 @@ def test_set_label():
             version='v0.1.0',
             type=cm.ResourceType.OCI_IMAGE,
             access=cm.OciAccess(
-                cm.AccessType.OCI_REGISTRY,
                 imageReference='test-repo.com/test-resource:v0.1.0',
             ),
             labels=testcase.input_labels,

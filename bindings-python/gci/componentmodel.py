@@ -45,6 +45,7 @@ class AccessType(enum.Enum):
 AccessType._value2member_map_ |= {
     'github/v1': AccessType.GITHUB,
     'localBlob': AccessType.LOCAL_BLOB,
+    'localFilesystemBlob': AccessType.LOCAL_BLOB,
     'none': AccessType.NONE,
     'OCIRegistry': AccessType.OCI_REGISTRY,
     'OCIRegistry/v1': AccessType.OCI_REGISTRY,
@@ -54,10 +55,12 @@ AccessType._value2member_map_ |= {
     's3/v1': AccessType.S3,
 }
 
+AccessTypeOrStr = typing.Union[AccessType, str]
+
 
 @dc(frozen=True, kw_only=True)
 class ResourceAccess:
-    type: typing.Union[AccessType, str] = AccessType.NONE
+    type: AccessTypeOrStr
 
 
 @dc(frozen=True, kw_only=True)
@@ -67,7 +70,7 @@ class LocalBlobAccess(ResourceAccess):
 
     see: https://github.com/open-component-model/ocm-spec/blob/main/doc/appendix/B/localBlob.md
     '''
-    type: AccessType = AccessType.LOCAL_BLOB
+    type: AccessTypeOrStr = AccessType.LOCAL_BLOB
     localReference: str
     mediaType: str = 'application/data'
     referenceName: typing.Optional[str] = None
@@ -82,7 +85,7 @@ class OciAccess(ResourceAccess):
 
 @dc(frozen=True, kw_only=True)
 class OciBlobAccess(OciAccess):
-    type: AccessType = AccessType.OCI_BLOB
+    type: AccessTypeOrStr = AccessType.OCI_BLOB
     mediaType: str
     digest: str
     size: int
@@ -97,6 +100,7 @@ class GithubAccess(ResourceAccess):
     repoUrl: str
     ref: typing.Optional[str] = None
     commit: typing.Optional[str] = None
+    type: AccessTypeOrStr = AccessType.GITHUB
 
     def __post_init__(self):
         parsed = self._normalise_and_parse_url()
@@ -109,7 +113,6 @@ class GithubAccess(ResourceAccess):
         if not parsed.scheme:
             # prepend dummy-schema to properly parse hostname and path (and rm it again later)
             parsed = urllib.parse.urlparse('dummy://' + self.repoUrl)
-            parsed = urllib.parse.urlparse(f'{parsed.netloc}{parsed.path}')
 
         return parsed
 
@@ -383,8 +386,8 @@ class Resource(Artifact, LabelMethodsMixin):
         OciAccess,
         RelativeOciAccess,
         S3Access,
-        ResourceAccess,
         None,
+        dict,
     ]
     digest: typing.Optional[DigestSpec] = None
     extraIdentity: typing.Dict[str, str] = dataclasses.field(default_factory=dict)
@@ -395,14 +398,14 @@ class Resource(Artifact, LabelMethodsMixin):
 
 @dc(frozen=True, kw_only=True)
 class RepositoryContext:
-    type: AccessType
+    type: AccessTypeOrStr
 
 
 @dc(frozen=True, kw_only=True)
 class OciRepositoryContext(RepositoryContext):
     baseUrl: str
     subPath: typing.Optional[str] = None
-    type: AccessType = AccessType.OCI_REGISTRY
+    type: AccessTypeOrStr = AccessType.OCI_REGISTRY
 
     @property
     def oci_ref(self):
@@ -525,7 +528,6 @@ class ComponentDescriptor:
             data=component_descriptor_dict,
             config=dacite.Config(
                 cast=[
-                    AccessType,
                     ResourceType,
                     SchemaVersion,
                     SourceType,
@@ -534,6 +536,7 @@ class ComponentDescriptor:
                 type_hooks={
                     typing.Union[AccessType, str]: functools.partial(enum_or_string, enum_type=AccessType),
                     typing.Union[ResourceType, str]: functools.partial(enum_or_string, enum_type=ResourceType),
+                    AccessType: functools.partial(enum_or_string, enum_type=AccessType),
                 },
             )
         )
