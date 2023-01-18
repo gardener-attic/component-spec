@@ -134,10 +134,10 @@ class S3Access(ResourceAccess):
 
 
 class ArtefactType(enum.Enum):
-    GIT = 'git'
-    OCI_IMAGE = 'ociImage'
     COSIGN_SIGNATURE = 'cosignSignature'
     GENERIC = 'generic'
+    GIT = 'git'
+    OCI_IMAGE = 'ociImage'
 
 
 # aliases (deprecated!) for backwards-compatibility
