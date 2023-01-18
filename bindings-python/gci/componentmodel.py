@@ -1,4 +1,5 @@
 import dataclasses
+import datetime
 import enum
 import functools
 import io
@@ -7,6 +8,7 @@ import typing
 import urllib.parse
 
 import dacite
+import dateutil.parser
 import jsonschema
 import yaml
 
@@ -482,6 +484,8 @@ class Component(LabelMethodsMixin):
 
     labels: typing.List[Label] = dataclasses.field(default_factory=list)
 
+    creationTime: typing.Optional[datetime.datetime] = None
+
     def current_repository_ctx(self):
         if not self.repositoryContexts:
             return None
@@ -561,6 +565,8 @@ class ComponentDescriptor:
                     AccessType: functools.partial(
                         enum_or_string, enum_type=AccessType
                     ),
+                    datetime.datetime:
+                        lambda v: dateutil.parser.isoparse(v) if v else None,
                 },
             )
         )

@@ -8,6 +8,8 @@ repo_root="$(readlink -f "${own_dir}/..")"
 function python_unittests {
   echo "running python unittests"
 
+  python3 -m pip install python-dateutil
+
   python_dir="${repo_root}/bindings-python"
   PYTHONPATH="${python_dir}" \
     python3 -m pytest "${python_dir}"

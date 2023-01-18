@@ -12,6 +12,8 @@ component:
 
   provider: 'internal'
 
+  creationTime: '1337-01-01T13:37:00Z'
+
   labels:
     - name: 'a_label'
       value: 'a_value'

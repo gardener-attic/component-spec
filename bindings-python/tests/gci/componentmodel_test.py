@@ -1,4 +1,5 @@
 import dataclasses
+import datetime
 import os
 import typing
 import unittest
@@ -22,6 +23,7 @@ def test_deserialisation():
     assert component_descriptor.component.resources[0].type is cm.ArtefactType.OCI_IMAGE
     assert isinstance(component_descriptor.component.resources[0].access, cm.OciAccess)
     assert component_descriptor.component.resources[0].access.type is cm.AccessType.OCI_REGISTRY
+    assert isinstance(component_descriptor.component.creationTime, datetime.datetime)
 
 
 def test_deserialisation_of_custom_resources():
