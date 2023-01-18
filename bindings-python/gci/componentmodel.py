@@ -137,6 +137,22 @@ class ArtefactType(enum.Enum):
     COSIGN_SIGNATURE = 'cosignSignature'
     GIT = 'git'
     OCI_IMAGE = 'ociImage'
+    OCI_ARTEFACT = 'ociArtifact/v1'
+    HELM_CHART = 'helmChart/v1'
+    BLOB = 'blob/v1'
+
+
+# hack: patch enum to accept "aliases"
+# -> the values defined in enum above will be  used for serialisation; the aliases are also
+# accepted for deserialisation
+# note: the `/v1` suffix is _always_ optional (if absent, /v1 is implied)
+ArtefactType._value2member_map_ |= {
+    'blob': ArtefactType.BLOB,
+    'git/v1': ArtefactType.GIT,
+    'ociImage/v1': ArtefactType.OCI_IMAGE,
+    'ociImage': ArtefactType.OCI_IMAGE,
+    'helmChart': ArtefactType.HELM_CHART,
+}
 
 
 # aliases (deprecated!) for backwards-compatibility
@@ -530,11 +546,11 @@ class ComponentDescriptor:
             config=dacite.Config(
                 cast=[
                     SchemaVersion,
-                    ArtefactType,
                     ResourceRelation,
                 ],
                 type_hooks={
                     typing.Union[AccessType, str]: functools.partial(enum_or_string, enum_type=AccessType),
+                    typing.Union[ArtefactType, str]: functools.partial(enum_or_string, enum_type=ArtefactType),
                     typing.Union[ArtifactIdentity, str]: functools.partial(enum_or_string, enum_type=ArtefactType),
                     AccessType: functools.partial(enum_or_string, enum_type=AccessType),
                 },
