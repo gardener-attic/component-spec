@@ -133,14 +133,16 @@ class S3Access(ResourceAccess):
     region: typing.Optional[str] = None
 
 
-class SourceType(enum.Enum):
+class ArtefactType(enum.Enum):
     GIT = 'git'
-
-
-class ResourceType(enum.Enum):
     OCI_IMAGE = 'ociImage'
     COSIGN_SIGNATURE = 'cosignSignature'
     GENERIC = 'generic'
+
+
+# aliases (deprecated!) for backwards-compatibility
+SourceType = ArtefactType
+ResourceType = ArtefactType
 
 
 class ResourceRelation(enum.Enum):
@@ -377,7 +379,7 @@ class SourceReference(LabelMethodsMixin):
 class Resource(Artifact, LabelMethodsMixin):
     name: str
     version: str
-    type: typing.Union[ResourceType, str]
+    type: typing.Union[ArtefactType, str]
     access: typing.Union[
         # Order of types is important for deserialization. The first matching type will be taken,
         # i.e. keep generic accesses at the bottom of the list
@@ -447,7 +449,7 @@ class ComponentSource(Artifact, LabelMethodsMixin):
     access: GithubAccess
     version: typing.Optional[str] = None  # introduce this backwards-compatible for now
     extraIdentity: typing.Dict[str, str] = dataclasses.field(default_factory=dict)
-    type: typing.Union[SourceType, str] = SourceType.GIT
+    type: typing.Union[ArtefactType, str] = ArtefactType.GIT
     labels: typing.List[Label] = dataclasses.field(default_factory=list)
 
 
@@ -528,14 +530,13 @@ class ComponentDescriptor:
             data=component_descriptor_dict,
             config=dacite.Config(
                 cast=[
-                    ResourceType,
                     SchemaVersion,
-                    SourceType,
+                    ArtefactType,
                     ResourceRelation,
                 ],
                 type_hooks={
                     typing.Union[AccessType, str]: functools.partial(enum_or_string, enum_type=AccessType),
-                    typing.Union[ResourceType, str]: functools.partial(enum_or_string, enum_type=ResourceType),
+                    typing.Union[ArtifactIdentity, str]: functools.partial(enum_or_string, enum_type=ArtefactType),
                     AccessType: functools.partial(enum_or_string, enum_type=AccessType),
                 },
             )

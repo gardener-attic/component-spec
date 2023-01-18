@@ -19,7 +19,7 @@ def test_deserialisation():
         component_descriptor_dict=component_descriptor_dict,
     )
 
-    assert component_descriptor.component.resources[0].type is cm.ResourceType.OCI_IMAGE
+    assert component_descriptor.component.resources[0].type is cm.ArtefactType.OCI_IMAGE
     assert isinstance(component_descriptor.component.resources[0].access, cm.OciAccess)
     assert component_descriptor.component.resources[0].access.type is cm.AccessType.OCI_REGISTRY
 
@@ -290,7 +290,7 @@ def test_set_label():
         test_resource = cm.Resource(
             name='test-resource',
             version='v0.1.0',
-            type=cm.ResourceType.OCI_IMAGE,
+            type=cm.ArtefactType.OCI_IMAGE,
             access=cm.OciAccess(
                 imageReference='test-repo.com/test-resource:v0.1.0',
             ),
