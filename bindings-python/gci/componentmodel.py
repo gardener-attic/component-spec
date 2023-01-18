@@ -549,10 +549,18 @@ class ComponentDescriptor:
                     ResourceRelation,
                 ],
                 type_hooks={
-                    typing.Union[AccessType, str]: functools.partial(enum_or_string, enum_type=AccessType),
-                    typing.Union[ArtefactType, str]: functools.partial(enum_or_string, enum_type=ArtefactType),
-                    typing.Union[ArtifactIdentity, str]: functools.partial(enum_or_string, enum_type=ArtefactType),
-                    AccessType: functools.partial(enum_or_string, enum_type=AccessType),
+                    typing.Union[AccessType, str]: functools.partial(
+                        enum_or_string, enum_type=AccessType
+                    ),
+                    typing.Union[ArtefactType, str]: functools.partial(
+                        enum_or_string, enum_type=ArtefactType
+                    ),
+                    typing.Union[ArtifactIdentity, str]: functools.partial(
+                        enum_or_string, enum_type=ArtefactType
+                    ),
+                    AccessType: functools.partial(
+                        enum_or_string, enum_type=AccessType
+                    ),
                 },
             )
         )
