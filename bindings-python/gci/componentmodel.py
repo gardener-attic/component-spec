@@ -135,7 +135,6 @@ class S3Access(ResourceAccess):
 
 class ArtefactType(enum.Enum):
     COSIGN_SIGNATURE = 'cosignSignature'
-    GENERIC = 'generic'
     GIT = 'git'
     OCI_IMAGE = 'ociImage'
 
