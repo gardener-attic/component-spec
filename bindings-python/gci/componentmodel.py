@@ -544,6 +544,13 @@ class ComponentDescriptor:
         component_descriptor_dict: dict,
         validation_mode: ValidationMode = ValidationMode.NONE,
     ):
+        def dateparse(v):
+            if not v:
+                return None
+            if isinstance(v, datetime.datetime):
+                return v
+            return dateutil.parser.isoparse(v)
+
         component_descriptor = dacite.from_dict(
             data_class=ComponentDescriptor,
             data=component_descriptor_dict,
@@ -565,8 +572,7 @@ class ComponentDescriptor:
                     AccessType: functools.partial(
                         enum_or_string, enum_type=AccessType
                     ),
-                    datetime.datetime:
-                        lambda v: dateutil.parser.isoparse(v) if v else None,
+                    datetime.datetime: dateparse,
                 },
             )
         )
