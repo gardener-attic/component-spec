@@ -26,7 +26,7 @@ setuptools.setup(
     name='gardener-component-model',
     version=version(),
     description='Gardener Component Model',
-    python_requires='>=3.9.*',
+    python_requires='>=3.9',
     packages=setuptools.find_packages(),
     package_data={'gci': ['component-descriptor.json-schema.yaml']},
     install_requires=list(requirements()),
