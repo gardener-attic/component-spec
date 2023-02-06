@@ -95,6 +95,7 @@ class OciBlobAccess(OciAccess):
 @dc(frozen=True, kw_only=True)
 class RelativeOciAccess(ResourceAccess):
     reference: str
+    type: AccessType = AccessType.RELATIVE_OCI_REFERENCE
 
 
 @dc(frozen=True, kw_only=True)
