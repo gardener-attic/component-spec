@@ -1,75 +1,35 @@
-
-
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
   <meta charset="utf-8" />
-  
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  
   <title>Gardener Component Descriptor Semantics &mdash; Gardener Component-Descriptor Contract and Specification  documentation</title>
-  
-
-  
-  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
-  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
-
-  
-  
-
-  
-  
-
-  
-
-  
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
     <script src="_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-    
-      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
         <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
         <script src="_static/jquery.js"></script>
         <script src="_static/underscore.js"></script>
         <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="_static/doctools.js"></script>
         <script src="_static/sphinx_highlight.js"></script>
-    
-    <script type="text/javascript" src="_static/js/theme.js"></script>
-
-    
+    <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="Gardener Component Descriptor Format Specification" href="format.html" />
     <link rel="prev" title="Motivation and Scope" href="motivation.html" /> 
 </head>
 
-<body class="wy-body-for-nav">
-
-   
+<body class="wy-body-for-nav"> 
   <div class="wy-grid-for-nav">
-    
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-          
-
-          
             <a href="index.html" class="icon icon-home"> Gardener Component-Descriptor Contract and Specification
-          
-
-          
           </a>
-
-          
-            
-            
-          
-
-          
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" />
@@ -77,18 +37,7 @@
     <input type="hidden" name="area" value="default" />
   </form>
 </div>
-
-          
-        </div>
-
-        
-        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
-          
-            
-            
-              
-            
-            
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="motivation.html">Motivation and Scope</a></li>
@@ -111,78 +60,37 @@
 <li class="toctree-l1"><a class="reference internal" href="building_components.html">Building Components</a></li>
 </ul>
 
-            
-          
         </div>
-        
       </div>
     </nav>
 
-    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
-
-      
-      <nav class="wy-nav-top" aria-label="top navigation">
-        
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
           <a href="index.html">Gardener Component-Descriptor Contract and Specification</a>
-        
       </nav>
 
-
       <div class="wy-nav-content">
-        
         <div class="rst-content">
-        
-          
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<div role="navigation" aria-label="breadcrumbs navigation">
-
+          <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-    
-      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
-        
-      <li>Gardener Component Descriptor Semantics</li>
-    
-    
+      <li><a href="index.html" class="icon icon-home"></a></li>
+      <li class="breadcrumb-item active">Gardener Component Descriptor Semantics</li>
       <li class="wy-breadcrumbs-aside">
-        
-          
             <a href="_sources/concepts.rst.txt" rel="nofollow"> View page source</a>
-          
-        
       </li>
-    
   </ul>
-
-  
   <hr/>
 </div>
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
-            
+             
   <div class="section" id="gardener-component-descriptor-semantics">
-<h1>Gardener Component Descriptor Semantics<a class="headerlink" href="#gardener-component-descriptor-semantics" title="Permalink to this heading">¶</a></h1>
+<h1>Gardener Component Descriptor Semantics<a class="headerlink" href="#gardener-component-descriptor-semantics" title="Permalink to this heading"></a></h1>
 <p><cite>Component Descriptors</cite> adhere to a schema defined in the JSON-schema contained in the
 <a class="reference external" href="https://github.com/gardener/component-spec">component-spec</a> repository.</p>
 <p>In this section, the semantics of those elements are defined.</p>
 <div class="section" id="component">
-<h2>Component<a class="headerlink" href="#component" title="Permalink to this heading">¶</a></h2>
+<h2>Component<a class="headerlink" href="#component" title="Permalink to this heading"></a></h2>
 <p id="concepts-components"><cite>Components</cite> are semantical entities with a certain semantical focus, as part
 of a software product. They are typically built from <cite>sources</cite>, which are being
 conciously developed.</p>
@@ -198,21 +106,21 @@ by changing sources.</p>
 <p>Each component version defines a certain version vector or sources, from which a version vector
 of resources can be derived.</p>
 <div class="section" id="component-descriptor">
-<h3>Component Descriptor<a class="headerlink" href="#component-descriptor" title="Permalink to this heading">¶</a></h3>
+<h3>Component Descriptor<a class="headerlink" href="#component-descriptor" title="Permalink to this heading"></a></h3>
 <p id="concepts-component-descriptors">A <cite>Component Descriptor version</cite> is determined from a component version. It describes
 the full version vectors of comprised source versions, and corresponding resource versions.</p>
 <p>It <em>MAY</em> declare dependencies towards other component versions.</p>
 <p>In addition, it may contain additional metadata.</p>
 </div>
 <div class="section" id="component-repository">
-<h3>Component Repository<a class="headerlink" href="#component-repository" title="Permalink to this heading">¶</a></h3>
+<h3>Component Repository<a class="headerlink" href="#component-repository" title="Permalink to this heading"></a></h3>
 <p id="concepts-component-repositories"><cite>Component Repositories</cite> store <cite>Component Descriptors versions</cite> and allow referencing them through
 the corresponding component version identities.</p>
 <p><cite>Component Descriptor versions</cite> stored in a component repository <em>SHOULD</em> be immutable.</p>
 <p><cite>Component Repositories</cite> <em>MAY</em> also be used to store sources or resources.</p>
 </div>
 <div class="section" id="component-repository-history">
-<h3>Component Repository History<a class="headerlink" href="#component-repository-history" title="Permalink to this heading">¶</a></h3>
+<h3>Component Repository History<a class="headerlink" href="#component-repository-history" title="Permalink to this heading"></a></h3>
 <p>Components are typically being developed in a common context. Such a context consists of
 organisational aspects (for example code ownership), and related infrastructure. Examples for
 related infrastructure contain source code repositories, build infrastructure, and resource
@@ -236,7 +144,7 @@ repositories.</p>
 </div>
 </div>
 <div class="section" id="identities-and-accessors">
-<h2>Identities and Accessors<a class="headerlink" href="#identities-and-accessors" title="Permalink to this heading">¶</a></h2>
+<h2>Identities and Accessors<a class="headerlink" href="#identities-and-accessors" title="Permalink to this heading"></a></h2>
 <p>Component versions are unambiguously identified by 2-tuples of <cite>name</cite> and <cite>version</cite> in the
 context of a <cite>Component Repository</cite>. Their identity never changes across
 any replication between context repositories.</p>
@@ -278,13 +186,13 @@ the component descriptor specifiation.</p>
 component itself may declare optional <cite>labels</cite>.</p>
 </div>
 <div class="section" id="component-sources">
-<h2>Component Sources<a class="headerlink" href="#component-sources" title="Permalink to this heading">¶</a></h2>
+<h2>Component Sources<a class="headerlink" href="#component-sources" title="Permalink to this heading"></a></h2>
 <p id="concepts-sources">Components are expected to have at least one source (code) representation. For each component
 version, the corresponding source snapshot from which the component was built <em>MUST</em> be
 specified.</p>
 </div>
 <div class="section" id="component-references">
-<h2>Component References<a class="headerlink" href="#component-references" title="Permalink to this heading">¶</a></h2>
+<h2>Component References<a class="headerlink" href="#component-references" title="Permalink to this heading"></a></h2>
 <p>Component versions may declare dependencies towards other component versions. Dependencies are
 always resolved in the same repository context. At the time of publishing a <cite>Component Descriptor</cite>,
 <cite>Component Descriptors</cite> for each referenced component version <em>MUST</em> already be present in the
@@ -293,7 +201,7 @@ context repository.</p>
 component versions.</p>
 </div>
 <div class="section" id="resources">
-<h2>Resources<a class="headerlink" href="#resources" title="Permalink to this heading">¶</a></h2>
+<h2>Resources<a class="headerlink" href="#resources" title="Permalink to this heading"></a></h2>
 <p>resources are technical artifacts of a certain format (or <cite>type</cite>).</p>
 <p>If built from the declaring component’s sources, their <cite>versions</cite> <em>MUST</em> match the component’s
 version. Whether or not a resource is built from the referencing component is expressed through
@@ -303,50 +211,33 @@ the <cite>relation</cite> attribute.</p>
 
 
            </div>
-           
           </div>
-          <footer>
-    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
-        <a href="format.html" class="btn btn-neutral float-right" title="Gardener Component Descriptor Format Specification" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
         <a href="motivation.html" class="btn btn-neutral float-left" title="Motivation and Scope" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="format.html" class="btn btn-neutral float-right" title="Gardener Component Descriptor Format Specification" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>
 
   <div role="contentinfo">
-    <p>
-        &#169; Copyright 2020, The Gardener Team.
-
-    </p>
+    <p>&#169; Copyright 2020, The Gardener Team.</p>
   </div>
-    
-    
-    
-    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
-    
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
     <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
-    
-    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
 
 </footer>
         </div>
       </div>
-
     </section>
-
   </div>
-  
-
-  <script type="text/javascript">
+  <script>
       jQuery(function () {
           SphinxRtdTheme.Navigation.enable(true);
       });
-  </script>
-
-  
-  
-    
-   
+  </script> 
 
 </body>
 </html>
