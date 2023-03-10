@@ -601,4 +601,6 @@ class EnumValueYamlDumper(yaml.SafeDumper):
     def represent_data(self, data):
         if isinstance(data, enum.Enum):
             return self.represent_data(data.value)
+        if isinstance(data, datetime.datetime):
+            return self.represent_data(data.isoformat(timespec='seconds'))
         return super().represent_data(data)
