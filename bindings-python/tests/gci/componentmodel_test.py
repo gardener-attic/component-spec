@@ -82,7 +82,7 @@ class TestVersionValidation(unittest.TestCase):
                 'componentReferences': [],
                 'labels': [],
                 'name': 'github.test/foo/bar',
-                'provider': 'internal',
+                'provider': 'some-provider',
                 'repositoryContexts': [{
                     'baseUrl': 'eu.gcr.io/test/context',
                     'type': 'ociRegistry',
