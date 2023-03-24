@@ -120,10 +120,10 @@ var _ = Describe("Validation", func() {
 	})
 
 	Context("#Provider", func() {
-		It("should forbid if a component's provider is invalid", func() {
+		It("should pass if a component's provider is a non-empty string", func() {
 			comp.Provider = "custom"
 			errList := validate(nil, comp)
-			Expect(errList).To(ContainElement(PointTo(MatchFields(IgnoreExtras, Fields{
+			Expect(errList).ToNot(ContainElement(PointTo(MatchFields(IgnoreExtras, Fields{
 				"Type":  Equal(field.ErrorTypeInvalid),
 				"Field": Equal("component.provider"),
 			}))))
