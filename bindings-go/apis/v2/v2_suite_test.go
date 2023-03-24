@@ -92,7 +92,7 @@ var _ = Describe("Helper", func() {
 					Name:    "my-comp",
 					Version: "1.2.3",
 				},
-				Provider:            v2.ExternalProvider,
+				Provider:            "external",
 				RepositoryContexts:  nil,
 				Sources:             nil,
 				ComponentReferences: nil,
