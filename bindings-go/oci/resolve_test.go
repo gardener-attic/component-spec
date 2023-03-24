@@ -167,7 +167,7 @@ func defaultComponentDescriptor(name, version string) *cdv2.ComponentDescriptor 
 	cd := &cdv2.ComponentDescriptor{}
 	cd.Name = name
 	cd.Version = version
-	cd.Provider = cdv2.InternalProvider
+	cd.Provider = "internal"
 	_ = cdv2.DefaultComponent(cd)
 	return cd
 }
