@@ -2,7 +2,7 @@
 // sources:
 // ../../../../language-independent/component-descriptor-v2-schema.yaml
 
-package main
+package jsonscheme
 
 
 import (
