@@ -90,7 +90,7 @@ func LanguageIndependentComponentDescriptorV2SchemaYamlBytes() ([]byte, error) {
 
 
 func LanguageIndependentComponentDescriptorV2SchemaYaml() (*asset, error) {
-	bytes, err := bindataLanguageindependentComponentdescriptorv2schemaYamlBytes()
+	bytes, err := LanguageIndependentComponentDescriptorV2SchemaYamlBytes()
 	if err != nil {
 		return nil, err
 	}
@@ -172,7 +172,7 @@ func AssetNames() []string {
 // _bindata is a table, holding each asset generator, mapped to its name.
 //
 var _bindata = map[string]func() (*asset, error){
-	"../../../../language-independent/component-descriptor-v2-schema.yaml": bindataLanguageindependentComponentdescriptorv2schemaYaml,
+	"../../../../language-independent/component-descriptor-v2-schema.yaml": LanguageIndependentComponentDescriptorV2SchemaYaml,
 }
 
 //
@@ -232,7 +232,7 @@ var _bintree = &bintree{Func: nil, Children: map[string]*bintree{
 			"..": {Func: nil, Children: map[string]*bintree{
 				"..": {Func: nil, Children: map[string]*bintree{
 					"language-independent": {Func: nil, Children: map[string]*bintree{
-						"component-descriptor-v2-schema.yaml": {Func: bindataLanguageindependentComponentdescriptorv2schemaYaml, Children: map[string]*bintree{}},
+						"component-descriptor-v2-schema.yaml": {Func: LanguageIndependentComponentDescriptorV2SchemaYaml, Children: map[string]*bintree{}},
 					}},
 				}},
 			}},
