@@ -1,7 +1,8 @@
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" />
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Building Components &mdash; Gardener Component-Descriptor Contract and Specification  documentation</title>
       <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
@@ -11,9 +12,6 @@
   <![endif]-->
   
         <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
-        <script src="_static/jquery.js"></script>
-        <script src="_static/underscore.js"></script>
-        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="_static/doctools.js"></script>
         <script src="_static/sphinx_highlight.js"></script>
     <script src="_static/js/theme.js"></script>
@@ -82,7 +80,7 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <div class="section" id="building-components">
+  <section id="building-components">
 <h1>Building Components<a class="headerlink" href="#building-components" title="Permalink to this heading"></a></h1>
 <p>The <cite>CNUDIE Component Descriptor model</cite> takes no assumption as to how component versions are created.
 Typically, they are generated during a build process, as this is where their artifacts are generated.
@@ -91,17 +89,17 @@ assumptions.</p>
 <p>To make generating Component Descriptors more convenient, there is a re-usable toolset that can
 be used (<a class="reference external" href="https://github.com/gardener/component-cli">https://github.com/gardener/component-cli</a>).</p>
 <p>The following example shows how this can be done based on a <cite>make</cite>-based build.</p>
-<div class="section" id="example">
+<section id="example">
 <h2>Example<a class="headerlink" href="#example" title="Permalink to this heading"></a></h2>
-<div class="section" id="prerequisites">
+<section id="prerequisites">
 <h3>Prerequisites<a class="headerlink" href="#prerequisites" title="Permalink to this heading"></a></h3>
 <ul class="simple">
 <li><p>toolset must be available</p></li>
 <li><p>OCI Registry with write-credentials to store Component-Descriptors</p></li>
 <li><p>also: expose credentials (.docker/config.json)</p></li>
 </ul>
-</div>
-<div class="section" id="integrating-component-descriptor-creation-into-the-build">
+</section>
+<section id="integrating-component-descriptor-creation-into-the-build">
 <h3>Integrating Component Descriptor creation into the build<a class="headerlink" href="#integrating-component-descriptor-creation-into-the-build" title="Permalink to this heading"></a></h3>
 <ul class="simple">
 <li><p>todo: reference example build (w/o CNUDIE-CD)</p></li>
@@ -109,9 +107,9 @@ be used (<a class="reference external" href="https://github.com/gardener/compone
 <li><p>next step: add make-target + template-file to create CNUDIE-CD</p></li>
 <li><p>final step: run it</p></li>
 </ul>
-</div>
-</div>
-</div>
+</section>
+</section>
+</section>
 
 
            </div>

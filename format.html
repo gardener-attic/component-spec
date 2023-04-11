@@ -1,7 +1,8 @@
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" />
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Gardener Component Descriptor Format Specification &mdash; Gardener Component-Descriptor Contract and Specification  documentation</title>
       <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
@@ -11,9 +12,6 @@
   <![endif]-->
   
         <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
-        <script src="_static/jquery.js"></script>
-        <script src="_static/underscore.js"></script>
-        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="_static/doctools.js"></script>
         <script src="_static/sphinx_highlight.js"></script>
     <script src="_static/js/theme.js"></script>
@@ -85,12 +83,12 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <div class="section" id="gardener-component-descriptor-format-specification">
+  <section id="gardener-component-descriptor-format-specification">
 <h1>Gardener Component Descriptor Format Specification<a class="headerlink" href="#gardener-component-descriptor-format-specification" title="Permalink to this heading"></a></h1>
 <p><cite>Gardener Component Descriptors</cite> are associative arrays adhering to a versioned schema. As they are
 intended to be a language-independent data format, also (de-)serialisation, publishing, discovery and
 retrieval needs to be defined.</p>
-<div class="section" id="data-format-serialisation-and-deserialisation">
+<section id="data-format-serialisation-and-deserialisation">
 <h2>Data Format, Serialisation and Deserialisation<a class="headerlink" href="#data-format-serialisation-and-deserialisation" title="Permalink to this heading"></a></h2>
 <p>In serialised form, <cite>Component Descriptors</cite> <em>MUST</em> be UTF-8-encoded. Either <a class="reference external" href="https://yaml.org">YAML</a>, or
 <a class="reference external" href="https://json.org">JSON</a> may be used. If <cite>YAML</cite> is used as serialisation format, only the subset of
@@ -102,15 +100,15 @@ to retain or not retain comments or formatting options.</p>
 <p>The order of attributes is insignificant, and <em>MUST NOT</em> be relied upon.</p>
 <p>The order of elements in sequences <em>MAY</em> be significant and <em>MUST</em> be retained in cases where it
 is significant.</p>
-</div>
-<div class="section" id="publishing-and-discovery-context-repositories">
+</section>
+<section id="publishing-and-discovery-context-repositories">
 <h2>Publishing and Discovery, Context Repositories<a class="headerlink" href="#publishing-and-discovery-context-repositories" title="Permalink to this heading"></a></h2>
 <p>Each <cite>Component Version</cite> is unambiguously identified by a two-tuple of:</p>
 <ul class="simple">
 <li><p>component name</p></li>
 <li><p>component version</p></li>
 </ul>
-<div class="section" id="component-names">
+<section id="component-names">
 <h3>Component Names<a class="headerlink" href="#component-names" title="Permalink to this heading"></a></h3>
 <p>Component Names reside in a global namespace. To avoid name conflicts <cite>Component Names</cite> <em>MUST</em>
 start with a valid domain name (as specified by RFC-1034, RFC-1035) with an optional URL path
@@ -122,8 +120,8 @@ URL path suffix <em>MUST</em> be possessed by the component proprietor.</p>
 code, and/or documentation) are hosted.</p>
 <p>An example, and recommended practise is using GitHub repository names for components on GitHub.</p>
 <p>For example <cite>github.com/gardener/gardener</cite>.</p>
-</div>
-<div class="section" id="component-versions">
+</section>
+<section id="component-versions">
 <h3>Component Versions<a class="headerlink" href="#component-versions" title="Permalink to this heading"></a></h3>
 <p>Component Versions refer to specific snapshots of a component. A common scenario being the release
 of a component, thus offering it for consumption.</p>
@@ -133,8 +131,8 @@ of a component, thus offering it for consumption.</p>
 <li><p>have an optional <cite>v</cite> prefix</p></li>
 <li><p>omit the third component (patch-level); if omitted, path-level is implied to equal <cite>0</cite></p></li>
 </ul>
-</div>
-<div class="section" id="context-repositories">
+</section>
+<section id="context-repositories">
 <h3>Context Repositories<a class="headerlink" href="#context-repositories" title="Permalink to this heading"></a></h3>
 <p><cite>Component Descriptors</cite> are published to <cite>Context Repositories</cite>. Context repositories <em>MUST</em>
 always contain the transitive closure of all <cite>Component Descriptors</cite>, referenced by contained
@@ -145,9 +143,9 @@ retained, and appended.</p>
 <p>As part of such a transporting procedure, both the components’ sources and resources <em>MAY</em> be
 transferred to different repositories. The new locations <em>MUST</em> in this case be reflected in the
 new <cite>Component Descriptor</cite>.</p>
-</div>
-</div>
-</div>
+</section>
+</section>
+</section>
 
 
            </div>
