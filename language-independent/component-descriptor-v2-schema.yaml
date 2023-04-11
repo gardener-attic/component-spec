@@ -61,12 +61,8 @@ definitions:
         properties:
           baseUrl:
             type: 'string'
-          componentNameMapping:
-            type: 'string'
-            enum: ['urlPath', 'sha256-digest']
           type:
             type: 'string'
-            enum: ['ociRegistry']
 
   access:
     type: 'object'
