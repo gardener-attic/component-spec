@@ -452,7 +452,11 @@ class OciRepositoryContext(RepositoryContext):
     ):
         if isinstance(name, Component):
             name = name.name
+            if not version:
+                version = name.version
         elif isinstance(name, ComponentIdentity):
+            if not version:
+                version = name.version
             name = name.name
 
         if not version:
@@ -601,6 +605,4 @@ class EnumValueYamlDumper(yaml.SafeDumper):
     def represent_data(self, data):
         if isinstance(data, enum.Enum):
             return self.represent_data(data.value)
-        if isinstance(data, datetime.datetime):
-            return self.represent_data(data.isoformat(timespec='seconds'))
         return super().represent_data(data)
