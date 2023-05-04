@@ -402,6 +402,7 @@ class Resource(Artifact, LabelMethodsMixin):
         # Order of types is important for deserialization. The first matching type will be taken,
         # i.e. keep generic accesses at the bottom of the list
         GithubAccess,
+        LocalBlobAccess,
         OciBlobAccess,
         OciAccess,
         RelativeOciAccess,
