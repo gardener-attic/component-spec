@@ -490,8 +490,6 @@ class Component(LabelMethodsMixin):
 
     labels: typing.List[Label] = dataclasses.field(default_factory=list)
 
-    creationTime: typing.Optional[datetime.datetime] = None
-
     def current_repository_ctx(self):
         if not self.repositoryContexts:
             return None
