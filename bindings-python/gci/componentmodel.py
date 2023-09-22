@@ -452,9 +452,9 @@ class OciRepositoryContext(RepositoryContext):
         version: str=None,
     ):
         if isinstance(name, Component):
-            name = name.name
             if not version:
                 version = name.version
+            name = name.name
         elif isinstance(name, ComponentIdentity):
             if not version:
                 version = name.version
