@@ -10,7 +10,6 @@ component-spec:
     head-update:
       <<: *github_pages_repo
       steps:
-        run-unittests: ~
         run-validate: ~
         run-golang-check:
           image: golang:1.18
@@ -28,7 +27,6 @@ component-spec:
           inject_effective_version: True
         release:
           nextversion: 'bump_patch'
-          release_callback: '.ci/release'
           git_tags:
           - ref_template: 'refs/tags/{VERSION}'
           - ref_template: 'refs/tags/bindings-go/{VERSION}' # needed for go module support
