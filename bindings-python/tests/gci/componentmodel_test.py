@@ -25,6 +25,9 @@ def test_deserialisation():
     assert isinstance(component.resources[0].access, cm.OciAccess)
     assert component.resources[0].access.type is cm.AccessType.OCI_REGISTRY
 
+    source = component.sources[0]
+    assert isinstance(source.access, cm.GithubAccess)
+
 
 def test_deserialisation_of_custom_resources():
     with open(os.path.join(test_res_dir, 'component_descriptor_v2_custom.yaml')) as f:
