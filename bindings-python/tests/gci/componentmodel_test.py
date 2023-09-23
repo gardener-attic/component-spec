@@ -19,10 +19,11 @@ def test_deserialisation():
     component_descriptor = cm.ComponentDescriptor.from_dict(
         component_descriptor_dict=component_descriptor_dict,
     )
+    component = component_descriptor.component
 
-    assert component_descriptor.component.resources[0].type is cm.ArtefactType.OCI_IMAGE
-    assert isinstance(component_descriptor.component.resources[0].access, cm.OciAccess)
-    assert component_descriptor.component.resources[0].access.type is cm.AccessType.OCI_REGISTRY
+    assert component.resources[0].type is cm.ArtefactType.OCI_IMAGE
+    assert isinstance(component.resources[0].access, cm.OciAccess)
+    assert component.resources[0].access.type is cm.AccessType.OCI_REGISTRY
 
 
 def test_deserialisation_of_custom_resources():
@@ -32,10 +33,12 @@ def test_deserialisation_of_custom_resources():
     component_descriptor = cm.ComponentDescriptor.from_dict(
         component_descriptor_dict=component_descriptor_dict,
     )
-    assert isinstance(component_descriptor.component.resources[0].access, cm.Access)
-    assert component_descriptor.component.resources[1].access is None
-    assert isinstance(component_descriptor.component.resources[2].access, cm.Access)
-    assert isinstance(component_descriptor.component.resources[3].access, cm.RelativeOciAccess)
+    component = component_descriptor.component
+
+    assert isinstance(component.resources[0].access, cm.Access)
+    assert component.resources[1].access is None
+    assert isinstance(component.resources[2].access, cm.Access)
+    assert isinstance(component.resources[3].access, cm.RelativeOciAccess)
 
 
 def test_github_access():
