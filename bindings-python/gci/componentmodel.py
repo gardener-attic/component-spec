@@ -61,12 +61,12 @@ AccessTypeOrStr = typing.Union[AccessType, str]
 
 
 @dc(frozen=True, kw_only=True)
-class ResourceAccess:
+class Access:
     type: typing.Optional[AccessTypeOrStr] = AccessType.NONE
 
 
 @dc(frozen=True, kw_only=True)
-class LocalBlobAccess(ResourceAccess):
+class LocalBlobAccess(Access):
     '''
     a blob that is accessible locally to the component-descriptor
 
@@ -80,7 +80,7 @@ class LocalBlobAccess(ResourceAccess):
 
 
 @dc(frozen=True, kw_only=True)
-class OciAccess(ResourceAccess):
+class OciAccess(Access):
     type: AccessType = AccessType.OCI_REGISTRY
     imageReference: str
 
@@ -93,13 +93,13 @@ class OciBlobAccess(OciAccess):
     size: int
 
 @dc(frozen=True, kw_only=True)
-class RelativeOciAccess(ResourceAccess):
+class RelativeOciAccess(Access):
     reference: str
     type: AccessType = AccessType.RELATIVE_OCI_REFERENCE
 
 
 @dc(frozen=True, kw_only=True)
-class GithubAccess(ResourceAccess):
+class GithubAccess(Access):
     repoUrl: str
     ref: typing.Optional[str] = None
     commit: typing.Optional[str] = None
@@ -130,7 +130,7 @@ class GithubAccess(ResourceAccess):
 
 
 @dc(frozen=True, kw_only=True)
-class S3Access(ResourceAccess):
+class S3Access(Access):
     bucketName: str
     objectKey: str
     region: typing.Optional[str] = None
@@ -407,7 +407,7 @@ class Resource(Artifact, LabelMethodsMixin):
         OciAccess,
         RelativeOciAccess,
         S3Access,
-        ResourceAccess,
+        Access,
         None,
     ]
     digest: typing.Optional[DigestSpec] = None
