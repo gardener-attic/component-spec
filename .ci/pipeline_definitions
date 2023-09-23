@@ -10,7 +10,6 @@ component-spec:
     head-update:
       <<: *github_pages_repo
       steps:
-        run-validate: ~
         run-golang-check:
           image: golang:1.18
         render_and_update_documentation:
