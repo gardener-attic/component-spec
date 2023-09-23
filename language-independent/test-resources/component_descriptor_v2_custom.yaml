@@ -24,6 +24,11 @@ component:
         type: 'github'
         repoUrl: 'github.com/gardener/gardener'
         ref: 'refs/tags/v1.7.2'
+    - name: 'filesystem-typed-source'
+      version: '1.2.3'
+      type: 'filesystem'
+      access:
+        type: 'custom'
 
   componentReferences:
     - name: 'my-etcd-druid'
