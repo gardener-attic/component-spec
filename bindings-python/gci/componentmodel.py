@@ -347,7 +347,7 @@ class Artifact(LabelMethodsMixin):
             IdCtor = ComponentReferenceIdentity
         elif own_type is Resource:
             IdCtor = ResourceIdentity
-        elif own_type is ComponentSource:
+        elif own_type is Source:
             IdCtor = SourceIdentity
         else:
             raise NotImplementedError(own_type)
@@ -467,13 +467,17 @@ class OciRepositoryContext(RepositoryContext):
 
 
 @dc
-class ComponentSource(Artifact, LabelMethodsMixin):
+class Source(Artifact, LabelMethodsMixin):
     name: str
     access: GithubAccess | Access
     version: typing.Optional[str] = None  # introduce this backwards-compatible for now
     extraIdentity: typing.Dict[str, str] = dataclasses.field(default_factory=dict)
     type: typing.Union[ArtefactType, str] = ArtefactType.GIT
     labels: typing.List[Label] = dataclasses.field(default_factory=list)
+
+
+# backwards-compatibility
+ComponentSource = Source
 
 
 @dc
@@ -484,7 +488,7 @@ class Component(LabelMethodsMixin):
     repositoryContexts: typing.List[OciRepositoryContext]
     provider: typing.Union[str, dict]
 
-    sources: typing.List[ComponentSource]
+    sources: typing.List[Source]
     componentReferences: typing.List[ComponentReference]
     resources: typing.List[Resource]
 
