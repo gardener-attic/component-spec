@@ -13,7 +13,7 @@ component-spec:
         run-golang-check:
           image: golang:1.18
         render_and_update_documentation:
-          depends: ['run-unittests', 'run-validate', 'run-golang-check']
+          depends: ['run-golang-check']
           publish_to: ['github_pages']
       traits:
         scheduling:
