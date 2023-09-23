@@ -469,7 +469,7 @@ class OciRepositoryContext(RepositoryContext):
 @dc
 class ComponentSource(Artifact, LabelMethodsMixin):
     name: str
-    access: GithubAccess
+    access: Access
     version: typing.Optional[str] = None  # introduce this backwards-compatible for now
     extraIdentity: typing.Dict[str, str] = dataclasses.field(default_factory=dict)
     type: typing.Union[ArtefactType, str] = ArtefactType.GIT
