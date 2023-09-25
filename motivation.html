@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Motivation and Scope &mdash; Gardener Component-Descriptor Contract and Specification  documentation</title>
+  <title>Motivation &mdash; Open Component Model Contract and Specification  documentation</title>
       <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -20,7 +20,7 @@
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="Gardener Component Descriptor Semantics" href="concepts.html" />
-    <link rel="prev" title="Gardener Component-Descriptor Contract and Specification" href="index.html" /> 
+    <link rel="prev" title="Open Component Model" href="index.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -32,7 +32,7 @@
           
           
           <a href="index.html" class="icon icon-home">
-            Gardener Component-Descriptor Contract and Specification
+            Open Component Model Contract and Specification
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
@@ -44,7 +44,7 @@
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul class="current">
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Motivation and Scope</a><ul>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Motivation</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#core-concepts">Core Concepts</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#scope-definition">Scope Definition</a></li>
 </ul>
@@ -62,7 +62,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="index.html">Gardener Component-Descriptor Contract and Specification</a>
+          <a href="index.html">Open Component Model Contract and Specification</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -70,7 +70,7 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
-      <li class="breadcrumb-item active">Motivation and Scope</li>
+      <li class="breadcrumb-item active">Motivation</li>
       <li class="wy-breadcrumbs-aside">
             <a href="_sources/motivation.rst.txt" rel="nofollow"> View page source</a>
       </li>
@@ -80,9 +80,10 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="motivation-and-scope">
-<h1>Motivation and Scope<a class="headerlink" href="#motivation-and-scope" title="Link to this heading"></a></h1>
-<p>Operating Software installations both for Cloud and on-premises covers many aspects:</p>
+  <section id="motivation">
+<h1>Motivation<a class="headerlink" href="#motivation" title="Link to this heading"></a></h1>
+<p>Operating software installations both for Cloud and on-premises covers
+many aspects:</p>
 <ul class="simple">
 <li><p>how, when and where are the technical artefacts created</p></li>
 <li><p>how are technical artefacts stored and accessed</p></li>
@@ -90,48 +91,101 @@
 <li><p>how is the configuration managed</p></li>
 <li><p>when are technical artefacts deployed</p></li>
 <li><p>where and how are those artefacts deployed</p></li>
-<li><p>which other software installations are required and how are they deployed and accessed</p></li>
+<li><p>which other software installations are required and how are they
+deployed and accessed</p></li>
 </ul>
-<p>The overall problem domain has a complexity that make it challenging to be solved as a whole.
-However, the problem domain can be divided into two disjoint subdomains:</p>
+<p>The overall problem domain has a complexity that makes it
+challenging to be solved as a whole.  However, the problem domain
+can be divided into two disjoint subdomains:</p>
 <ul class="simple">
 <li><p>production of software artefacts</p></li>
-<li><p>deployment and lifecycle management of installations</p></li>
+<li><p>processes acting on those artefact sets like compliance
+processes, transport, deployment and lifecycle management of
+installations</p></li>
 </ul>
-<p>The elements transitioning between those two subdomains are synchronisation
-data (“when things should happen”) and technical artefacts and their purposes.</p>
-<p>By standardising those elements, it is possible to decouple those two aspects. This allows
-to split the overall complexity into smaller parts. By this, the overall complexity can also be
-reduced.</p>
-<p>The CNUDIE Component Model defines a standardisation of the latter (technical
-artefacts and their purposes). The major goal that is tried to be achieved by
-this standardisation is to allow for components and their artefacts to be
-umambiguously addressed and accessed in a location- and technology-agnostic
-manner. This should work for both global and local or even private environments.</p>
+<p>The elements transitioning between those two subdomains are
+synchronisation data (“when things should happen”) and technical
+artefacts and their purposes.</p>
+<p>By standardising those elements, it is possible to decouple those
+two aspects. This allows to split the overall complexity into
+smaller parts. The involved artefacts are basically some kind
+of source of truth, all processes during a software lifecycle
+finally cooperate on these elements, they are generated by a build,
+matter of compliance assessment, the have to transported and
+deployed, and finally the data controlling processes like
+deployment can be expressed by artefacts, also. Because of
+this, it seems to be a good idea to standardize the description
+and handling of software artefacts. By this, independent tools
+can cooperate on such a view to software and the overall complexity
+can be reduced, .</p>
+<p>When dealing with aspects of software or software artefacts
+like delivery, life cycle management or security aspects it is
+important to reliably build the bridge between uniquely denoting
+or identifying software or software parts and the real, effective
+technical content behind the naming scheme.
+This must be combined with the possibility to describe the access
+of the real content just by the naming scheme in any kind of storage
+environment, be it public or fenced local ones,
+and a reliable way to transport software among such environments.
+At the same time not only the sole executable artefacts must be
+considered, but all other kinds of meta data or accompanying information
+used to describe the artefacts, their meaning, deployment and lifecycle
+aspects.</p>
+<p>Although container based software systems, especially Kubernetes,
+are increasingly displacing other other runtime models there will for
+sure always be competing or specialized or even new upcoming ones in
+the future, which must potentially be commonly described in one closed
+model. Therefore such a software description model must not be related to
+dedicated technologies, be it content types, runtime models or tools
+working the the denoted content.</p>
+<p>The Open Component Model will offer a sound common technology-agnostic
+basis to denote and describe the access of any kind of software by grouping
+typed artefacts and establishing a hierarchical naming scheme, which is
+applicable for all content that can reliably represented as blobs.</p>
+<p>Like the today’s generic file system models it can be used to store
+and access any kind of data in any suitable repository or even archives
+or regular file systems.</p>
+<p>It acts as a common scheme for any kind of tool that can interpret or deal
+with the typed artefact blobs with its own semantic to fulfill its tasks.
+The common naming scheme allows to correlate artefacts described by
+the model
+with other tool specific data at API level and therefore enables
+the cooperation of decoupled, independent tools by always keeping
+the connection to the single truth, the artefacts and artefacts groups
+they deal with.</p>
+<p>Establishing a common, technology-agnostic and extensible model to
+describe software and its artifacts provides software developers,
+software vendors, and their partners with a unique way to consistently
+build, deliver and deploy compliant software, based on any technology,
+to any environment.</p>
 <section id="core-concepts">
 <h2>Core Concepts<a class="headerlink" href="#core-concepts" title="Link to this heading"></a></h2>
-<p><a class="reference internal" href="concepts.html#concepts-components"><span class="std std-ref">Components</span></a> in CNUDIE are semantical entities with a
+<p><a class="reference internal" href="concepts.html#concepts-components"><span class="std std-ref">Components</span></a> in OCM are semantical entities with a
 certain semantical focus, as part of a software product. They are typically
-built from <span class="xref std std-ref">Sources &lt;concepts_sources</span>, which are being conciously developed.</p>
+built from <a class="reference internal" href="concepts.html#concepts-sources"><span class="std std-ref">Sources</span></a>, which are being conciously developed.</p>
 <p>They consist of a set of (component) versions. Each version is described by a
 <a class="reference internal" href="concepts.html#concepts-component-descriptors"><span class="std std-ref">Component Descriptor</span></a>, which describes
 the included set of artefacts. <cite>Component Descriptors</cite> are stored in a
-<span class="xref std std-ref">Component Repository &lt;_concepts_component_repositories</span> in a standardised
+<a class="reference internal" href="concepts.html#concepts-component-repositories"><span class="std std-ref">Component Repository</span></a> in a standardized
 way. Within such a component repository, component descriptors are addressed by
 their component name and version.</p>
 <p>By separating the storage locations (component repository) from the component version
 identity, in combination with a defined addressing scheme, it is possible to
-access component descriptors in a component repository, in a location-independent manner.
-This can be leveraged to replicate component descriptors between component repositories.</p>
+access component descriptors uniquely in any component repository, in a
+location-independent manner.
+This can be leveraged to replicate component descriptors and the described artefacts
+between component repositories.</p>
 <p>Each of the artefacts declared in a <cite>Component Descriptor</cite> has an <cite>identity</cite>, an <cite>access</cite>
 description and a <cite>type</cite>. <cite>Artefact identities</cite> can be used to reference an artefact in
 the context of the declaring component descriptor. The <cite>Artefact type</cite> defines how the
 artefact is to be interpreted. The <cite>access Description</cite> defines from where the artefact
 can be retrieved.</p>
+<img alt="_images/Transport.png" src="_images/Transport.png" />
 <p>When replicating component descriptors and their artefacts, the artefacts’ <cite>access</cite> descriptions
 may be changed. However, <cite>artefact types</cite> and <cite>artefact identities</cite> always remain unchanged.</p>
-<p>The CNUDIE Component Model can roughly be compared to a filesystem “living” in an arbitrary
+<p>The Open Component Model can roughly be compared to a filesystem “living” in an arbitrary
 storage (e.g. a blobstore, oci-registry, archive, ..).</p>
+<img alt="_images/ResourceAccess.png" src="_images/ResourceAccess.png" />
 <p>Starting from an arbitrary component repository used as root repository it is
 possible to access any artefact described by the component model as long as the
 dedicated component version has been imported into this repository. The
@@ -146,21 +200,38 @@ feature a local identity in the describing component descriptor.</p>
 </section>
 <section id="scope-definition">
 <h2>Scope Definition<a class="headerlink" href="#scope-definition" title="Link to this heading"></a></h2>
-<p>The CNUDIE Component model intends to solve the problem of addressing,
+<p>The Open Component model intends to solve the problem of addressing,
 identifying, and accessing artefacts for software components, relative to an
 arbitrary component repository. By that, it also enables the transport of
 software components between component repositories.</p>
 <p>Through the standardisation of structure and <cite>access</cite> to artefacts, it can serve as an
-interface to any operations that need to interact with the content. This allows
-for tools operating against this interface to be implemented in a re-usable, and
-technology-agnostic manner (examples being transport, compliance and security
-scanning, codesigning, ..).</p>
+interface to any operation or tool that needs to interact with the content.
+This allows for tools operating against this interface to be implemented in a
+re-usable, and technology-agnostic manner (examples being transport,
+compliance and security scanning, codesigning, ..).</p>
 <p>Higherlevel functionality, such as deployment, or lifecycle-management aspects are
-out of the scope the CNUDIE Component Model targets. Data for such aspects (for example
-a deployment blueprint) can, however, be described by the CNUDIE Component Model
+out of the scope the Open Component Model targets. However, it acts as a container to
+host (access, transport, …) information for those processes. Data for such
+aspects (for example a deployment blueprint) can, be described by the Open Component Model
 as dedicated typed artefacts. This is equivalent to e.g. adding a <cite>Makefile</cite>
 into a filesystem. The filesystem does not “know” about the semantics of the
 <cite>Makefile</cite> (including, e.g. declared dependencies towards other files).</p>
+<p>An example for such a tool is the Landscaper.
+With the Landscaper, a new open, technology-agnostic and extensible deployment
+control tool is established on top of this software description model.
+Based on deployment descriptions, the Blueprints, and additional artefact information
+taken from the component model, it orchestrates and configures desired states in
+a Kubernetes-like manner that are finally handled by type specific Deployers which
+control the actual technology-specific deployment steps. Based on a very small set
+of standard Kubernetes-based deployers, any other kind of deployer can be added as
+part of the deployment process to support deployments in any technical or even
+fenced environment.  The complete data plane is maintained in a Kubernetes system
+and can be maintained by traditional GitOps processes configuring installations
+based on artefacts uniformly described by and accessed using the open component model.</p>
+<p>The combination of both parts, the Open Component Model and the Landscaper makes
+complete heterogeneous scenarios, including the required software parts and their
+orchestrations, transportable among and executable in any local and independent
+repository landscapes, controlled by local GitOps processes.</p>
 </section>
 </section>
 
@@ -168,7 +239,7 @@ into a filesystem. The filesystem does not “know” about the semantics of the
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="index.html" class="btn btn-neutral float-left" title="Gardener Component-Descriptor Contract and Specification" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="index.html" class="btn btn-neutral float-left" title="Open Component Model" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
         <a href="concepts.html" class="btn btn-neutral float-right" title="Gardener Component Descriptor Semantics" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 

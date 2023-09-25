@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Component Content in an OCI Registry &mdash; Gardener Component-Descriptor Contract and Specification  documentation</title>
+  <title>Component Content in an OCI Registry &mdash; Open Component Model Contract and Specification  documentation</title>
       <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -32,7 +32,7 @@
           
           
           <a href="index.html" class="icon icon-home">
-            Gardener Component-Descriptor Contract and Specification
+            Open Component Model Contract and Specification
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
@@ -44,7 +44,7 @@
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="motivation.html">Motivation and Scope</a></li>
+<li class="toctree-l1"><a class="reference internal" href="motivation.html">Motivation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="concepts.html">Gardener Component Descriptor Semantics</a></li>
 <li class="toctree-l1"><a class="reference internal" href="format.html">Gardener Component Descriptor Format Specification</a></li>
 <li class="toctree-l1"><a class="reference internal" href="component_descriptor_registries.html">Component Descriptor Registries</a></li>
@@ -68,7 +68,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="index.html">Gardener Component-Descriptor Contract and Specification</a>
+          <a href="index.html">Open Component Model Contract and Specification</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -146,7 +146,8 @@ artefact and one for describing regular standard OCI artefacts.</p>
 artefact archives.</p>
 <section id="component-archive">
 <h3>Component Archive<a class="headerlink" href="#component-archive" title="Link to this heading"></a></h3>
-<p>So far there is only a specification for the format for a component artefact.</p>
+<p>The component archive contains a first file <code class="docutils literal notranslate"><span class="pre">component-descriptor.yaml</span></code>
+which contains the component descriptor of the component version.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>├── component-descriptor.yaml
 └── blobs
     ├── blob1
@@ -162,7 +163,18 @@ support streaming.</p>
 <section id="oci-artefact">
 <h3>OCI Artefact<a class="headerlink" href="#oci-artefact" title="Link to this heading"></a></h3>
 <p>A similar format for standard OCI Artefacts (including OCI Images as special case)
-could look like this</p>
+always contains the file <code class="docutils literal notranslate"><span class="pre">artefact-descriptor.yaml</span></code> as first file.
+It is a YAML or JSON file describing the artefact meta data. Additionally it may contain
+signatures like the component descriptor.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">apiVersion</span><span class="p">:</span> <span class="n">ocm</span><span class="o">.</span><span class="n">gardener</span><span class="o">.</span><span class="n">cloud</span><span class="o">/</span><span class="n">v1</span>
+<span class="n">kind</span><span class="p">:</span> <span class="n">ArtefactDescriptor</span>
+<span class="n">metadata</span><span class="p">:</span>
+  <span class="n">name</span><span class="p">:</span> <span class="o">&lt;</span><span class="n">artefact</span> <span class="n">name</span><span class="o">&gt;</span>
+  <span class="n">version</span><span class="p">:</span> <span class="o">&lt;</span><span class="n">artefact</span> <span class="n">version</span><span class="o">&gt;</span>
+</pre></div>
+</div>
+<p>Then it contains the files belonging to this oci artefact. It is the
+<code class="docutils literal notranslate"><span class="pre">oci-artefact.json</span></code> and the blobs described by the oci-artefact.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>├── artefact-descriptor.yaml
 ├── oci-manifest.json
 └── blobs
@@ -171,12 +183,9 @@ could look like this</p>
     └── blobn
 </pre></div>
 </div>
-<p>Like the component descriptor the additional file <code class="docutils literal notranslate"><span class="pre">artefact-descriptor.yaml</span></code>
-described the artefact name and version. The other files are just taken
-from the OCI artefact api. The blob names should be the correct OCI
-digests used in the <code class="docutils literal notranslate"><span class="pre">oci-manifest.json</span></code>.</p>
-<p>The artefact descriptor must be the first entry in the tar archive to
-support streaming, followed by the oci manifest.</p>
+<p>The blob names should be the correct OCI digests used in the <code class="docutils literal notranslate"><span class="pre">oci-manifest.json</span></code>.</p>
+<p>The artefact descriptor must be the first entry in the tar archive followed by the
+oci manifest to support streaming.</p>
 </section>
 </section>
 <section id="oci-related-access-types">
