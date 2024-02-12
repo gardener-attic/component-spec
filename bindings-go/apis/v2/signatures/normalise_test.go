@@ -26,9 +26,9 @@ import (
 
 var _ = Describe("Normalise/Hash component-descriptor", func() {
 	var baseCd cdv2.ComponentDescriptor
-	correctBaseCdHash := "6c571bb6e351ae755baa7f26cbd1f600d2968ab8b88e25a3bab277e53afdc3ad"
+	correctBaseCdHash := "aa32547cf0cbead58bc9a27d6c0545d6a4965f9ff2de9f09ce1e6d777f53fbaf"
 	//corresponding normalised CD:
-	//[{"component":[{"componentReferences":[[{"componentName":"compRefNameComponentName"},{"digest":[{"hashAlgorithm":"sha256"},{"normalisationAlgorithm":"jsonNormalisation/v1"},{"value":"00000000000000"}]},{"extraIdentity":[{"refKey":"refName"}]},{"name":"compRefName"},{"version":"v0.0.2compRef"}]]},{"name":"CD-Name"},{"provider":""},{"resources":[[{"digest":[{"hashAlgorithm":"sha256"},{"normalisationAlgorithm":"ociArtifactDigest/v1"},{"value":"00000000000000"}]},{"extraIdentity":[{"key":"value"}]},{"name":"Resource1"},{"relation": ""},{"type",""},{"version":"v0.0.3resource"}]]},{"version":"v0.0.1"}]},{"meta":[{"schemaVersion":"v2"}]}]
+	//[{"component":[{"componentReferences":[[{"componentName":"compRefNameComponentName"},{"digest":[{"hashAlgorithm":"sha256"},{"normalisationAlgorithm":"jsonNormalisation/v1"},{"value":"00000000000000"}]},{"extraIdentity":[{"refKey":"refName"}]},{"name":"compRefName"},{"version":"v0.0.2compRef"}],[{"componentName":"compRefNameComponentName"},{"digest":[{"hashAlgorithm":"sha256"},{"normalisationAlgorithm":"jsonNormalisation/v1"},{"value":"00000000000000"}]},{"name":"compRefWithNoExtraIdentity"},{"version":"v0.0.3compRef"}]]},{"name":"CD-Name"},{"provider":""},{"resources":[[{"digest":[{"hashAlgorithm":"sha256"},{"normalisationAlgorithm":"ociArtifactDigest/v1"},{"value":"00000000000000"}]},{"extraIdentity":[{"key":"value"}]},{"name":"Resource1"},{"relation":""},{"type":""},{"version":"v0.0.3resource"}],[{"digest":[{"hashAlgorithm":"sha256"},{"normalisationAlgorithm":"ociArtifactDigest/v1"},{"value":"00000000000000"}]},{"extraIdentity":[{"key":"value"}]},{"name":"ResourceWithNoExtraIdentity"},{"relation":""},{"type":""},{"version":"v0.0.4resource"}]]},{"version":"v0.0.1"}]}]
 	BeforeEach(func() {
 		baseCd = cdv2.ComponentDescriptor{
 			Metadata: cdv2.Metadata{
@@ -53,6 +53,17 @@ var _ = Describe("Normalise/Hash component-descriptor", func() {
 							Value:                  "00000000000000",
 						},
 					},
+					{
+						// ExtraIdentity is nil -> should be left out completely from normalisation
+						Name:          "compRefWithNoExtraIdentity",
+						ComponentName: "compRefNameComponentName",
+						Version:       "v0.0.3compRef",
+						Digest: &cdv2.DigestSpec{
+							HashAlgorithm:          signatures.SHA256,
+							NormalisationAlgorithm: string(cdv2.JsonNormalisationV1),
+							Value:                  "00000000000000",
+						},
+					},
 				},
 				Resources: []cdv2.Resource{
 					{
@@ -69,6 +80,21 @@ var _ = Describe("Normalise/Hash component-descriptor", func() {
 							Value:                  "00000000000000",
 						},
 						Access: cdv2.NewUnstructuredType(cdv2.OCIRegistryType, map[string]interface{}{"imageRef": "ref"}),
+					},
+					{
+						IdentityObjectMeta: cdv2.IdentityObjectMeta{
+							Name:    "ResourceWithNoExtraIdentity",
+							Version: "v0.0.4resource",
+							ExtraIdentity: cdv2.Identity{
+								"key": "value",
+							},
+						},
+						Digest: &cdv2.DigestSpec{
+							HashAlgorithm:          signatures.SHA256,
+							NormalisationAlgorithm: string(cdv2.OciArtifactDigestV1),
+							Value:                  "00000000000000",
+						},
+						Access: cdv2.NewUnstructuredType(cdv2.OCIRegistryType, map[string]interface{}{"imageRef": "ref:v0.0.4"}),
 					},
 				},
 			},
@@ -92,6 +118,32 @@ var _ = Describe("Normalise/Hash component-descriptor", func() {
 			hash, err := signatures.HashForComponentDescriptor(baseCd, *hasher)
 			Expect(err).To(BeNil())
 			Expect(hash.Value).To(Equal(correctBaseCdHash))
+		})
+	})
+	Describe("should remove empty component refs/resources lists during normalisation", func() {
+		It("with sha256", func() {
+			expectedHash := "44460fad9d46f9281018858a94bf80ae348e5c24ea4d9955ade89a16fb587edf"
+			//corresponding normalised CD:
+			//[{"component":[{"name":"CD-Name"},{"provider":""},{"version":"v0.0.1"}]}]
+			cdWithEmptyLists := cdv2.ComponentDescriptor{
+				Metadata: cdv2.Metadata{
+					Version: "v2",
+				},
+				ComponentSpec: cdv2.ComponentSpec{
+					ObjectMeta: cdv2.ObjectMeta{
+						Name:    "CD-Name",
+						Version: "v0.0.1",
+					},
+					// ComponentReferences & Resource empty -> should be left out completely from normalisation
+					ComponentReferences: []cdv2.ComponentReference{},
+					Resources:           []cdv2.Resource{},
+				},
+			}
+			hasher, err := signatures.HasherForName(signatures.SHA256)
+			Expect(err).To(BeNil())
+			hash, err := signatures.HashForComponentDescriptor(cdWithEmptyLists, *hasher)
+			Expect(err).To(BeNil())
+			Expect(hash.Value).To(Equal(expectedHash))
 		})
 	})
 	Describe("should ignore modifications in unhashed fields", func() {

@@ -86,10 +86,6 @@ func normaliseComponentDescriptor(cd cdv2.ComponentDescriptor) ([]byte, error) {
 		return nil, fmt.Errorf("component descriptor %s:%s is not normaliseable: %w", cd.Name, cd.Version, err)
 	}
 
-	meta := []Entry{
-		{"schemaVersion": cd.Metadata.Version},
-	}
-
 	componentReferences := []interface{}{}
 	for _, ref := range cd.ComponentSpec.ComponentReferences {
 		extraIdentity := buildExtraIdentity(ref.ExtraIdentity)
@@ -104,25 +100,32 @@ func normaliseComponentDescriptor(cd cdv2.ComponentDescriptor) ([]byte, error) {
 			{"componentName": ref.ComponentName},
 			{"name": ref.Name},
 			{"version": ref.Version},
-			{"extraIdentity": extraIdentity},
 			{"digest": digest},
 		}
+
+		if extraIdentity != nil {
+			componentReference = append(componentReference, Entry{"extraIdentity": extraIdentity})
+		}
+
 		componentReferences = append(componentReferences, componentReference)
 	}
 
 	resources := []interface{}{}
 	for _, res := range cd.ComponentSpec.Resources {
-		extraIdentity := buildExtraIdentity(res.ExtraIdentity)
+		resource := []Entry{
+			{"name": res.Name},
+			{"version": res.Version},
+			{"type": res.Type},
+			{"relation": res.Relation},
+		}
 
-		//ignore access.type=None for normalisation and hash calculation
+		extraIdentity := buildExtraIdentity(res.ExtraIdentity)
+		if extraIdentity != nil {
+			resource = append(resource, Entry{"extraIdentity": extraIdentity})
+		}
+
+		// skip adding digest for access.type=None -> ignore for normalisation and hash calculation
 		if res.Access == nil || res.Access.Type == "None" {
-			resource := []Entry{
-				{"name": res.Name},
-				{"version": res.Version},
-				{"type": res.Type},
-				{"relation": res.Relation},
-				{"extraIdentity": extraIdentity},
-			}
 			resources = append(resources, resource)
 			continue
 		}
@@ -132,15 +135,8 @@ func normaliseComponentDescriptor(cd cdv2.ComponentDescriptor) ([]byte, error) {
 			{"normalisationAlgorithm": res.Digest.NormalisationAlgorithm},
 			{"value": res.Digest.Value},
 		}
+		resource = append(resource, Entry{"digest": digest})
 
-		resource := []Entry{
-			{"name": res.Name},
-			{"version": res.Version},
-			{"type": res.Type},
-			{"relation": res.Relation},
-			{"extraIdentity": extraIdentity},
-			{"digest": digest},
-		}
 		resources = append(resources, resource)
 	}
 
@@ -148,12 +144,17 @@ func normaliseComponentDescriptor(cd cdv2.ComponentDescriptor) ([]byte, error) {
 		{"name": cd.ComponentSpec.Name},
 		{"version": cd.ComponentSpec.Version},
 		{"provider": cd.ComponentSpec.Provider},
-		{"componentReferences": componentReferences},
-		{"resources": resources},
+	}
+
+	if len(componentReferences) > 0 {
+		componentSpec = append(componentSpec, Entry{"componentReferences": componentReferences})
+	}
+
+	if len(resources) > 0 {
+		componentSpec = append(componentSpec, Entry{"resources": resources})
 	}
 
 	normalisedComponentDescriptor := []Entry{
-		{"meta": meta},
 		{"component": componentSpec},
 	}
 
