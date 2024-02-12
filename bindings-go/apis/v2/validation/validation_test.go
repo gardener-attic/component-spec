@@ -58,7 +58,7 @@ var _ = Describe("Validation", func() {
 				Version: "1.2.3",
 			},
 			Relation: v2.ExternalRelation,
-			Access:   &unstrucOCIRegistry1,
+			Access:   unstrucOCIRegistry1,
 		}
 		ociRegistry2 = &v2.OCIRegistryAccess{
 			ObjectType: v2.ObjectType{
@@ -74,7 +74,7 @@ var _ = Describe("Validation", func() {
 				Version: "1.2.3",
 			},
 			Relation: v2.ExternalRelation,
-			Access:   &unstrucOCIRegistry2,
+			Access:   unstrucOCIRegistry2,
 		}
 
 		comp = &v2.ComponentDescriptor{

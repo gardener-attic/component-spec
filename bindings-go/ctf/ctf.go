@@ -91,10 +91,10 @@ const (
 )
 
 type CTF struct {
-	fs vfs.FileSystem
+	fs      vfs.FileSystem
 	ctfPath string
 	tempDir string
-	tempFs vfs.FileSystem
+	tempFs  vfs.FileSystem
 }
 
 // NewCTF reads a CTF archive from a file.

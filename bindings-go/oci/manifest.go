@@ -183,7 +183,7 @@ func (b *ManifestBuilder) addLocalBlobs(ctx context.Context) ([]ocispecv1.Descri
 		if err != nil {
 			return nil, fmt.Errorf("unable to convert ociBlob to untructured type: %w", err)
 		}
-		res.Access = &unstructuredType
+		res.Access = unstructuredType
 		b.archive.ComponentDescriptor.Resources[i] = res
 		blobDescriptors = append(blobDescriptors, desc)
 	}

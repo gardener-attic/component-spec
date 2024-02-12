@@ -60,7 +60,7 @@ var _ = Describe("Helper", func() {
 				},
 			},
 			Relation: v2.ExternalRelation,
-			Access:   &unstrucOCIRegistry1,
+			Access:   unstrucOCIRegistry1,
 		}
 		ociRegistry2 = &v2.OCIRegistryAccess{
 			ObjectType: v2.ObjectType{
@@ -80,7 +80,7 @@ var _ = Describe("Helper", func() {
 				},
 			},
 			Relation: v2.ExternalRelation,
-			Access:   &unstrucOCIRegistry2,
+			Access:   unstrucOCIRegistry2,
 		}
 
 		comp = &v2.ComponentDescriptor{

@@ -80,7 +80,7 @@ component:
 	// get the latest repository context.
 	// the context is returned as unstructured object (similar to the access types) as differnt repository types
 	// with different attributes are possible.
-	unstructuredRepoCtx := component.GetEffectiveRepositoryContext()
+	unstructuredRepoCtx, err := v2.ToUnstructuredTypedObject(nil, component.GetEffectiveRepositoryContext())
 	// decode the unstructured type into a specific type
 	ociRepo := &v2.OCIRegistryRepository{}
 	check(unstructuredRepoCtx.DecodeInto(ociRepo))

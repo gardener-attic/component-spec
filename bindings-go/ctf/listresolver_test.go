@@ -30,13 +30,13 @@ var _ = Describe("ListResolver", func() {
 		cd.Name = "example.com/a"
 		cd.Version = "0.0.0"
 		repoCtx, _ := cdv2.NewUnstructured(cdv2.NewOCIRegistryRepository("example.com/registry", ""))
-		cd.RepositoryContexts = append(cd.RepositoryContexts, &repoCtx)
+		cd.RepositoryContexts = append(cd.RepositoryContexts, repoCtx)
 
 		lr, err := ctf.NewListResolver(&cdv2.ComponentDescriptorList{
 			Components: []cdv2.ComponentDescriptor{cd},
 		})
 		Expect(err).ToNot(HaveOccurred())
-		res, err := lr.Resolve(context.TODO(), &repoCtx, "example.com/a", "0.0.0")
+		res, err := lr.Resolve(context.TODO(), repoCtx, "example.com/a", "0.0.0")
 		Expect(err).ToNot(HaveOccurred())
 		Expect(res.Name).To(Equal("example.com/a"))
 	})
@@ -46,7 +46,7 @@ var _ = Describe("ListResolver", func() {
 		cd.Name = "example.com/a"
 		cd.Version = "0.0.0"
 		repoCtx, _ := cdv2.NewUnstructured(cdv2.NewOCIRegistryRepository("example.com/registry", ""))
-		cd.RepositoryContexts = append(cd.RepositoryContexts, &repoCtx)
+		cd.RepositoryContexts = append(cd.RepositoryContexts, repoCtx)
 
 		cd2 := cdv2.ComponentDescriptor{}
 		cd2.Name = "example.com/a"
@@ -57,20 +57,20 @@ var _ = Describe("ListResolver", func() {
 			},
 		}
 		repoCtx2, _ := cdv2.NewUnstructured(cdv2.NewOCIRegistryRepository("example.com/registry2", ""))
-		cd2.RepositoryContexts = append(cd.RepositoryContexts, &repoCtx2)
+		cd2.RepositoryContexts = append(cd.RepositoryContexts, repoCtx2)
 
 		lr, err := ctf.NewListResolver(&cdv2.ComponentDescriptorList{
 			Components: []cdv2.ComponentDescriptor{cd, cd2},
 		})
 		Expect(err).ToNot(HaveOccurred())
-		res, err := lr.Resolve(context.TODO(), &repoCtx2, "example.com/a", "0.0.0")
+		res, err := lr.Resolve(context.TODO(), repoCtx2, "example.com/a", "0.0.0")
 		Expect(err).ToNot(HaveOccurred())
 		Expect(res.Name).To(Equal("example.com/a"))
 		Expect(res.Labels).To(ContainElement(cdv2.Label{
 			Name: "test",
 		}))
 
-		res, err = lr.Resolve(context.TODO(), &repoCtx, "example.com/a", "0.0.0")
+		res, err = lr.Resolve(context.TODO(), repoCtx, "example.com/a", "0.0.0")
 		Expect(err).ToNot(HaveOccurred())
 		Expect(res.Name).To(Equal("example.com/a"))
 		Expect(res.Labels).ToNot(ContainElement(cdv2.Label{
@@ -83,13 +83,13 @@ var _ = Describe("ListResolver", func() {
 		cd.Name = "example.com/a"
 		cd.Version = "0.0.0"
 		repoCtx, _ := cdv2.NewUnstructured(cdv2.NewOCIRegistryRepository("example.com/registry", ""))
-		cd.RepositoryContexts = append(cd.RepositoryContexts, &repoCtx)
+		cd.RepositoryContexts = append(cd.RepositoryContexts, repoCtx)
 
 		lr, err := ctf.NewListResolver(&cdv2.ComponentDescriptorList{
 			Components: []cdv2.ComponentDescriptor{cd},
 		})
 		Expect(err).ToNot(HaveOccurred())
-		_, err = lr.Resolve(context.TODO(), &repoCtx, "example.com/b", "0.0.0")
+		_, err = lr.Resolve(context.TODO(), repoCtx, "example.com/b", "0.0.0")
 		Expect(err).To(HaveOccurred())
 		Expect(err).To(Equal(ctf.NotFoundError))
 	})

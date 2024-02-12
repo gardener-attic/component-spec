@@ -72,7 +72,7 @@ func NewNameSelector(name string) selector.Interface {
 }
 
 // GetEffectiveRepositoryContext returns the current active repository context.
-func (c ComponentDescriptor) GetEffectiveRepositoryContext() *UnstructuredTypedObject {
+func (c ComponentDescriptor) GetEffectiveRepositoryContext() Repository {
 	if len(c.RepositoryContexts) == 0 {
 		return nil
 	}
@@ -82,13 +82,16 @@ func (c ComponentDescriptor) GetEffectiveRepositoryContext() *UnstructuredTypedO
 // InjectRepositoryContext appends the given repository context to components descriptor repository history.
 // The context is not appended if the effective repository context already matches the current context.
 func InjectRepositoryContext(cd *ComponentDescriptor, repoCtx TypedObjectAccessor) error {
-	effective := cd.GetEffectiveRepositoryContext()
+	effective, err := NewUnstructured(cd.GetEffectiveRepositoryContext())
+	if err != nil {
+		return err
+	}
 	uRepoCtx, err := NewUnstructured(repoCtx)
 	if err != nil {
 		return err
 	}
-	if !UnstructuredTypesEqual(effective, &uRepoCtx) {
-		cd.RepositoryContexts = append(cd.RepositoryContexts, &uRepoCtx)
+	if !UnstructuredTypesEqual(effective, uRepoCtx) {
+		cd.RepositoryContexts = append(cd.RepositoryContexts, uRepoCtx)
 	}
 	return nil
 }

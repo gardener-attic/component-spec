@@ -17,6 +17,8 @@ package v2
 import (
 	"encoding/json"
 	"fmt"
+
+	"github.com/modern-go/reflect2"
 )
 
 // KnownTypeValidationFunc defines a function that can validate types.
@@ -133,6 +135,8 @@ func NewCodec(knownTypes KnownTypes, defaultCodec TypedObjectCodec, validationFu
 	}
 }
 
+var defaultCodec = NewDefaultCodec()
+
 // Decode unmarshals a unstructured typed object into a TypedObjectAccessor.
 // The given known types are used to decode the data into a specific.
 // The given defaultCodec is used if no matching type is known.
@@ -176,8 +180,28 @@ func (c *codec) Encode(acc TypedObjectAccessor) ([]byte, error) {
 	return codec.Encode(acc)
 }
 
+func DecodeInto(obj TypedObjectAccessor, into TypedObjectAccessor) error {
+	un, err := ToUnstructuredTypedObject(nil, obj)
+	if err != nil {
+		return err
+	}
+	if reflect2.IsNil(un) {
+		return fmt.Errorf("no accessor")
+	}
+	return un.DecodeInto(into)
+}
+
 // ToUnstructuredTypedObject converts a typed object to a unstructured object.
 func ToUnstructuredTypedObject(codec TypedObjectCodec, obj TypedObjectAccessor) (*UnstructuredTypedObject, error) {
+	if obj == nil {
+		return nil, nil
+	}
+	if un, ok := obj.(*UnstructuredTypedObject); ok {
+		return un, nil
+	}
+	if codec == nil {
+		codec = defaultCodec
+	}
 	data, err := codec.Encode(obj)
 	if err != nil {
 		return nil, err
